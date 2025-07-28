@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>..\XML\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Highever.SocialMedia.Common\Highever.SocialMedia.Common.csproj" />
+    <ProjectReference Include="..\Highever.SocialMedia.Domain\Highever.SocialMedia.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

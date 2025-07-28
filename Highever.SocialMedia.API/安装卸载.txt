@@ -1,0 +1,6 @@
+nssm install SocialMedia "D:\项目文件\SocialMedia_Publish\Highever.SocialMedia.API.exe"
+net start SocialMedia
+net stop SocialMedia
+nssm remove SocialMedia confirm
+
+F:\nssm-2.24

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="EventBus\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Highever.SocialMedia.Application.Contracts\Highever.SocialMedia.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Highever.SocialMedia.Common\Highever.SocialMedia.Common.csproj" />
+    <ProjectReference Include="..\Highever.SocialMedia.Domain\Highever.SocialMedia.Domain.csproj" />
+    <ProjectReference Include="..\Highever.SocialMedia.MongoDB\Highever.SocialMedia.MongoDB.csproj" />
+    <ProjectReference Include="..\Highever.SocialMedia.SqlSugar\Highever.SocialMedia.SqlSugar.csproj" />
+  </ItemGroup>
+
+</Project>

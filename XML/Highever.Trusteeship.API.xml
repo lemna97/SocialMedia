@@ -1,0 +1,609 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Highever.SocialMedia.API</name>
+    </assembly>
+    <members>
+        <member name="T:Highever.SocialMedia.API.AuthorizationParameterFilter">
+            <summary>
+            全局Authorizec参数校验
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.AuthTokenParameterFilter">
+            <summary>
+            全局Token参数校验
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.CustomExcludeFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema,Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext)">
+            <summary>
+             自定义请求参数显示
+            </summary>
+            <param name="schema"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:Highever.SocialMedia.API.EnumSchemaFilter">
+            <summary>
+            枚举注释
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.EnumSchemaFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema,Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext)">
+            <summary>
+            
+            </summary>
+            <param name="model"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.API.HiddenApiFilter.Apply(Microsoft.OpenApi.Models.OpenApiDocument,Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext)">
+            <summary>
+            
+            </summary>
+            <param name="swaggerDoc"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:Highever.SocialMedia.API.CustomExceptionHandlerMiddleware">
+            <summary>
+            异常日志中间件
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.IocRegister">
+            <summary>
+            可以使用 scrutor 进行批量注入，更简单方便
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.IocRegister.Register(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            依赖注入
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.API.SwaggerGroups.ConfigureKnife4UI(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Controllers.AIRecruitHomeController">
+            <summary>
+            AI-Boss直聘平台
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.AIRecruitHomeController.AddOrUpdateJobTitle(System.Collections.Generic.List{Highever.SocialMedia.Domain.JobTitle})">
+            <summary>
+             录入职位信息
+            </summary>
+            <param name="jobTitle"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.AIRecruitHomeController.AddOrUpdateJobSeeker(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.JobSeeker})">
+            <summary>
+            录入打招呼记录
+            </summary>
+            <param name="jobSeekers"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.AIRecruitHomeController.GetJobTitle(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="encryptJobId"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.CSVTestController.GetData">
+            <summary>
+            查询CSVTest所有数据（GET /data）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.CSVTestController.SendData(Highever.SocialMedia.Domain.Entity.CSVTest)">
+            <summary>
+            插入一条CSVTest数据（POST /senddata）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.CSVTestController.Search(System.String)">
+            <summary>
+            根据UserId查询该用户所有的Match（GET /search?name=xxx）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Controllers.FileController">
+            <summary>
+            Temu 平台
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.FileController.UploadImage(Microsoft.AspNetCore.Http.IFormFile)">
+             <summary>
+            上传图片到服务器，调用后台管理的上传图片接口
+             </summary>
+             <remark>
+             这是接口介绍：
+             .....
+             .....
+             .....
+             </remark>
+             <param name="files">表单文件信息</param>
+             <returns></returns> 
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.FileController.ReadFileBytes(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            文件流类型转化字节类型
+            </summary>
+            <param name="fileData">表单文件信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.FileController.UploadImageByCollection(Microsoft.AspNetCore.Http.IFormCollection)">
+             <summary>
+            上传图片到服务器，调用后台管理的上传图片接口
+             </summary>
+             <remark>
+             这是接口介绍：
+             .....
+             .....
+             .....
+             </remark>
+             <param name="formData">表单文件信息</param>
+             <returns></returns> 
+        </member>
+        <member name="F:Highever.SocialMedia.API.Controllers.HomeController._serviceProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.HomeController.#ctor(System.IServiceProvider,Highever.SocialMedia.Common.HttpClientHelper)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.HomeController.SearchAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            转发调用 TikHub 搜索接口的测试端点
+            </summary>
+            <remarks>
+            GET /api/TikHubTest/search?keyword=pubg
+            </remarks>  
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.HomeController.GetCookie">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.HomeController.TestMyDbcontext_QueryList(Highever.Amazon.Advertising.Common.SearchForSemiSupplierModel)">
+             <summary>
+             测试XML
+             </summary>
+             <remarks> 
+             Sample request:
+             ```
+              POST /hotmap
+              { 
+                  "displayName": "演示名称1",
+                  "matchRule": 0,
+                  "matchCondition": "https://www.cnblogs.com/JulianHuang/",
+                  "targetUrl": "https://www.cnblogs.com/JulianHuang/",
+                  "versions": [
+                  {
+                     "versionName": "ver2020",
+                     "startDate": "2020-12-13T10:03:09",
+                     "endDate": "2020-12-13T10:03:09",
+                     "offlinePageUrl": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  //  没有绑定图片和离线网页的对应属性传 null
+                     "pictureUrl": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     "createDate": "2020-12-13T10:03:09"
+                  }
+                ] 
+              }
+            ```
+             </remarks>
+             <param name="testTable_Para">请求参数</param>
+             <returns></returns>  
+        </member>
+        <member name="T:Highever.SocialMedia.API.Controllers.TemuController">
+            <summary>
+            Temu 平台
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Controllers.TemuController._serviceProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.#ctor(System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.GetTemuSearchForSemiSupplierExcel(System.Collections.Generic.List{Highever.Amazon.Advertising.Common.SearchForSemiSupplierModel})">
+            <summary>
+            获取【已发布站点】申报价表格
+            </summary> 
+            <param name="SearchForSemiSupplierModel"></param> 
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.GetTemuFetchSuggestSupplyPriceSave(System.Collections.Generic.List{Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest})">
+            <summary>
+             获取【价格待确认】参考申报价格
+            </summary>
+            <param name="suggestSupplyPriceListModels"></param> 
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.TemuFetchSuggestSupplyPriceByExcel(System.Collections.Generic.List{Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest})">
+            <summary>
+            导出 【价格待确认】核价操作记录
+            </summary>
+            <param name="suggestSupplyPriceListModels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.AutoReplenishOproductPropertyRequest(System.Collections.Generic.List{Highever.SocialMedia.API.Model.ProductPropertyRequest})">
+            <summary>
+            商品属性自动补充
+            </summary>
+            <param name="productPropertyRequests"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.RecursiveProcessPropertiesNewAsync(System.Collections.Generic.List{Highever.SocialMedia.API.Model.ProductPicture},System.Collections.Generic.List{Highever.SocialMedia.API.Model.ProductPicture},System.Collections.Concurrent.ConcurrentBag{Highever.SocialMedia.API.Model.GptResponses},Highever.SocialMedia.API.Model.ProductPropertyRequest,System.String,Highever.SocialMedia.OpenAI.SystemMessage)">
+            <summary>
+            递归处理商品属性，构建问题文本并调用 GPT 获取响应（多个问题请求一次）
+            </summary>
+            <param name="allProperties"></param>
+            <param name="currentProperties"></param>
+            <param name="_gptResponsesBag"></param>
+            <param name="productPropertyRequest"></param>
+            <param name="productPictureBase64"></param>
+            <param name="systemContent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.EditCallBack(System.Collections.Generic.List{Highever.SocialMedia.API.Model.EditCallBack})">
+            <summary>
+            成功回调
+            </summary>
+            <param name="editCallBacks"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.DownloadEditRecord(System.Collections.Generic.List{System.Int64})">
+            <summary>
+            导出数据
+            </summary>
+            <param name="productIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.ProcessSinglePropertyAsync(System.String,System.Text.StringBuilder,Highever.SocialMedia.OpenAI.SystemMessage)">
+            <summary>
+            处理单个属性的问题选项，并调用 GPT 获取答案
+            </summary> 
+            <param name="productPictureBase64">商品图片的 Base64 编码</param>
+            <param name="stringBuilder">GPT 的系统消息</param>
+            <param name="systemContent">GPT 的系统消息</param>
+            <returns>GPT 返回的响应集合</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.ProcessProductPropertyNewAsync(System.Collections.Generic.List{Highever.SocialMedia.API.Model.ProductPropertyRequest},System.Collections.Concurrent.ConcurrentBag{Highever.SocialMedia.Domain.Entity.ProductPropertyRequestRecord})">
+            <summary>
+            
+            </summary>
+            <param name="request"></param>
+            <param name="productPropertyRequestRecordList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.AutoReplenishOproductPropertyRequestTest">
+            <summary>
+            商品属性补充 【测试】
+            </summary> 
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.DownloadImageAsBase64Async(System.String)">
+            <summary>
+            下载图片并将其转换为 Base64 字符串
+            </summary>
+            <param name="imageUrl">图片的 URL 地址</param>
+            <returns>以 Base64 格式编码的图片数据</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.SplitList``1(System.Collections.Generic.List{``0},System.Int32)">
+            <summary>
+            将列表拆分为指定数量的组
+            </summary>
+            <typeparam name="T">列表元素类型</typeparam>
+            <param name="list">需要拆分的原始列表</param>
+            <param name="groupCount">组的数量</param>
+            <returns>拆分后的列表集合</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TemuController.ExecuteConcurrentlyAsync``2(System.Collections.Generic.List{``0},System.Func{``0,System.Threading.Tasks.Task{``1}},System.Int32)">
+            <summary>
+            控制并发执行的方法
+            </summary>
+            <typeparam name="TInput">输入类型</typeparam>
+            <typeparam name="TOutput">返回值类型</typeparam>
+            <param name="inputs">需要处理的输入集合</param>
+            <param name="processor">处理逻辑的委托</param>
+            <param name="maxDegreeOfConcurrency">最大并发数</param>
+            <returns>按顺序返回的结果集合</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Controllers.WeatherForecastController">
+            <summary>
+            测试服务
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.WeatherForecastController.#ctor(Microsoft.Extensions.Logging.ILogger{Highever.SocialMedia.API.Controllers.WeatherForecastController})">
+            <summary>
+            
+            </summary>
+            <param name="logger"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.WeatherForecastController.Get">
+            <summary>
+            测试获取
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.WeatherForecastController.GetObsolete">
+            <summary>
+            测试Obsolete
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.WeatherForecastController.Obsoleteceshi">
+            <summary>
+            测试Obsolete
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Model.ProductPicture.controlType">
+            <summary>
+            控件类型（1：下拉选项）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Model.ProductPicture.chooseMaxNum">
+            <summary>
+            可以选择几个值
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.WeatherForecast">
+            <summary>
+            注释1
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.WeatherForecast.Date">
+            <summary>
+            注释2
+            </summary>
+        </member>
+        <member name="T:Highever.Amazon.Advertising.Common.TemuModel">
+            <summary>
+            【已发布站点】核价结果
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.TemuModel.activityDiscount">
+            <summary>
+            活动折扣
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.TemuModel.discountPrice">
+            <summary>
+            折扣后的价格
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.TemuModel.discountProfitRate">
+            <summary>
+            折扣后的利润
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.TemuModel.profit_discountProfitRate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierModel.mallId">
+            <summary>
+            店铺ID
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierModel.mallName">
+            <summary>
+            店铺名称
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierModel.activityDiscount">
+            <summary>
+            折扣
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel.supplierId">
+            <summary>
+            supplierId
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel.supplierPrice">
+            <summary>
+            申报价格
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel.supplierPriceCurrencyType">
+            <summary>
+            币种
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel.productId">
+            <summary>
+            产品ID
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel.productName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel.goodsId">
+            <summary>
+            goodsId
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel_SkuList.skcId">
+            <summary>
+            skcId
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel_SkuList.extCode">
+            <summary>
+            货号
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel_SkuList.supplierPrice">
+            <summary>
+            申报价格
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SearchForSemiSupplierDetailModel_SkuList.supplierPriceCurrencyType">
+            <summary>
+            币种
+            </summary>
+        </member>
+        <member name="T:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest.declareNumber">
+            <summary>
+            申报次数
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest.productSkcExtCode">
+            <summary>
+            货号
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest.priceOrderId">
+            <summary>
+            priceOrderId
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest.productId">
+            <summary>
+            产品ID
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequest.skuList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequestDetail">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequestDetail.productSkuId">
+            <summary>
+            SKUId
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequestDetail.suggestSupplyPrice">
+            <summary>
+            参考申报价格
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequestDetail.suggestPriceCurrency">
+            <summary>
+            币种
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequestDetail.ratio">
+            <summary>
+            汇率
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceRequestDetail.priceBeforeExchange">
+            <summary>
+            当前申报价格
+            </summary>
+        </member>
+        <member name="T:Highever.Amazon.Advertising.Common.SuggestSupplyPriceSave">
+            <summary>
+             反价操作
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceSave.priceOrderId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceSave.supplierResult">
+            <summary>
+             1:同意，2：返价。3：拒绝
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceSave.items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Highever.Amazon.Advertising.Common.SuggestSupplyPriceSave_Detail">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceSave_Detail.productSkuId">
+            <summary>
+            productSkuId
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceSave_Detail.price">
+            <summary>
+            反价价格
+            </summary>
+        </member>
+        <member name="T:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.sku">
+            <summary>
+            sku
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.productSkcExtCode">
+            <summary>
+             货号
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.suggestSupplyPrice">
+            <summary>
+            参考申报价格
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.priceBeforeExchange">
+            <summary>
+            申报价格
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.free_shipping_price">
+            <summary>
+            成本价
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.operation">
+            <summary>
+             1:同意，2：返价。3：拒绝
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.price">
+            <summary>
+             价格 （分）
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.price2">
+            <summary>
+             价格
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.profitRate">
+            <summary>
+             利润
+            </summary>
+        </member>
+        <member name="P:Highever.Amazon.Advertising.Common.SuggestSupplyPriceResult_Excel.coreNumber">
+            <summary>
+             核价次数
+            </summary>
+        </member>
+    </members>
+</doc>

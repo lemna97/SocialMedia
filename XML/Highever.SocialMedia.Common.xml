@@ -1,0 +1,1247 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Highever.SocialMedia.Common</name>
+    </assembly>
+    <members>
+        <member name="T:Highever.SocialMedia.Common.AgencyHttpHelper">
+            <summary>
+            通用 HTTP 帮助类：自动携带登录 Cookie，获取指定 URL 的响应文本。
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AgencyHttpHelper.FetchAsync(System.String)">
+            <summary>
+            发送 GET 请求并返回响应内容（UTF-8 编码）。<br/>
+            依赖 <see cref="M:Highever.SocialMedia.Common.CookieDumper.GetCookie"/> 获取登录会话 Cookie。
+            </summary>
+            <param name="url">完整绝对 URL，例如 https://example.com/api/data</param>
+            <returns>服务器返回的响应字符串</returns>
+            <exception cref="T:System.Net.Http.HttpRequestException">HTTP 非 2xx 时抛出</exception>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.AmazonProductHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.ParseAmazonProduct(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            抓取亚马逊商品页面主要信息
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetImages_Json(OpenQA.Selenium.IWebDriver,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="driver"></param>
+            <param name="color"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetImages_Html(OpenQA.Selenium.IWebDriver)">
+            <summary>
+            从html元素中获取
+            </summary>
+            <param name="driver"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetFivePoints_Id(OpenQA.Selenium.IWebDriver)">
+            <summary>
+            
+            </summary>
+            <param name="driver"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.CookieDumper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.AppSettingConifgHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.AppSettingConifgHelper._config">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AppSettingConifgHelper.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AppSettingConifgHelper.ReadAppSettings(System.String)">
+            <summary>
+            读取指定节点的字符串
+            </summary>
+            <param name="sessions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AppSettingConifgHelper.ReadAppSettings(System.String[])">
+            <summary>
+            读取指定节点的字符串
+            </summary>
+            <param name="sessions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AppSettingConifgHelper.ReadAppSettings``1(System.String[])">
+            <summary>
+            读取实体信息
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.GroupInfoAttribute">
+            <summary>
+            分组信息特性
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.GroupInfoAttribute.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.GroupInfoAttribute.Version">
+            <summary>
+            版本
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.GroupInfoAttribute.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.GroupInfoAttribute.Url">
+            <summary>
+            地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.GroupInfoAttribute.UrlDescription">
+            <summary>
+            地址描述
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ApiGroupAttribute">
+            <summary>
+            分组接口特性
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ApiGroupAttribute.#ctor(Highever.SocialMedia.Common.SwaggerApiGroup)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.ApiGroupAttribute.GroupName">
+            <summary>
+            分组名称
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ValidateInputAtrribute">
+            <summary>
+            全局模型验证
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.DictionaryHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.DictionaryHelper.RemoveKeysByValue``2(System.Collections.Concurrent.ConcurrentDictionary{``0,``1},``1)">
+            <summary>
+            根据指定值从字典中批量删除键值对。
+            </summary>
+            <typeparam name="TKey">字典键的类型</typeparam>
+            <typeparam name="TValue">字典值的类型</typeparam>
+            <param name="dictionary">需要操作的字典</param>
+            <param name="valueToMatch">用于匹配的值</param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.DictionaryHelper.EstimateMemoryUsage``1(System.Collections.Generic.List{``0})">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.DingTalkHelper.SendDingMsg(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            钉钉发送消息
+            </summary>
+            <param name="atMobile"></param>
+            <param name="messageText"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.HttpCode">
+            <summary>
+            状态码
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.HttpCode.未登录">
+            <summary>
+            未登录 
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.HttpCode.成功">
+            <summary>
+            成功
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.HttpCode.失败">
+            <summary>
+            失败
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.HttpCode.无权限">
+            <summary>
+            无权限
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.HttpCode.系统请求超时">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.HttpCode.接口请求超时">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.SwaggerApiGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.SwaggerApiGroup.Login">
+            <summary>
+            授权认证
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.SwaggerApiGroup.FullSocialMedia">
+            <summary>
+            全托管的接口
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.SwaggerApiGroup.AIRecruit">
+            <summary>
+            全托管的接口
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ExcelHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.ParseListToExcel``1(System.Collections.Generic.List{``0},System.String,System.Boolean,System.Boolean)">
+            <summary>
+            List转Excel
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list">数据</param>
+            <param name="sheetName">表名</param>
+            <param name="overwrite">true,覆盖单元格，false追加内容(list和创建的excel或excel模板)</param>
+            <param name="xlsx">true-xlsx，false-xls</param>
+            <returns>返回文件</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.ParseExcelToList``1(System.IO.Stream,System.String)">
+            <summary>
+            Excel转为List
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="fileStream"></param>
+            <param name="sheetname"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.ReadExcelFile``1(System.String)">
+            <summary>
+            读取文件
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="filePath"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.ExportDataToExcel``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+            使用 NPOI 的 SXSSFWorkbook 将给定的数据集导出为 Excel 文件。
+            处理大数据量时，会自动拆分到多个工作表中。
+            </summary>
+            <typeparam name="T">数据集合的元素类型。</typeparam>
+            <param name="data">要导出的数据集合。</param>
+            <param name="headers">表头映射字典，键为表头显示名称（中文），值为属性名称。</param>
+            <param name="folder">文件夹。</param>
+            <param name="filename">导出的 Excel 文件名。</param>
+            <returns>表示 Excel 文件的字节数组。</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.ConvertExcelNumericToDate(System.Type,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="numericValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.GetCellValue(NPOI.SS.UserModel.ICell,System.Type)">
+            <summary>
+            从 Excel 单元格中获取值并转换为目标类型。
+            </summary>
+            <param name="cell">Excel 单元格。</param>
+            <param name="targetType">目标类型。</param>
+            <returns>解析后的值，类型与目标类型一致。</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.CreateHeaderCellStyle(NPOI.SS.UserModel.IWorkbook)">
+            <summary>
+            创建表头的单元格样式（加粗、背景色、居中）。
+            </summary>
+            <param name="workbook">工作簿对象。</param>
+            <returns>表头的单元格样式。</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.CreateDataCellStyle(NPOI.SS.UserModel.IWorkbook)">
+            <summary>
+            创建数据单元格的样式（居中）。
+            </summary>
+            <param name="workbook">工作簿对象。</param>
+            <returns>数据单元格的样式。</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.InsertHeaderRow(NPOI.SS.UserModel.ISheet,System.Collections.Generic.Dictionary{System.String,System.String},System.Int32@,NPOI.SS.UserModel.ICellStyle)">
+            <summary>
+            插入表头行到指定的工作表，并更新行索引。
+            </summary>
+            <param name="sheet">目标工作表。</param>
+            <param name="headers">表头映射字典。</param>
+            <param name="rowIndex">当前行索引，方法内会更新。</param>
+            <param name="headerStyle">表头样式。</param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.GetPropertyValue(System.Object,System.String)">
+            <summary>
+            根据属性名称从动态对象中获取属性值。
+            </summary>
+            <param name="record">动态对象。</param>
+            <param name="propertyName">属性名称。</param>
+            <returns>属性值，如果属性不存在则返回 null。</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.SetCellValue(NPOI.SS.UserModel.ICell,System.Object,NPOI.SS.UserModel.ICellStyle)">
+            <summary>
+            根据值的类型设置 Excel 单元格的值，并应用数据样式。
+            </summary>
+            <param name="cell">Excel 单元格。</param>
+            <param name="value">要设置的值。</param>
+            <param name="dataStyle">数据单元格样式。</param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetDescription(System.Enum)">
+            <summary>
+            从枚举中获取Description
+            </summary>
+            <param name="enumName">需要获取枚举描述的枚举</param>
+            <returns>描述内容</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetTableName``1">
+            <summary>
+            获取实体的表（或集合）名：
+            有 [SugarTable("xxx")] 就用 xxx，否则用 typeof(TEntity).Name
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetDescription(System.Type,System.Int32)">
+            <summary>
+            根据 value 值获取Description
+            </summary>
+            <param name="enumType"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetDescriptAttr(System.Reflection.FieldInfo)">
+            <summary>
+            获取字段Description
+            </summary>
+            <param name="fieldInfo">FieldInfo</param>
+            <returns>DescriptionAttribute[] </returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetEnumNamesList(System.Type)">
+            <summary>
+            获取枚举所有名称
+            </summary>
+            <param name="enumType">枚举类型typeof(T)</param>
+            <returns>枚举名称列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetEnumValuesList(System.Type)">
+            <summary>
+            获取所有枚举对应的值
+            </summary>
+            <param name="enumType">枚举类型typeof(T)</param>
+            <returns>枚举值列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetNameAndDescriptions(System.Type)">
+            <summary>
+            获取枚举名以及对应的Description
+            </summary>
+            <param name="type">枚举类型typeof(T)</param>
+            <returns>返回Dictionary  ,Key为枚举名，  Value为枚举对应的Description</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.EnumException.GetNameAndValue(System.Type)">
+            <summary>
+            获取枚举名以及对应的Value
+            </summary>
+            <param name="type">枚举类型typeof(T)</param>
+            <returns>返回Dictionary  ,Key为描述名，  Value为枚举对应的值</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HostingEnvironmentException.UseStaticHostEnviroment(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            扩展静态HOST事件
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.RegisteredServicesExtension.RegisteredServicesPage(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            查看服务列表
+            </summary>
+            <param name="app"></param>
+            <param name="services"></param>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ServiceCollectionExtension">
+            <summary>
+            容器的扩展
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ServiceCollectionExtension.AddEFAutoMigrate(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            自动迁移
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.RemoveDup(System.String[])">
+            <summary>
+            删除数组中的重复项
+            </summary>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.NewNo">
+            <summary>
+            自动生成编号 例： 201008251145409865
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.NewGuid">
+            <summary>
+            获得Guid，不包含-；例：ece4f4a60b764339b94a07c84e338a27
+            </summary> 
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.IsNullOrEmpty(System.String)">
+            <summary>
+             
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.IsNullOrWhiteSpace(System.String)">
+            <summary>
+             
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetInt(System.String)">
+            <summary>
+            string转化为int, false:返回 0
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetIntObject(System.String)">
+            <summary>
+            获取int类型 返回object
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetShortObject(System.String)">
+            <summary>
+            获取short类型返回object
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetBool(System.String,System.Boolean)">
+            <summary>
+            转换布尔
+            </summary>
+            <param name="value">判断的值</param>
+            <param name="defaultValue">默认值</param>
+            <remarks>侯湘岳</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetFloatObject(System.String)">
+            <summary>
+            获取Float类型返回Object类型
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetDoubleObject(System.String)">
+            <summary>
+            获取double类型返回object类型
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetDateTimeFormat(System.Nullable{System.DateTime},System.String)">
+            <summary>
+            将时间转换成字符串
+            </summary>
+            <param name="date"></param>
+            <param name="format"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.RoundCorrect(System.Double,System.Int32,System.Boolean)">
+            <summary>
+            保留小数位数
+            byte
+            </summary>
+            <param name="d">数值</param>
+            <param name="decimals">保留几位小数位数</param>
+            <param name="roundOff">是否四舍五入</param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetDateTimeFormat(System.Object,System.DateTime)">
+            <summary>
+            将datetime转化为string,格式为：yyyy-MM-dd
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.GetCurDayLastTime(System.DateTime)">
+            <summary>
+            获取当前天的最后时间
+            </summary>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetDateTimeFormat(System.Object,System.String,System.DateTime)">
+            <summary>
+            将datetime转化为string可以自定义格,格式类：DateTimeFormat
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetDecimalObject(System.String)">
+            <summary>
+            获取Decimal类型 
+            </summary>
+            <param name="value">输入值</param>
+            <returns>如果没有值返回null</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetFewWeeks(System.Object,System.DateTime,System.Int32)">
+            <summary>
+            获得第几周：0-当前日期是第几周。n-相隔N周是第几周
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetFewQuarter(System.Object,System.DateTime)">
+            <summary>
+            获得处于第几季：0-上季是第几季。n-相隔N季
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.TryGetDecodeStr(System.Object)">
+            <summary>
+            获取转码的文字信息
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.GetMd5(System.String)">
+            <summary>
+            进行MD5效验
+            </summary>
+            <param name="strmd5"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.EnUnicode(System.String)">
+            <summary>
+            Unicode编码(汉字转换为\uxxx)
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.DeUnicode(System.String)">
+            <summary>
+            Unicode解码（\uxxxx转换为汉字）
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.Fix``2(System.Func{System.Func{``0,``1},System.Func{``0,``1}})">
+            <summary>
+            递归 20201117 witt
+            </summary>
+            <typeparam name="T">入参对象</typeparam>
+            <typeparam name="TResult">返回对象</typeparam>
+            <param name="f"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.EncodeBase64(System.String,System.String)">
+            编码
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.DecodeBase64(System.String,System.String)">
+            解码
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.GetTimeStamp(System.Nullable{System.DateTime},System.String)">
+            <summary>
+            获取时间戳
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.ConvertTimeStampToDateTime(System.Int64,System.String)">
+            <summary>
+            转换时间戳为C#时间
+            </summary>
+            <param name="timeStamp">时间戳 单位：毫秒</param>
+            <returns>C#时间</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.GetRandomNum">
+            <summary>
+            获取6位数数字验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.GetRedisExpirationTime(System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            获取指定时间内的随机时间redis缓存过期 (秒) 默认：每晚1点到5点之间随机
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.GetRndString(System.Int32)">
+            <summary>
+            产生随机字符串，用于客户端随机命名
+            </summary>
+            <param name="len"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.UrlDecode(System.String)">
+            <summary>
+            url解码
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringExtension.UrlEncode(System.String)">
+            <summary>
+            url编码
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.HostingEnvironmentHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.HostingEnvironmentHelper._hostEnviroment">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HostingEnvironmentHelper.Configure(Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="hostEnviroment"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.#ctor(System.Net.Http.IHttpClientFactory,Highever.SocialMedia.Common.INLogger)">
+            <summary>
+            构造函数注入 IHttpClientFactory
+            </summary>
+            <param name="httpClientFactory">IHttpClientFactory 实例</param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.PostImageAsync(System.String,System.Byte[],System.String,System.String)">
+            <summary>
+            向目标地址提交图片文件参数数据
+            </summary>
+            <param name="requestUrl">请求地址</param>
+            <param name="bmpBytes">图片字节流</param>
+            <param name="imgType">上传图片类型</param>
+            <param name="fileName">图片名称</param>
+            <returns>服务器返回的响应内容</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.PostAsync(System.String,System.String)">
+            <summary>
+            发送 JSON 格式的 POST 请求
+            </summary>
+            <param name="url">请求地址</param>
+            <param name="postData">POST 数据（JSON 格式）</param>
+            <returns>响应结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.PostAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="url"></param>
+            <param name="postData"></param>
+            <param name="headers"></param>
+            <param name="mediaType"></param>
+            <param name="isLogrecord"></param>
+            <returns></returns>
+            <exception cref="T:System.Net.Http.HttpRequestException"></exception>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.GetAsync``1(System.String,System.Object,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
+            <summary> 
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.GetAsync``1(System.String)">
+            <summary>
+            发送 GET 请求并解析为泛型对象
+            </summary>
+            <typeparam name="T">响应数据的类型</typeparam>
+            <param name="url">请求地址</param>
+            <returns>反序列化后的响应对象</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.PutAsync(System.String,System.String)">
+            <summary>
+            发送 PUT 请求，提交 JSON 数据
+            </summary>
+            <param name="url">请求地址</param>
+            <param name="putData">PUT 数据（JSON 格式）</param>
+            <returns>响应结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.PutAsync``1(System.String,System.String)">
+            <summary>
+            发送 PUT 请求并解析为泛型对象
+            </summary>
+            <typeparam name="T">响应数据的类型</typeparam>
+            <param name="url">请求地址</param>
+            <param name="putData">PUT 数据（JSON 格式）</param>
+            <returns>反序列化后的响应对象</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.CreateJsonContent(System.String,System.Text.Encoding)">
+            <summary>
+            创建 JSON 格式的 HttpContent
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.IScopedDependency">
+            <summary>
+            注入标识
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ISingletonDependency">
+            <summary>
+            注入标识
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ITransientDependency">
+            <summary>
+            注入标识
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ServiceLocator">
+            <summary>
+            服务定位器
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.ServiceLocator._serviceProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.Error(System.String)">
+            <summary>
+            异常记录到文件
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.Error(System.Exception,System.String)">
+            <summary>
+            异常记录到文件
+            </summary>
+            <param name="exception"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.Info(System.String)">
+            <summary>
+            跟踪日志
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.ApiInfo(System.String)">
+            <summary>
+            API跟踪日志
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.ApiError(System.String)">
+            <summary>
+            API异常日志
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.ApiError(System.Exception,System.String)">
+            <summary>
+            API异常日志
+            </summary>
+            <param name="e"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.DebugError(System.String)">
+            <summary>
+            调试日志
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.DebugInfo(System.String)">
+            <summary>
+            调试日志
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.DateBaseError(System.String)">
+            <summary>
+            异常跟踪记录到数据库
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.DateBaseErrorByCode(System.Exception,System.String)">
+            <summary>
+            异常记录到数据库
+            </summary>
+            <param name="e"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.DateBaseErrorByCode(System.Exception,System.String)">
+            <summary>
+            异常记录到数据库（code）
+            </summary>
+            <param name="e"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.DateBaseError(System.String)">
+            <summary>
+            异常记录到数据库
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.Error(System.String)">
+            <summary>
+            异常记录到文件
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.Error(System.Exception,System.String)">
+            <summary>
+            异常记录到文件
+            </summary>
+            <param name="e"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.PackageErrorMsg(System.Exception,System.String@,System.String)">
+            <summary>
+            组装Error格式
+            </summary>
+            <param name="e"></param>
+            <param name="errorCode"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.Info(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.ApiInfo(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.AjaxResult`1">
+            <summary>
+            统一响应模型
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AjaxResult`1.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.Success">
+            <summary>
+            是否成功
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.HttpCode">
+            <summary>
+            状态码 
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.Msg">
+            <summary>
+            返回消息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.Data">
+            <summary>
+            返回数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.PageResult`1.Items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Model.ApiException">
+            <summary>封装非 2xx 时的详细信息</summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.UploadResult">
+            <summary>
+            上传响应模型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.UploadResult.code">
+            <summary>
+            code
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.UploadResult.Msg">
+            <summary>
+            结果
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.UploadResult.data">
+            <summary> 
+            图片地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.UploadResult.imgname">
+            <summary>
+            图片名称
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.StringHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.UnescapeJson(System.String)">
+            <summary>
+            递归去除 JSON 字符串的多重转义，并返回标准 JSON。
+            </summary>
+            <param name="input">需要处理的输入字符串</param>
+            <returns>去除转义后的标准 JSON 字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsWrappedWithQuotes(System.String)">
+            <summary>
+            判断输入是否被多重引号包装（即是否需要进一步去转义）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GenerateId(System.String,System.String,System.String)">
+            <summary>
+            根据三个字符串参数生成一个 16 位符号 + 数字组合的唯一 ID。
+            </summary>
+            <param name="param1">第一个字符串</param>
+            <param name="param2">第二个字符串</param>
+            <param name="param3">第三个字符串</param>
+            <returns>返回 16 位符号 + 数字的加密 ID</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.ExtractNumber``1(System.String)">
+            <summary>
+            从字符串中提取第一个有效的数字（整数或小数）。
+            </summary>
+            <typeparam name="T">返回的数值类型，可为 string, double, decimal 等。</typeparam>
+            <param name="input">包含数字的字符串。</param>
+            <returns>提取的数字，如果无法提取则返回默认值。</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GenerateBatchNumber(System.String,System.String)">
+            <summary>
+            批次号
+            </summary>
+            <param name="prefix"></param>
+            <param name="dateFormat"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.JsonStringsEqual(System.String,System.String)">
+            <summary>
+            对比两个字符串
+            LEMNA
+            </summary>
+            <param name="json1"></param>
+            <param name="json2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.JsonStringsEqual(System.Object,System.Object)">
+            <summary>
+            对比两个对象
+            LEMNA
+            </summary>
+            <param name="obj1"></param>
+            <param name="obj2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GenerateRandomString(System.Int32)">
+            <summary>
+            生成随机数
+            </summary>
+            <param name="length"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsValid(System.DateTime)">
+            <summary>
+            判断时间是否有效：小于2000年视为无效
+            </summary>
+            <param name="time"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsInDate(System.DateTime,System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary> 
+            判断某个日期是否在某段日期范围内，返回布尔值
+            </summary> 
+            <param name="dt">要判断的日期</param> 
+            <param name="dt1">开始日期</param> 
+            <param name="dt2">结束日期</param> 
+            <returns></returns>  
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.SplitList``1(System.Collections.Generic.List{``0},System.Int32,System.Int32)">
+            <summary>
+            List分页处理
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="_list"></param>
+            <param name="PageIndex"></param>
+            <param name="PageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.CheckStringIsNumberOrAbc(System.String)">
+            <summary>
+            检查字符串是否是纯数字和字母
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.decimalToPrice(System.Nullable{System.Decimal})">
+            <summary>
+            decimal金额 转为三位','分割 (1.保留两位 2.自动四舍五入)
+            </summary>
+            <param name="thisPrice"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.TimeToString(System.Nullable{System.DateTime},System.String,System.Boolean,System.String)">
+            <summary>
+            时间转字符串
+            </summary>
+            <param name="time">时间</param>
+            <param name="format">字符串格式 默认yyyy-MM-dd</param>
+            <param name="defaultValue">时间为空时，默认返回</param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IntToString(System.Nullable{System.Int32},System.String,System.Boolean,System.String)">
+            <summary>
+            整数值转字符串
+            </summary>
+            <param name="number">需要转换的值</param>
+            <param name="format">格式 默认无</param>
+            <param name="isThrow">若为空值 是否抛出异常，该值为true时，defaultValue无效</param>
+            <param name="defaultValue">若为空值，默认返回</param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.DecimalToString(System.Nullable{System.Decimal},System.String,System.Boolean,System.String)">
+            <summary>
+            （小）数值转字符串
+            </summary>
+            <param name="number">需要转换的值</param>
+            <param name="format">格式 默认无</param>
+            <param name="isThrow">若为空值 是否抛出异常，该值为true时，defaultValue无效</param>
+            <param name="defaultValue">若为空值，默认返回</param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.decimalToPrice(System.Decimal)">
+            <summary>
+            decimal金额 转为三位','分割 (1.保留两位 2.自动四舍五入)
+            </summary>
+            <param name="thisPrice"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.ToDate(System.Nullable{System.DateTime})">
+            <summary>
+            DATETIME?
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GetUnionNameByDate(System.Int32)">
+            <summary>
+            通过当前时间获取唯一名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.ToJsonSerializeObject(System.Object)">
+            <summary>
+            C# 序列化json不显示null的字段
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.ToDecimal2(System.Decimal)">
+            <summary>
+            保留小数点2位
+            </summary>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.ToMoneyText(System.Decimal)">
+            <summary>
+            金额阿拉伯数字转换为大写
+            </summary>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GetDaXie(System.Char)">
+            <summary>
+            获取大写信息
+            </summary>
+            <param name="c"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GetDateByStamp(System.Int64)">
+            <summary>
+            根据时间戳获取时间
+            </summary>
+            <param name="createTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsNullOrWhiteSpaceOr(System.Object[])">
+            <summary>
+            或判断  判断是否存在空(至少一个)
+            </summary>
+            <param name="paramArr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsNullOrWhiteSpaceAnd(System.Object[])">
+            <summary>
+            与判断  判断是否都为空
+            </summary>
+            <param name="paramArr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsContainsOr(System.String,System.String[])">
+            <summary>
+            是否包含  或判断
+            </summary>
+            <param name="origin"></param>
+            <param name="paramArr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsContainsAnd(System.String,System.String[])">
+            <summary>
+            是否包含  与判断
+            </summary>
+            <param name="origin"></param>
+            <param name="paramArr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.HandleSpecialSpace(System.String)">
+            <summary>
+            字符串 特殊字符串 ??? 的替换 ' '
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GetTitleLowerCase(System.String)">
+            <summary>
+            首字母转小写
+            </summary>
+            <param name="ptteType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GetTitleUpperCase(System.String)">
+            <summary>
+            首字母转大写
+            </summary>
+            <param name="ptteType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GZipCompressString(System.String)">
+            <summary>
+            将传入字符串以GZip算法压缩后，返回Base64编码字符
+            </summary>
+            <param name="rawString">需要压缩的字符串</param>
+            <returns>压缩后的Base64编码的字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.Compress(System.Byte[])">
+            <summary>
+            GZip压缩
+            </summary>
+            <param name="rawData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GZipDecompressString(System.String)">
+            <summary>
+            将传入的二进制字符串资料以GZip算法解压缩
+            </summary>
+            <param name="zippedString">经GZip压缩后的二进制字符串</param>
+            <returns>原始未压缩字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.Decompress(System.Byte[])">
+            <summary>
+            ZIP解压
+            </summary>
+            <param name="zippedData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.Decompress(System.IO.FileInfo)">
+            <summary>
+            将gzip文件转成json
+            </summary>
+            <param name="fileToDecompress"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GetHtmlWithUtf(System.String)">
+            <summary>
+            C#使用GZIP解压缩完整读取网页内容
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.HttpDownload(System.String)">
+            <summary>
+            url文件转流
+            </summary>
+            <param name="url">网页路径</param> 
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.GZipDeCompress(System.IO.Stream,System.IO.Stream)">
+            <summary>
+             GZip解压
+            </summary>
+            <param name="zipStream"></param>
+            <param name="outputStream"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.StreamToString(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            流转化成字符串
+            </summary>
+            <param name="stream">流</param>
+            <param name="encode"></param>
+            <returns>字符串</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Highever.SocialMedia.Common.StringHelper.String2Unicode(System.String)" -->
+        <member name="M:Highever.SocialMedia.Common.StringHelper.Unicode2String(System.String)">
+            <summary>
+            Unicode转字符串
+            </summary>
+            <param name="source">经过Unicode编码的字符串</param>
+            <returns>正常字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.StringHelper.IsAsin(System.String)">
+            <summary>
+            示例方法，判断字符串是否为ASIN
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

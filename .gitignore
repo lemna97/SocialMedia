@@ -1,0 +1,67 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider and VSCode settings
+.idea/
+.vscode/
+*.code-workspace
+.vs/
+
+# Visual Studio database files
+*.mdf
+*.ldf
+appsettings.Development.json
+appsettings.json
+
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Publish outputs
+publish/
+out/
+
+# NUGET packages
+*.nupkg
+**/packages/*
+*.snupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+# Uncomment if necessary however generally it should be given to the user as part of the repository
+#!**/[Pp]ackages/repositories.config
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# OS generated files
+.DS_Store
+*.swp
+*.bak
+*.tmp
+*.log
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# dotCover
+*.dotCover
+
+# local history for Visual Studio
+.localhistory/
+
+# web publish
+*.Publish.xml
+
+# Azure Stream Analytics local run output 
+ASALocalRun/

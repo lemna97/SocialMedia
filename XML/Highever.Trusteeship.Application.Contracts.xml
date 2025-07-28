@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Highever.SocialMedia.Application.Contracts</name>
+    </assembly>
+    <members>
+        <member name="T:Highever.SocialMedia.Application.Contracts.ICSVTestService">
+            <summary>
+            ICSVTestService 的应用服务接口
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IDistributionProductsAppService">
+            <summary>
+            DistributionProducts 的应用服务接口
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IJobSeekerService">
+            <summary>
+            IJobSeekerService 的应用服务接口
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IJobTitleService">
+            <summary>
+            IJobTitleService 的应用服务接口
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IProductPropertyRequestRecordService">
+            <summary>
+            DistributionProducts 的应用服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IProductPropertyRequestRecordService.CreateAsync(Highever.SocialMedia.Domain.Entity.ProductPropertyRequestRecord)">
+            <summary>
+            
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
