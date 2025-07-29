@@ -2,35 +2,40 @@
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain;
 using Highever.SocialMedia.Domain.Entity;
-using Highever.SocialMedia.SqlSugar;
+using Highever.SocialMedia.Domain.Repository;
 using NPOI.SS.Formula.Functions;
 using SQLBuilder.Core.Extensions;
 using System.Linq.Expressions;
 
-namespace Highever.SocialMedia.Application
+namespace Highever.SocialMedia.Application.Services
 {
     public class ProductPropertyRequestRecordService : IProductPropertyRequestRecordService
     {
-        public readonly ISqlSugarRepository<ProductPropertyRequestRecord> _repository;
+        private readonly IRepository<ProductPropertyRequestRecord> _repository;
 
-        public ProductPropertyRequestRecordService(ISqlSugarRepository<ProductPropertyRequestRecord> repository)
+        public ProductPropertyRequestRecordService(IRepository<ProductPropertyRequestRecord> repository)
         {
             _repository = repository;
         }
         public async Task<int> CreateAsync(ProductPropertyRequestRecord input)
         {
-            return await _repository.InsertEntityAsync(input);
+            return await _repository.InsertAsync(input);
         }
         public async Task<int> CreateAsync(List<ProductPropertyRequestRecord> input)
         {
-            return await _repository.BulkInsertAsync(input);
+            return await _repository.InsertRangeAsync(input);
         }  
         
         public async Task<int> DeleteAsync(List<ProductPropertyRequestRecord> input)
         {
-            return await _repository.BulkDeleteAsync(input);
+            return await _repository.DeleteRangeAsync(input);
         }
-        public async Task<int> DeleteAsync(Expression<Func<ProductPropertyRequestRecord, bool>>? predicate = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync(Expression<Func<ProductPropertyRequestRecord, bool>> predicate)
         {
             return await _repository.BulkDeleteAsync(predicate);
         }
@@ -39,7 +44,7 @@ namespace Highever.SocialMedia.Application
             return await _repository.BulkUpdateAsync(input);
         }
 
-        public async Task<List<ProductPropertyRequestRecord>> GetQueryListAsync(Expression<Func<ProductPropertyRequestRecord, bool>>? predicate = null)
+        public async Task<List<ProductPropertyRequestRecord>> GetQueryListAsync(Expression<Func<ProductPropertyRequestRecord, bool>> predicate)
         {
             return await _repository.QueryListAsync(predicate: predicate);
         }

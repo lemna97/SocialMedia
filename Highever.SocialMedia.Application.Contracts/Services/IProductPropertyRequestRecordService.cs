@@ -20,8 +20,8 @@ namespace Highever.SocialMedia.Application.Contracts
         public Task<int> CreateAsync(ProductPropertyRequestRecord input);
         public Task<int> CreateAsync(List<ProductPropertyRequestRecord> inputs); 
         Task<int> DeleteAsync(List<ProductPropertyRequestRecord> input);
-        Task<int> DeleteAsync(Expression<Func<ProductPropertyRequestRecord, bool>>? predicate = null);
-        Task<List<ProductPropertyRequestRecord>> GetQueryListAsync(Expression<Func<ProductPropertyRequestRecord, bool>>? predicate = null);
+        Task<int> DeleteAsync(Expression<Func<ProductPropertyRequestRecord, bool>> predicate);
+        Task<List<ProductPropertyRequestRecord>> GetQueryListAsync(Expression<Func<ProductPropertyRequestRecord, bool>> predicate);
         Task<int> UpdateAsync(List<ProductPropertyRequestRecord> input);
     }
 

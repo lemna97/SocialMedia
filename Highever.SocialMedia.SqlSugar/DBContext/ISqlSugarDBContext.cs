@@ -2,7 +2,7 @@
 
 namespace Highever.SocialMedia.SqlSugar
 {
-    public interface ISqlSugarDBContext
+    public interface ISqlSugarDBContext: IDisposable
     {
         public ISqlSugarClient Db { get; }
         public void BeginTran();

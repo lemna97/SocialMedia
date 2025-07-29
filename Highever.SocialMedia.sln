@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Highever.SocialMedia.MongoD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Highever.SocialMedia.OpenAI", "Highever.SocialMedia.OpenAI\Highever.SocialMedia.OpenAI.csproj", "{A7BB7A0D-570D-484C-B6AE-6927051A9D4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Highever.SocialMedia.Admin", "Highever.SocialMedia.Admin\Highever.SocialMedia.Admin.csproj", "{62382DCC-3B33-4860-B07F-AABB1819E136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Highever.SocialMedia.Admin", "Highever.SocialMedia.Admin\Highever.SocialMedia.Admin.csproj", "{62382DCC-3B33-4860-B07F-AABB1819E136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

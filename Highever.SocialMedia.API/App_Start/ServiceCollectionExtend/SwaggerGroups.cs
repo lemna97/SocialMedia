@@ -46,22 +46,22 @@ namespace Highever.SocialMedia.API
                 }
             });
 
-            // 添加默认分组："Default"
-            //if (!registeredGroups.Contains(Name)) // Name = "Default"
-            //{
-            //    c.SwaggerDoc(Name, new OpenApiInfo
-            //    {
-            //        Title = Title,
-            //        Version = "v1",
-            //        Description = "未分组的接口"
-            //    });
+            // 添加默认分组："Default" - 修复：取消注释并确保注册
+            if (!registeredGroups.Contains(Name))
+            {
+                c.SwaggerDoc(Name, new OpenApiInfo
+                {
+                    Title = Title,
+                    Version = "v1",
+                    Description = "未分组的接口"
+                });
 
-            //    c.AddServer(new OpenApiServer
-            //    {
-            //        Url = Url,
-            //        Description = UrlDescription
-            //    });
-            //}
+                c.AddServer(new OpenApiServer
+                {
+                    Url = Url,
+                    Description = UrlDescription
+                });
+            }
         }
         /// <summary>
         /// 

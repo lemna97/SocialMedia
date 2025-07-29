@@ -1,146 +1,161 @@
-﻿using Highever.SocialMedia.Common;
+﻿using Highever.SocialMedia.Domain.Repository;
 using SqlSugar;
 using System.Linq.Expressions;
 
 namespace Highever.SocialMedia.SqlSugar
 {
     /// <summary>
-    /// 扩展泛型方法
+    /// SqlSugar 仓储实现 - 实现通用接口
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class SqlSugarRepository<T> : SimpleClient<T>, ISqlSugarRepository<T> where T : class ,new()
+    public class SqlSugarRepository<T> : IRepository<T> where T : class, new()
     {
         private readonly ISqlSugarClient _db;
 
         public SqlSugarRepository(ISqlSugarDBContext dbContext)
         {
-            if (dbContext == null)
-                throw new ArgumentNullException(nameof(dbContext));
-
-            _db = dbContext.Db;
+            _db = dbContext?.Db ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        #region 扩展方法，批量方法，后续通用扩展方法
-
-        /// <summary>
-        /// 条件查询单个实体
-        /// </summary>
-        public async Task<T> QuerySingleAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetByIdAsync(object id)
         {
-            return await _db.Queryable<T>().Where(predicate).SingleAsync();
+            return await _db.Queryable<T>().InSingleAsync(id);
         }
 
-        /// <summary>
-        /// 条件查询列表
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="isAsc"></param>
-        /// <returns></returns>
-        public async Task<List<T>> QueryListAsync(
+        public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _db.Queryable<T>().Where(predicate).FirstAsync();
+        }
+
+        public async Task<List<T>> GetListAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            var query = _db.Queryable<T>();
+            if (predicate != null)
+                query = query.Where(predicate);
+            return await query.ToListAsync();
+        }
+
+        public async Task<PagedResult<T>> GetPagedListAsync(
             Expression<Func<T, bool>>? predicate = null,
+            int pageIndex = 1,
+            int pageSize = 20,
             Expression<Func<T, object>>? orderBy = null,
-            bool isAsc = true)
+            bool ascending = true)
         {
+            RefAsync<int> totalCount = 0;
             var query = _db.Queryable<T>();
 
             if (predicate != null)
                 query = query.Where(predicate);
 
             if (orderBy != null)
-                query = isAsc ? query.OrderBy(orderBy) : query.OrderBy(orderBy, OrderByType.Desc);
-
-            return await query.ToListAsync();
-        }
-
-        /// <summary>
-        /// 分页查询
-        /// </summary>
-        public async Task<PageResult<T>> QueryPageAsync(
-            Expression<Func<T, bool>> predicate,
-            int pageIndex,
-            int pageSize,
-            Expression<Func<T, object>> orderBy,
-            bool isAsc = true)
-        {
-            RefAsync<int> totalCount = 0;
-
-            var query = _db.Queryable<T>().Where(predicate);
-
-            query = isAsc ? query.OrderBy(orderBy) : query.OrderBy(orderBy, OrderByType.Desc);
+                query = ascending ? query.OrderBy(orderBy) : query.OrderBy(orderBy, OrderByType.Desc);
 
             var items = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
 
-            return new PageResult<T>
+            return new PagedResult<T>
             {
-                Total = totalCount.Value,
-                Items = items
+                Items = items,
+                TotalCount = totalCount.Value,
+                PageIndex = pageIndex,
+                PageSize = pageSize
             };
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public async Task<int> BulkInsertAsync(List<T> entities)
+
+        public async Task<int> InsertAsync(T entity)
         {
-            return await _db.Insertable(entities).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
-         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public async Task<int> BulkUpdateAsync(List<T> entities)
+
+        public async Task<int> InsertRangeAsync(IEnumerable<T> entities)
         {
-            return await _db.Updateable(entities).ExecuteCommandAsync();
+            return await _db.Insertable(entities.ToList()).ExecuteCommandAsync();
+        }
+
+        public async Task<int> UpdateAsync(T entity)
+        {
+            return await _db.Updateable(entity).ExecuteCommandAsync();
+        }
+
+        public async Task<int> UpdateRangeAsync(IEnumerable<T> entities)
+        {
+            return await _db.Updateable(entities.ToList()).ExecuteCommandAsync();
+        }
+
+        public async Task<int> DeleteAsync(T entity)
+        {
+            return await _db.Deleteable(entity).ExecuteCommandAsync();
+        }
+
+        public async Task<int> DeleteRangeAsync(IEnumerable<T> entities)
+        {
+            return await _db.Deleteable(entities.ToList()).ExecuteCommandAsync();
+        }
+
+        public async Task<int> DeleteAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _db.Deleteable(predicate).ExecuteCommandAsync();
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            var query = _db.Queryable<T>();
+            if (predicate != null)
+                query = query.Where(predicate);
+            return await query.CountAsync();
+        }
+
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _db.Queryable<T>().Where(predicate).AnyAsync();
+        }
+
+
+        #region 新增的批量操作方法实现
+
+        /// <summary>
+        /// 批量插入
+        /// </summary>
+        public async Task<int> BulkInsertAsync(IEnumerable<T> entities)
+        {
+            if (entities == null || !entities.Any())
+                return 0;
+
+            return await _db.Insertable(entities.ToList()).ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 
+        /// 批量更新
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> InsertEntityAsync(T entity)
+        public async Task<int> BulkUpdateAsync(IEnumerable<T> entities)
         {
-            return await base.InsertAsync(entity) ? 1 : 0;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="updateColumns"></param>
-        /// <returns></returns>
-        public async Task<bool> UpdatePartialAsync(T entity, params string[] updateColumns)
-        {
-            var result = await _db.Updateable(entity)
-                .UpdateColumns(updateColumns)
-                .ExecuteCommandAsync();
-            return result > 0;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public async Task<int> BulkDeleteAsync(List<T> entities)
-        {
-            return await _db.Deleteable(entities).ExecuteCommandAsync();
+            if (entities == null || !entities.Any())
+                return 0;
+
+            return await _db.Updateable(entities.ToList()).ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 
+        /// 批量删除（根据条件）
         /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public async Task<int> BulkDeleteAsync(Expression<Func<T, bool>>?  entities)
+        public async Task<int> BulkDeleteAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _db.Deleteable(entities).ExecuteCommandAsync();
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return await _db.Deleteable<T>().Where(predicate).ExecuteCommandAsync();
         }
 
+        /// <summary>
+        /// 查询列表（别名方法，与 GetListAsync 功能相同）
+        /// </summary>
+        public async Task<List<T>> QueryListAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            var query = _db.Queryable<T>();
+            if (predicate != null)
+                query = query.Where(predicate);
+            return await query.ToListAsync();
+        }
 
         #endregion
-
     }
-
 }

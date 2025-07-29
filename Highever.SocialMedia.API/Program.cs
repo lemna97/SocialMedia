@@ -15,48 +15,58 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     EnvironmentName = Environments.Development
 });
-//Body����У������
+
+// Body 参数校验过滤器
 builder.Services.AddControllers(options =>
 {
-    //ȫ��ģ���ֶι��������ѡ�SuppressModelStateInvalidFilter�����ó� True
+    // 全局模型字段过滤器，可选：SuppressModelStateInvalidFilter 设置成 True
     options.Filters.Add<ValidateInputAtrribute>();
 });
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    //���������ValidateInputAtrributeȫ��ģ���ֶ���֤���·��� ApiBehaviorOptions  �Զ���һ��Ҫ����
+    // 如果启用了 ValidateInputAtrribute 全局模型字段验证，则方法 ApiBehaviorOptions 自动验证一定要禁用
     options.SuppressModelStateInvalidFilter = true;
 });
-#region ͬ�� I/O
-//AllowSynchronousIO ����Ĭ��Kestrel�������Ƿ��������������Ӧʹ��ͬ�� I/O
-//builder.Services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true);
-//����IIS�������Ƿ��������������Ӧʹ��ͬ�� I/O
-//.Configure<IISOptions>(x => x.AllowSynchronousIO = true);
+
+#region 同步 I/O 配置
+// AllowSynchronousIO 配置默认Kestrel服务器是否允许请求和响应使用同步 I/O
+// builder.Services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true);
+// 配置IIS服务器是否允许请求和响应使用同步 I/O
+// .Configure<IISOptions>(x => x.AllowSynchronousIO = true);
 #endregion 
-//����HTTP������
+
+// 配置HTTP上下文访问器
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
-//����ȫ��ѡ��
+
+// 配置全局选项
 builder.Services.AddOptions();
-#region  �ڴ滺�� / Session ���
-//�����ڴ滺��
+
+#region 内存缓存 / Session 配置
+// 配置内存缓存
 builder.Services.AddMemoryCache();
-//����session
+
+// 配置session
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "lemna.api.cookie";
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-    options.IdleTimeout = TimeSpan.FromMinutes(30); //Ĭ����20����
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // 默认是20分钟
 });
-//�����ڴ滺��洢session(ֻ�ʺϵ���ܹ�) 
+
+// 配置内存缓存存储session(只适合单机构) 
 builder.Services.AddDistributedMemoryCache();
 #endregion
-#region UI
+
+#region UI 配置
 builder.Services.AddSwaggerGen(c =>
 {
-    // ʹ�� GetSwaggerGroups ����ÿ������
+    // 使用 GetSwaggerGroups 配置每个分组
     c.ConfigureSwaggerGroups();
-    // �жϽӿڹ����ĸ�����
+    
+    // 判断接口归属哪个分组
     c.DocInclusionPredicate((docName, apiDescription) =>
     {
         if (docName == SwaggerGroups.Name)
@@ -66,117 +76,132 @@ builder.Services.AddSwaggerGen(c =>
         }
         return apiDescription.GroupName == docName;
     });
-    // ����ӿ���ͬ�����
+    
+    // 配置接口唯一标识符
     c.CustomOperationIds(apiDesc =>
     {
         var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
         var parameters = string.Join("-", apiDesc.ParameterDescriptions.Select(p => p.Name));
         return $"{controllerAction.ControllerName}-{controllerAction.ActionName}-{parameters}";
     });
-    // ��ȡ XML �ļ�·�������ݿ����ͷ���������
+    
+    // 获取 XML 文件路径，配置数据库实体和方法的注释
     var projectRoot = Directory.GetCurrentDirectory();
     var xmlPath = Path.Combine(projectRoot);
 #if DEBUG
-    // ������������ȡ�ϼ����Ŀ¼ 
-    projectRoot = Path.Combine(Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.Parent.Parent.FullName);// ���������ĸ�Ŀ¼ 
+    // 开发环境下获取上级项目目录 
+    projectRoot = Path.Combine(Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.Parent.Parent.FullName);
     xmlPath = Path.Combine(projectRoot, "XML");
 #endif
-    // �������� XML �ĵ�
+    
+    // 包含所有 XML 文档
     c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.API.xml"));
     c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.Application.Contracts.xml"));
     c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.Domain.xml"));
     c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.Common.xml"));
+    
     c.SchemaFilter<EnumSchemaFilter>();
-    //�Զ��� Authorization ����
+    // 自定义 Authorization 参数
     c.OperationFilter<AuthorizationParameterFilter>();
-    //�Զ��� ��������
+    // 自定义 隐藏接口
     c.DocumentFilter<HiddenApiFilter>();
-    // ע���Զ����Ĭ�Ϸ���������
+    // 注册自定义默认方法操作过滤器
     c.OperationFilter<AutoHttpMethodOperationFilter>();
 });
 #endregion 
-#region Nlog 
-builder.Logging.ClearProviders();//ɾ����������������־������
-builder.Logging.SetMinimumLevel(LogLevel.Trace);//ָ������
+
+#region Nlog 日志配置
+builder.Logging.ClearProviders(); // 删除所有已经注册的日志处理程序
+builder.Logging.SetMinimumLevel(LogLevel.Trace); // 指定日志级别
 builder.Host.UseNLog();
-//���ӿ���̨��־
+// 添加控制台日志
 builder.Logging.AddConsole();
 #endregion
-#region ����ע��
+
+#region 依赖注入
 builder.Services.Register();
 #endregion 
-#region ����TextJson
+
+#region 配置 TextJson 序列化
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    //��ʽ������ʱ���ʽ
+    // 格式化日期时间格式
     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonExtension.DatetimeJsonConverter());
-    //����ѭ������
+    // 忽略循环引用
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    //��ʽ�����
+    // 格式化缩进
     options.JsonSerializerOptions.WriteIndented = true;
-    //���ݸ�ʽ����ĸСд
+    // 数据格式首字母小写
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    //ȡ��Unicode����
+    // 取消Unicode编码
     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-    //���ݸ�ʽԭ�����
-    //options.JsonSerializerOptions.PropertyNamingPolicy = null;
-    //���Կ�ֵ
-    //options.JsonSerializerOptions.IgnoreNullValues = false;
-    //�����������(������ָ����ĩβ�Ķ��ţ������л�ʱ����ע�ͻ򶺺ţ����׳��쳣������������AllowTrailingCommas������Ĭ��Ϊfalse��)
-    //options.JsonSerializerOptions.AllowTrailingCommas = false;
-    //�����л����������������Ƿ�ʹ�ò����ִ�Сд�ıȽ�
-    //options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
-    options.JsonSerializerOptions.Converters.Add(new LongToStringConverter()); // �Զ��� long ת string Converter
-    //���н��յ����ֶζ��ᱻ����Ϊ string ���ͣ�����ǰ�˷��͵������ֻ��ǲ���ֵ
-    //options.JsonSerializerOptions.Converters.Add(new StringJsonConverter());
+    // 数据格式原样输出
+    // options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    // 忽略空值
+    // options.JsonSerializerOptions.IgnoreNullValues = false;
+    // 允许尾随逗号(允许在指定对象末尾的逗号，在序列化时忽略注释或逗号，如果抛出异常，可以设置AllowTrailingCommas属性，默认为false）
+    // options.JsonSerializerOptions.AllowTrailingCommas = false;
+    // 反序列化过程中属性名称是否使用不区分大小写的比较
+    // options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+    options.JsonSerializerOptions.Converters.Add(new LongToStringConverter()); // 自定义 long 转 string Converter
+    // 所有接收的数字字段都会被解析为 string 类型，这样前端发送的数字只要是参数值
+    // options.JsonSerializerOptions.Converters.Add(new StringJsonConverter());
 });
 #endregion
 
-#region ���� CORS ����
+#region 配置 CORS 跨域
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:8068", "https://example.com", "http://127.0.0.1", "http://erpauth.amz-marketing.com:10001") // ��������Դ
-              .AllowAnyMethod() // �������� HTTP ���� (GET, POST, PUT, DELETE ��)
-              .AllowAnyHeader() // ������������ͷ
-              .AllowCredentials(); // �����Ҫ֧�ִ�ƾ�ݵ����� (�� Cookies �� Authorization Header)
+        policy.WithOrigins("http://localhost:8068", "https://example.com", "http://127.0.0.1", "http://erpauth.amz-marketing.com:10001") // 允许特定源
+              .AllowAnyMethod() // 允许所有 HTTP 方法 (GET, POST, PUT, DELETE 等)
+              .AllowAnyHeader() // 允许所有请求头
+              .AllowCredentials(); // 如果需要支持传递凭据的请求 (如 Cookies 或 Authorization Header)
     });
-    // ���Ҫ����������Դ������ȫ�������ڿ���ʱ��
+    // 如果需要允许所有源，可以在开发时使用
     // options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 #endregion
 
-
-//ָ���˿ں�
+// 指定端口号
 builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("HOST_PORT")}").UseIIS();
+
 var app = builder.Build();
-//�쳣���ܵ���ʼ�ĵ�һ���м�������룩
+
+// 异常处理（放在最开始的第一个中间件里面）
 app.UseCustomExceptionHandler();
-//����λ��
+
+// 服务定位器
 ServiceLocator.SetLocatorProvider(app.Services);
-//DI�����ķ����б�
+
+// DI容器中的服务列表
 app.RegisteredServicesPage(builder.Services);
-//���ؾ�̬��Դ
+
+// 加载静态资源
 app.UseStaticFiles();
-//����·�� 
+
+// 配置路由 
 app.UseRouting();
-// ʹ�� CORS �����м��
+
+// 使用 CORS 跨域中间件
 app.UseCors("AllowSpecificOrigins");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.ConfigureKnife4UI();
 }
-//CSP����
+
+// CSP 内容安全策略配置
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' http://erpauth.amz-marketing.com:10001;");
     await next();
 });
-app.UseAuthorization();
 
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

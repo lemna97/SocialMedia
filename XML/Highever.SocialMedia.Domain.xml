@@ -487,5 +487,15 @@
             强制初始化主键
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Domain.Repository.IRepository`1">
+            <summary>
+            通用仓储接口 - 不依赖任何 ORM
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Repository.PagedResult`1">
+            <summary>
+            分页结果 - 不依赖任何 ORM
+            </summary>
+        </member>
     </members>
 </doc>

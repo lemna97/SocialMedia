@@ -1,17 +1,16 @@
 ﻿using Highever.SocialMedia.Application.Contracts;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain;
-using Highever.SocialMedia.SqlSugar;
-using NPOI.SS.Formula.Functions;
+using Highever.SocialMedia.Domain.Repository;
 using System.Linq.Expressions;
 
 namespace Highever.SocialMedia.Application
 {
     public class DistributionProductsAppService : IDistributionProductsAppService
     {
-        public readonly ISqlSugarRepository<DistributionProducts> _repository;
+        private readonly IRepository<DistributionProducts> _repository;
 
-        public DistributionProductsAppService(ISqlSugarRepository<DistributionProducts> repository)
+        public DistributionProductsAppService(IRepository<DistributionProducts> repository)
         {
             _repository = repository;
         }
@@ -24,32 +23,31 @@ namespace Highever.SocialMedia.Application
                 input.FreeShippingPrice,
                 input.StockQuantity
             );
-            await _repository.InsertEntityAsync(product);
+            await _repository.InsertAsync(product);
             return product.Id;
         }
         public async Task<int> CreateAsync(DistributionProducts input)
         { 
-          return  await _repository.InsertEntityAsync(input); 
+            return await _repository.InsertAsync(input);
         }
         /// <summary>
-        /// 
+        /// 获取产品列表
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <param name="predicate">查询条件</param>
+        /// <returns>产品列表</returns>
         public async Task<List<DistributionProducts>> GetQueryListAsync(Expression<Func<DistributionProducts, bool>>? predicate = null)
         {
-            return await _repository.QueryListAsync(predicate: predicate);
+            return await _repository.GetListAsync(predicate: predicate);
         }
 
         /// <summary>
-        /// 
+        /// 根据ID获取产品
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="id">产品ID</param>
+        /// <returns>产品DTO</returns>
         public async Task<DistributionProductDto> GetByIdAsync(int id)
         {
-            var product = await _repository.QuerySingleAsync(t => t.Id == id);
+            var product = await _repository.FirstOrDefaultAsync(t => t.Id == id);
 
             if (product == null)
             {

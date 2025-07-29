@@ -35,7 +35,7 @@ namespace Highever.SocialMedia.API.Controllers
         [HttpGet]
         [Route("FetchAsync")]
         public async Task<IActionResult> FetchAsync()
-        {
+        { 
             string html = await AgencyHttpHelper.FetchAsync("https://www.tiktok.com/@get.whit.it");
             Console.WriteLine(html);
             return Ok();
@@ -49,7 +49,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// GET /api/TikHubTest/search?keyword=pubg
         /// </remarks>  
         [HttpGet]
-        [Route("tk_search")] 
+        [Route("tk_search")]
         public async Task<IActionResult> SearchAsync(
             [FromQuery] string keyword, CancellationToken ct)
         {
@@ -62,7 +62,7 @@ namespace Highever.SocialMedia.API.Controllers
             var headers = new Dictionary<string, string> { ["Authorization"] = token };
 
             var resp = await _httpClientHelper.GetAsync<TkApiResponse>(url, query, headers, ct);
-            return Ok(resp); 
+            return Ok(resp);
         }
         /// <summary>
         /// 

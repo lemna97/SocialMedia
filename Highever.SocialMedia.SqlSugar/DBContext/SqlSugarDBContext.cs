@@ -14,40 +14,41 @@ namespace Highever.SocialMedia.SqlSugar
 
             _db = new SqlSugarScope(new ConnectionConfig
             {
-                //主库
                 ConnectionString = masterConnectionString,
                 DbType = DbType.MySql,
-                //是否自动关闭链接
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {
-                      // 内存缓存
+                    // 添加内存缓存配置
                 },
                 MoreSettings = new ConnMoreSettings
                 {
-                    IsWithNoLockQuery = true // 默认查询加 NOLOCK
+                    IsWithNoLockQuery = true, 
+                    IsAutoRemoveDataCache = true
                 },
                 SlaveConnectionConfigs = slaveConnections
             },
-             db =>
-             {
-                 // 所有读写操作都走主库true
-                 db.Ado.IsDisableMasterSlaveSeparation = false; 
-
-                 // SQL 日志记录
-                 db.Aop.OnLogExecuting = (sql, pars) =>
-                 {
-                     Console.WriteLine($"SQL: {sql}");
-                 };
-                 // 替换日志记录方式
-                 db.Aop.OnLogExecuting = (sql, pars) =>
-                 {
-                     _nLogger.Info($"SQL: {sql}");
-                 };
-                 // 实体映射：固定表明配置
-                 db.MappingTables.Add("YourEntity", $"YourEntity_2023");
-             });
-        } 
+            db =>
+            {
+                db.Ado.IsDisableMasterSlaveSeparation = false;
+                
+                // 优化日志记录
+                db.Aop.OnLogExecuting = (sql, pars) =>
+                {
+                    _nLogger.Info($"SQL: {sql}, Parameters: {string.Join(",", pars?.Select(p => $"{p.ParameterName}={p.Value}") ?? new string[0])}");
+                };
+                
+                // 添加错误处理
+                db.Aop.OnError = (exp) =>
+                {
+                    _nLogger.Error($"SQL Error: {exp.Message}");
+                };
+            });
+        }
+        public void Dispose()
+        {
+            _db?.Dispose();
+        }
         public ISqlSugarClient Db => _db;
 
         #region Transaction 
