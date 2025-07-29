@@ -5,9 +5,6 @@ using Highever.SocialMedia.Common.Model;
 using Highever.SocialMedia.Domain;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-using static System.Net.WebRequestMethods;
 
 namespace Highever.SocialMedia.API.Controllers
 {

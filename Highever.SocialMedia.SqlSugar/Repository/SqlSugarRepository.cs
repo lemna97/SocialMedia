@@ -65,6 +65,10 @@ namespace Highever.SocialMedia.SqlSugar
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
+        public long InsertById(T entity)
+        {
+            return _db.Insertable(entity).ExecuteReturnSnowflakeId();
+        }
 
         public async Task<int> InsertRangeAsync(IEnumerable<T> entities)
         {

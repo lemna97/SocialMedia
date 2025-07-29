@@ -4,6 +4,26 @@
         <name>Highever.SocialMedia.Domain</name>
     </assembly>
     <members>
+        <member name="T:Highever.SocialMedia.Domain.Entity.BaseEntity">
+            <summary>
+            实体基类
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.BaseEntity.Id">
+            <summary>
+            主键ID（雪花ID）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.BaseEntity.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.BaseEntity.UpdatedAt">
+            <summary>
+            修改时间
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Domain.Entity.CSVTest">
             <summary>
             对应MongoDB的CSVTest集合
@@ -289,6 +309,181 @@
             返回的消息
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.MenuPerms">
+            <summary>
+            角色菜单关联表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.MenuPerms.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.MenuPerms.MenuId">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.Menus">
+            <summary>
+            菜单表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.ParentId">
+            <summary>
+            父级菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.Code">
+            <summary>
+            菜单代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.Url">
+            <summary>
+            菜单URL
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.Icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.Permissions">
+            <summary>
+            权限表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Permissions.ResourceId">
+            <summary>
+            资源ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Permissions.Operation">
+            <summary>
+            操作类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Permissions.PermCode">
+            <summary>
+            权限代码
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.Resources">
+            <summary>
+            资源表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Resources.Name">
+            <summary>
+            表名/接口标识
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Resources.DisplayName">
+            <summary>
+            资源显示名称
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.RolePerms">
+            <summary>
+            角色权限关联表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.RolePerms.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.RolePerms.PermId">
+            <summary>
+            权限ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.RolePerms.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.Roles">
+            <summary>
+            角色表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Roles.Code">
+            <summary>
+            角色代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Roles.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Roles.IsSys">
+            <summary>
+            是否系统内置角色
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.UserRoles">
+            <summary>
+            用户角色关联表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserRoles.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserRoles.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserRoles.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.Users">
+            <summary>
+            用户账号信息表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Users.Account">
+            <summary>
+            账号
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Users.PasswordHash">
+            <summary>
+            密码哈希
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Users.DisplayName">
+            <summary>
+            显示名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Users.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Domain.DistributionProducts">
             <summary>
             货源信息
@@ -496,6 +691,59 @@
             <summary>
             分页结果 - 不依赖任何 ORM
             </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Repository.IMenusRepository">
+            <summary>
+            菜单仓储接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.AddAsync(Highever.SocialMedia.Domain.Entity.Menus)">
+            <summary>
+            添加菜单
+            </summary>
+            <param name="entity">菜单实体</param>
+            <returns>添加结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.UpdateAsync(Highever.SocialMedia.Domain.Entity.Menus)">
+            <summary>
+            更新菜单
+            </summary>
+            <param name="entity">菜单实体</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.DeleteAsync(System.Int64)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="id">菜单ID</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.GetByIdAsync(System.Int64)">
+            <summary>
+            根据ID获取菜单
+            </summary>
+            <param name="id">菜单ID</param>
+            <returns>菜单信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Menus,System.Boolean}})">
+            <summary>
+            根据条件查询单个菜单
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>菜单信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.GetAllAsync">
+            <summary>
+            获取所有菜单
+            </summary>
+            <returns>菜单列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.GetListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Menus,System.Boolean}})">
+            <summary>
+            根据条件查询菜单列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>菜单列表</returns>
         </member>
     </members>
 </doc>

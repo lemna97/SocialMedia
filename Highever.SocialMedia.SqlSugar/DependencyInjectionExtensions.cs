@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
 using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Domain.Repository;
 
 namespace Highever.SocialMedia.SqlSugar
 {
@@ -49,14 +50,16 @@ namespace Highever.SocialMedia.SqlSugar
                 
                 return new SqlSugarDBContext(masterConnectionString, slaveConnections, logger);
             });
-            
-            // 注册 ISqlSugarClient（可选，用于直接注入）
-            services.AddScoped<ISqlSugarClient>(provider =>
+             
+            // 注册 ISqlSugarClient
+            services.AddScoped(provider =>
             {
                 var context = provider.GetRequiredService<ISqlSugarDBContext>();
                 return context.Db;
             });
-            
+
+            services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
+
             return services;
         }
     }

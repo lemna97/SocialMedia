@@ -1,11 +1,9 @@
 ﻿using Highever.SocialMedia.Application;
 using Highever.SocialMedia.Common;
-using Highever.SocialMedia.SqlSugar;
 using Highever.SocialMedia.MongoDB;
-using Highever.SocialMedia.OpenAI;
-using SqlSugar;
+using Highever.SocialMedia.SqlSugar;
 
-namespace Highever.SocialMedia.API
+namespace Highever.SocialMedia.Admin
 {
     /// <summary>
     /// 可以使用 scrutor 进行批量注入，更简单方便
@@ -31,7 +29,9 @@ namespace Highever.SocialMedia.API
             services.AddSingleton(new AppSettingConifgHelper(configuration)); 
             //日志注入
             services.AddScoped<INLogger, NLogAdapter>();
-            //注入ORM  
+            //注入ORM
+            services.AddSqlSugar();
+            //MongoDB服务
             services.AddMongoDB();  
             //AI
             services.AddChatGPT();

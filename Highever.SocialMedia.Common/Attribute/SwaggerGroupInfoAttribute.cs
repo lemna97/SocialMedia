@@ -27,23 +27,5 @@ namespace Highever.SocialMedia.Common
         /// 地址描述
         /// </summary>
         public string UrlDescription { get; set; }
-    }
-    /// <summary>
-    /// 分组接口特性
-    /// </summary>
-    public class ApiGroupAttribute : System.Attribute, IApiDescriptionGroupNameProvider
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        public ApiGroupAttribute(SwaggerApiGroup name)
-        {
-            GroupName = name.ToString();
-        }
-        /// <summary>
-        /// 分组名称
-        /// </summary>
-        public string GroupName { get; set; }
-    }
+    } 
 }

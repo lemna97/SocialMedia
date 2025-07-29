@@ -36,5 +36,587 @@
             <param name="input"></param>
             <returns></returns>
         </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService">
+            <summary>
+            角色菜单关联服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.CreateAsync(Highever.SocialMedia.Domain.Entity.MenuPerms)">
+            <summary>
+            创建角色菜单关联
+            </summary>
+            <param name="input">关联信息</param>
+            <returns>创建结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.MenuPerms})">
+            <summary>
+            批量创建角色菜单关联
+            </summary>
+            <param name="input">关联信息列表</param>
+            <returns>创建结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.MenuPerms,System.Boolean}})">
+            <summary>
+            删除角色菜单关联
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.MenuPerms,System.Boolean}})">
+            <summary>
+            查询单个角色菜单关联
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>关联信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.MenuPerms,System.Boolean}})">
+            <summary>
+            查询角色菜单关联列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>关联列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.GetMenusByRoleIdAsync(System.Int64)">
+            <summary>
+            根据角色ID获取菜单列表
+            </summary>
+            <param name="roleId">角色ID</param>
+            <returns>菜单列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.AssignMenusToRoleAsync(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            为角色分配菜单
+            </summary>
+            <param name="roleId">角色ID</param>
+            <param name="menuIds">菜单ID列表</param>
+            <returns>分配结果</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Services.IMenusService">
+            <summary>
+            菜单服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.AddAsync(Highever.SocialMedia.Domain.Entity.Menus)">
+            <summary>
+            添加菜单
+            </summary>
+            <param name="entity">菜单实体</param>
+            <returns>添加结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.UpdateAsync(Highever.SocialMedia.Domain.Entity.Menus)">
+            <summary>
+            更新菜单
+            </summary>
+            <param name="entity">菜单实体</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.DeleteAsync(System.Int64)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="id">菜单ID</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetByIdAsync(System.Int64)">
+            <summary>
+            根据ID获取菜单
+            </summary>
+            <param name="id">菜单ID</param>
+            <returns>菜单信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Menus,System.Boolean}})">
+            <summary>
+            根据条件查询单个菜单
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>菜单信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetAllAsync">
+            <summary>
+            获取所有菜单
+            </summary>
+            <returns>菜单列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Menus,System.Boolean}})">
+            <summary>
+            根据条件查询菜单列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>菜单列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetMenuTreeAsync">
+            <summary>
+            获取菜单树结构
+            </summary>
+            <returns>菜单树</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IPermissionsService">
+            <summary>
+            权限管理服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.CreateAsync(Highever.SocialMedia.Domain.Entity.Permissions)">
+            <summary>
+            创建权限
+            </summary>
+            <param name="input">权限信息</param>
+            <returns>权限ID</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Permissions})">
+            <summary>
+            批量创建权限
+            </summary>
+            <param name="input">权限列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.UpdateAsync(Highever.SocialMedia.Domain.Entity.Permissions)">
+            <summary>
+            更新权限信息
+            </summary>
+            <param name="input">权限信息</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.UpdateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Permissions})">
+            <summary>
+            批量更新权限
+            </summary>
+            <param name="input">权限列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Permissions,System.Boolean}})">
+            <summary>
+            删除权限
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.GetByIdAsync(System.Int32)">
+            <summary>
+            根据ID获取权限
+            </summary>
+            <param name="id">权限ID</param>
+            <returns>权限信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Permissions,System.Boolean}})">
+            <summary>
+            根据条件查询单个权限
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>权限信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Permissions,System.Boolean}})">
+            <summary>
+            查询权限列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>权限列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.GetPagedListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Permissions,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Permissions,System.Object}},System.Boolean)">
+            <summary>
+            分页查询权限
+            </summary>
+            <param name="predicate">查询条件</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderBy">排序字段</param>
+            <param name="ascending">是否升序</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.CountAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Permissions,System.Boolean}})">
+            <summary>
+            统计权限数量
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>权限数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IPermissionsService.ExistsAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Permissions,System.Boolean}})">
+            <summary>
+            检查权限是否存在
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IResourcesService">
+            <summary>
+            资源管理服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.CreateAsync(Highever.SocialMedia.Domain.Entity.Resources)">
+            <summary>
+            创建资源
+            </summary>
+            <param name="input">资源信息</param>
+            <returns>资源ID</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Resources})">
+            <summary>
+            批量创建资源
+            </summary>
+            <param name="input">资源列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.UpdateAsync(Highever.SocialMedia.Domain.Entity.Resources)">
+            <summary>
+            更新资源信息
+            </summary>
+            <param name="input">资源信息</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.UpdateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Resources})">
+            <summary>
+            批量更新资源
+            </summary>
+            <param name="input">资源列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Resources,System.Boolean}})">
+            <summary>
+            删除资源
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.GetByIdAsync(System.Int32)">
+            <summary>
+            根据ID获取资源
+            </summary>
+            <param name="id">资源ID</param>
+            <returns>资源信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Resources,System.Boolean}})">
+            <summary>
+            根据条件查询单个资源
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>资源信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Resources,System.Boolean}})">
+            <summary>
+            查询资源列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>资源列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.GetPagedListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Resources,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Resources,System.Object}},System.Boolean)">
+            <summary>
+            分页查询资源
+            </summary>
+            <param name="predicate">查询条件</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderBy">排序字段</param>
+            <param name="ascending">是否升序</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.CountAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Resources,System.Boolean}})">
+            <summary>
+            统计资源数量
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>资源数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IResourcesService.ExistsAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Resources,System.Boolean}})">
+            <summary>
+            检查资源是否存在
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IRolePermsService">
+            <summary>
+            角色权限关联服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.CreateAsync(Highever.SocialMedia.Domain.Entity.RolePerms)">
+            <summary>
+            创建角色权限关联
+            </summary>
+            <param name="input">角色权限关联信息</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.RolePerms})">
+            <summary>
+            批量创建角色权限关联
+            </summary>
+            <param name="input">角色权限关联列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.RolePerms,System.Boolean}})">
+            <summary>
+            删除角色权限关联
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.RolePerms,System.Boolean}})">
+            <summary>
+            根据条件查询单个角色权限关联
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>角色权限关联信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.RolePerms,System.Boolean}})">
+            <summary>
+            查询角色权限关联列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>角色权限关联列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.GetPermissionsByRoleIdAsync(System.Int32)">
+            <summary>
+            根据角色ID获取权限列表
+            </summary>
+            <param name="roleId">角色ID</param>
+            <returns>权限列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.GetRolesByPermIdAsync(System.Int32)">
+            <summary>
+            根据权限ID获取角色列表
+            </summary>
+            <param name="permId">权限ID</param>
+            <returns>角色列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolePermsService.HasPermissionAsync(System.Int32,System.Int32)">
+            <summary>
+            检查角色是否拥有指定权限
+            </summary>
+            <param name="roleId">角色ID</param>
+            <param name="permId">权限ID</param>
+            <returns>是否拥有权限</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IRolesService">
+            <summary>
+            角色管理服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.CreateAsync(Highever.SocialMedia.Domain.Entity.Roles)">
+            <summary>
+            创建角色
+            </summary>
+            <param name="input">角色信息</param>
+            <returns>角色ID</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Roles})">
+            <summary>
+            批量创建角色
+            </summary>
+            <param name="input">角色列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.UpdateAsync(Highever.SocialMedia.Domain.Entity.Roles)">
+            <summary>
+            更新角色信息
+            </summary>
+            <param name="input">角色信息</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.UpdateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Roles})">
+            <summary>
+            批量更新角色
+            </summary>
+            <param name="input">角色列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+            <summary>
+            删除角色
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetByIdAsync(System.Int32)">
+            <summary>
+            根据ID获取角色
+            </summary>
+            <param name="id">角色ID</param>
+            <returns>角色信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+            <summary>
+            根据条件查询单个角色
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>角色信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+            <summary>
+            查询角色列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>角色列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetPagedListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Object}},System.Boolean)">
+            <summary>
+            分页查询角色
+            </summary>
+            <param name="predicate">查询条件</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderBy">排序字段</param>
+            <param name="ascending">是否升序</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.CountAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+            <summary>
+            统计角色数量
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>角色数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.ExistsAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+            <summary>
+            检查角色是否存在
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IUserRolesService">
+            <summary>
+            用户角色关联服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.CreateAsync(Highever.SocialMedia.Domain.Entity.UserRoles)">
+            <summary>
+            创建用户角色关联
+            </summary>
+            <param name="input">用户角色关联信息</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.UserRoles})">
+            <summary>
+            批量创建用户角色关联
+            </summary>
+            <param name="input">用户角色关联列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.UserRoles,System.Boolean}})">
+            <summary>
+            删除用户角色关联
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.UserRoles,System.Boolean}})">
+            <summary>
+            根据条件查询单个用户角色关联
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>用户角色关联信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.UserRoles,System.Boolean}})">
+            <summary>
+            查询用户角色关联列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>用户角色关联列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.GetRolesByUserIdAsync(System.Int32)">
+            <summary>
+            根据用户ID获取角色列表
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>角色列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.GetUsersByRoleIdAsync(System.Int32)">
+            <summary>
+            根据角色ID获取用户列表
+            </summary>
+            <param name="roleId">角色ID</param>
+            <returns>用户列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUserRolesService.HasRoleAsync(System.Int32,System.Int32)">
+            <summary>
+            检查用户是否拥有指定角色
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="roleId">角色ID</param>
+            <returns>是否拥有角色</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.IUsersService">
+            <summary>
+            用户管理服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.CreateAsync(Highever.SocialMedia.Domain.Entity.Users)">
+            <summary>
+            创建用户
+            </summary>
+            <param name="input">用户信息</param>
+            <returns>用户ID</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Users})">
+            <summary>
+            批量创建用户
+            </summary>
+            <param name="input">用户列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.UpdateAsync(Highever.SocialMedia.Domain.Entity.Users)">
+            <summary>
+            更新用户信息
+            </summary>
+            <param name="input">用户信息</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.UpdateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Users})">
+            <summary>
+            批量更新用户
+            </summary>
+            <param name="input">用户列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            删除用户
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.GetByIdAsync(System.Int32)">
+            <summary>
+            根据ID获取用户
+            </summary>
+            <param name="id">用户ID</param>
+            <returns>用户信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            根据条件查询单个用户
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>用户信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            查询用户列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>用户列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.GetPagedListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Object}},System.Boolean)">
+            <summary>
+            分页查询用户
+            </summary>
+            <param name="predicate">查询条件</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderBy">排序字段</param>
+            <param name="ascending">是否升序</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.CountAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            统计用户数量
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>用户数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.ExistsAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            检查用户是否存在
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>是否存在</returns>
+        </member>
     </members>
 </doc>

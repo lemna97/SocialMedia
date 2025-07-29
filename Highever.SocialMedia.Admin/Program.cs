@@ -1,19 +1,64 @@
+using Highever.SocialMedia.Admin;
+using Highever.SocialMedia.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.IdentityModel.Tokens;
+using NLog.Web;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
-using Highever.SocialMedia.API;
-using Highever.SocialMedia.Common;
-using IGeekFan.AspNetCore.Knife4jUI;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using NLog.Web;
+using Highever.SocialMedia.Common.Models;
+using Highever.SocialMedia.Common.Helpers;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     EnvironmentName = Environments.Development
+});
+
+// JWT配置
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+// 注册JWT帮助类
+builder.Services.AddSingleton(jwtSettings);
+builder.Services.AddScoped<JwtHelper>();
+
+// 配置JWT认证
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidateAudience = true,
+        ValidAudience = jwtSettings.Audience,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // 支持从查询参数中获取token
+            var accessToken = context.Request.Query["token"];
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // Body 参数校验过滤器
@@ -181,6 +226,10 @@ app.UseRouting();
 // 使用 CORS 跨域中间件
 app.UseCors("AllowSpecificOrigins");
 
+// 直接使用标准的JWT认证，不需要自定义中间件
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -195,7 +244,6 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

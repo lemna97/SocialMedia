@@ -123,22 +123,6 @@
             地址描述
             </summary>
         </member>
-        <member name="T:Highever.SocialMedia.Common.ApiGroupAttribute">
-            <summary>
-            分组接口特性
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Common.ApiGroupAttribute.#ctor(Highever.SocialMedia.Common.SwaggerApiGroup)">
-            <summary>
-            
-            </summary>
-            <param name="name"></param>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.ApiGroupAttribute.GroupName">
-            <summary>
-            分组名称
-            </summary>
-        </member>
         <member name="T:Highever.SocialMedia.Common.ValidateInputAtrribute">
             <summary>
             全局模型验证
@@ -207,26 +191,6 @@
         <member name="F:Highever.SocialMedia.Common.HttpCode.接口请求超时">
             <summary>
             
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Common.SwaggerApiGroup">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Highever.SocialMedia.Common.SwaggerApiGroup.Login">
-            <summary>
-            授权认证
-            </summary>
-        </member>
-        <member name="F:Highever.SocialMedia.Common.SwaggerApiGroup.FullSocialMedia">
-            <summary>
-            全托管的接口
-            </summary>
-        </member>
-        <member name="F:Highever.SocialMedia.Common.SwaggerApiGroup.AIRecruit">
-            <summary>
-            全托管的接口
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.ExcelHelper">
@@ -629,6 +593,55 @@
             <param name="str"></param>
             <returns></returns>
         </member>
+        <member name="T:Highever.SocialMedia.Common.Helpers.JwtHelper">
+            <summary>
+            JWT帮助类
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GenerateToken(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            生成JWT令牌
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="userName">用户名</param>
+            <param name="roles">角色列表</param>
+            <param name="permissions">权限列表</param>
+            <returns>JWT令牌</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GenerateRefreshToken">
+            <summary>
+            生成刷新令牌
+            </summary>
+            <returns>刷新令牌</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.ValidateToken(System.String)">
+            <summary>
+            验证JWT令牌
+            </summary>
+            <param name="token">JWT令牌</param>
+            <returns>验证结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GetUserIdFromToken(System.String)">
+            <summary>
+            从令牌中获取用户ID
+            </summary>
+            <param name="token">JWT令牌</param>
+            <returns>用户ID</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GetUserNameFromToken(System.String)">
+            <summary>
+            从令牌中获取用户名
+            </summary>
+            <param name="token">JWT令牌</param>
+            <returns>用户名</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.IsTokenExpired(System.String)">
+            <summary>
+            检查令牌是否过期
+            </summary>
+            <param name="token">JWT令牌</param>
+            <returns>是否过期</returns>
+        </member>
         <member name="T:Highever.SocialMedia.Common.HostingEnvironmentHelper">
             <summary>
             
@@ -857,6 +870,36 @@
             
             </summary>
             <param name="message"></param>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Models.JwtSettings">
+            <summary>
+            JWT配置
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.SecretKey">
+            <summary>
+            密钥
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.Issuer">
+            <summary>
+            发行者
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.Audience">
+            <summary>
+            受众
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.ExpiryMinutes">
+            <summary>
+            过期时间（分钟）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.RefreshTokenExpiryDays">
+            <summary>
+            刷新令牌过期时间（天）
+            </summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.AjaxResult`1">
             <summary>

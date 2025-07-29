@@ -62,6 +62,42 @@
             </summary>
             <param name="app"></param>
         </member>
+        <member name="T:Highever.SocialMedia.API.SwaggerApiGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.SwaggerApiGroup.Login">
+            <summary>
+            授权认证
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.SwaggerApiGroup.FullSocialMedia">
+            <summary>
+            全托管的接口
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.SwaggerApiGroup.AIRecruit">
+            <summary>
+            全托管的接口
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.ApiGroupAttribute">
+            <summary>
+            分组接口特性
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.ApiGroupAttribute.#ctor(Highever.SocialMedia.API.SwaggerApiGroup)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="P:Highever.SocialMedia.API.ApiGroupAttribute.GroupName">
+            <summary>
+            分组名称
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.API.Controllers.AIRecruitHomeController">
             <summary>
             AI-Boss直聘平台

@@ -13,8 +13,8 @@
         {
             Success = true;
             Msg = "";
-            HttpCode = HttpCode.失败;
-        }
+            HttpCode = HttpCode.成功;
+        }  
         /// <summary>
         /// 是否成功
         /// </summary>
