@@ -14,7 +14,7 @@ namespace Highever.SocialMedia.Application.Contracts
         Task<int> CreateAsync(DistributionProductDto input);
         Task<int> CreateAsync(DistributionProducts input);
         Task<DistributionProductDto> GetByIdAsync(int id);
-        Task<List<DistributionProducts>> GetQueryListAsync(Expression<Func<DistributionProducts, bool>>? predicate = null);
+        Task<List<DistributionProducts>> GetQueryListAsync(Expression<Func<DistributionProducts, bool>> predicate);
     }
 
 }

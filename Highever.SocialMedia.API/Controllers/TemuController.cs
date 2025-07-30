@@ -9,7 +9,7 @@ using LinqKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using Newtonsoft.Json; 
 using StackExchange.Redis;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
@@ -71,7 +71,7 @@ namespace Highever.SocialMedia.API.Controllers
             }
             try
             {
-                var productsList = await _distributionProductsAppService.GetQueryListAsync();
+                var productsList = await _distributionProductsAppService.GetQueryListAsync(t => true);
                 #region 主逻辑
                 try
                 {
@@ -126,7 +126,7 @@ namespace Highever.SocialMedia.API.Controllers
                                             _supplierPrice = temp_supplierPrice.ToDecimal() ?? 0;
                                         }
                                     }
-                               
+
                                     if (!string.IsNullOrEmpty(extCode))
                                     {
                                         Func<string, string> removeLeadingZero = s => s.StartsWith("0") ? s.Substring(1) : s;
@@ -259,7 +259,7 @@ namespace Highever.SocialMedia.API.Controllers
             }
             try
             {
-                var productsList = await _distributionProductsAppService.GetQueryListAsync();
+                var productsList = await _distributionProductsAppService.GetQueryListAsync(t => true);
                 ConcurrentBag<SuggestSupplyPriceSave> temp_Results = new ConcurrentBag<SuggestSupplyPriceSave>();
                 #region 主逻辑
                 try
@@ -392,7 +392,7 @@ namespace Highever.SocialMedia.API.Controllers
                     throw;
                 }
                 #endregion  
-                return Json(new AjaxResult<object>() { Data = temp_Results, HttpCode = HttpCode.成功 });
+                return this.Success(temp_Results);
             }
             catch (JsonException ex)
             {
@@ -424,7 +424,7 @@ namespace Highever.SocialMedia.API.Controllers
 
                 ConcurrentBag<SuggestSupplyPriceSave> temu_Results = new ConcurrentBag<SuggestSupplyPriceSave>();
                 ConcurrentBag<SuggestSupplyPriceResult_Excel> temp_excel_Results = new ConcurrentBag<SuggestSupplyPriceResult_Excel>();
-                var productsList = await _distributionProductsAppService.GetQueryListAsync();
+                var productsList = await _distributionProductsAppService.GetQueryListAsync(t => true);
                 // 读取TXT文件内容
                 #region 主逻辑
                 try
@@ -616,7 +616,7 @@ namespace Highever.SocialMedia.API.Controllers
         {
             if (productPropertyRequests == null || productPropertyRequests.Count == 0)
             {
-                Json(new AjaxResult<object>() { Data = { }, HttpCode = HttpCode.失败 });
+                return this.Fail("参数错误");
             }
 
             _logger.ApiInfo($"开始处理商品属性请求，Request 数量：{productPropertyRequests.Count}");
@@ -660,7 +660,7 @@ namespace Highever.SocialMedia.API.Controllers
             var add_count = await _productPropertyRequestRecordService.CreateAsync(productPropertyRequestRecordList.ToList());
             _logger.ApiInfo($"所有批次任务处理完成，删除：{del_count}条，新增：{add_count}条，总响应数量：{responses.Count}");
 
-            return Json(new AjaxResult<object>() { Data = responses, HttpCode = HttpCode.成功 });
+            return this.Success(responses);
         }
 
         /// <summary>
@@ -777,11 +777,13 @@ namespace Highever.SocialMedia.API.Controllers
         {
             if (editCallBacks == null || editCallBacks.Count == 0)
             {
-                Json(new AjaxResult<object>() { Data = { }, HttpCode = HttpCode.失败 });
+                return this.Fail();
             }
             _logger.ApiInfo($"属性补充执行回调，Request 数量：{editCallBacks.Count}");
+
             var productIds = editCallBacks.Select(t => t.productId).ToArray();
-            var temp_excel_Results = await _productPropertyRequestRecordService.GetQueryListAsync(t => productIds.Contains(t.ProductId));
+            Expression<Func<ProductPropertyRequestRecord, bool>> predicate = t => productIds.Contains(t.ProductId);
+            var temp_excel_Results = await _productPropertyRequestRecordService.GetQueryListAsync(predicate);
             temp_excel_Results.ForEach(item =>
             {
                 if (editCallBacks.Any(t => t.productId == item.ProductId))
@@ -791,8 +793,11 @@ namespace Highever.SocialMedia.API.Controllers
                     item.ResultText = temp_first?.resultText ?? string.Empty;
                 }
             });
-            await _productPropertyRequestRecordService.UpdateAsync(temp_excel_Results);
-            return Json(new AjaxResult<object>() { Data = temp_excel_Results.Select(t => t.ProductId).ToList(), HttpCode = HttpCode.成功 });
+            //暂时这么用
+            await _productPropertyRequestRecordService.DeleteAsync(predicate);
+            await _productPropertyRequestRecordService.CreateAsync(temp_excel_Results);
+            return this.Success(temp_excel_Results.Select(t => t.ProductId).ToList());
+
         }
         /// <summary>
         /// 导出数据
@@ -805,7 +810,7 @@ namespace Highever.SocialMedia.API.Controllers
         public async Task<IActionResult> DownloadEditRecord([FromBody] List<long>? productIds = null)
         {
             byte[] excelBytes = new byte[0];
-            Expression<Func<ProductPropertyRequestRecord, bool>>? predicate = t => true;
+            Expression<Func<ProductPropertyRequestRecord, bool>> predicate = t => true;
             //店铺ID
             Request.Headers.TryGetValue("mallid", out var mallId);
             if (string.IsNullOrEmpty(mallId))

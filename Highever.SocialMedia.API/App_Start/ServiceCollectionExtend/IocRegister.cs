@@ -32,6 +32,8 @@ namespace Highever.SocialMedia.API
             //日志注入
             services.AddScoped<INLogger, NLogAdapter>();
             //注入ORM  
+            services.AddSqlSugar();
+            
             services.AddMongoDB();  
             //AI
             services.AddChatGPT();

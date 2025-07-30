@@ -44,13 +44,14 @@ namespace Highever.SocialMedia.API
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var message = exception.Message;
-            var result = new AjaxResult<string>() { HttpCode = HttpCode.失败, Msg = message }; 
+
+            var result = new AjaxResult<string>() {  httpCode = HttpCode.失败, msg = message }; 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             if (message.ToLower().Contains("ssl") || message.ToLower().Contains("connection"))
             {
-                result.HttpCode =HttpCode.接口请求超时;
+                result.httpCode =HttpCode.接口请求超时;
             } 
             return context.Response.WriteAsync(JsonSerializer.Serialize(result));
         }

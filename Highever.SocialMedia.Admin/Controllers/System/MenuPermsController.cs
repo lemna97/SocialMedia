@@ -27,10 +27,10 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// <param name="roleId">角色ID</param>
         /// <returns>菜单列表</returns>
         [HttpGet("role/{roleId}/menus")]
-        public async Task<AjaxResult<List<Menus>>> GetMenusByRoleId(long roleId)
+        public async Task<IActionResult> GetMenusByRoleId(long roleId)
         {
             var menus = await _menuPermsService.GetMenusByRoleIdAsync(roleId);
-            return new AjaxResult<List<Menus>> { Data = menus };
+            return this.Success(menus);
         }
 
         /// <summary>
@@ -40,10 +40,10 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// <param name="menuIds">菜单ID列表</param>
         /// <returns>分配结果</returns>
         [HttpPost("role/{roleId}/assign")]
-        public async Task<AjaxResult<string>> AssignMenusToRole(long roleId, [FromBody] List<long> menuIds)
+        public async Task<IActionResult> AssignMenusToRole(long roleId, [FromBody] List<long> menuIds)
         {
             var result = await _menuPermsService.AssignMenusToRoleAsync(roleId, menuIds);
-            return new AjaxResult<string> {};
+            return this.Ok();
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// <param name="menuPerm">关联信息</param>
         /// <returns>添加结果</returns>
         [HttpPost]
-        public async Task<AjaxResult<string>> AddMenuPerm([FromBody] MenuPerms menuPerm)
+        public async Task<IActionResult> AddMenuPerm([FromBody] MenuPerms menuPerm)
         {
             var result = await _menuPermsService.CreateAsync(menuPerm);
-            return new AjaxResult<string> {};
+            return this.Ok();
         }
 
         /// <summary>
@@ -65,10 +65,10 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// <param name="menuId">菜单ID</param>
         /// <returns>删除结果</returns>
         [HttpDelete("role/{roleId}/menu/{menuId}")]
-        public async Task<AjaxResult<string>> DeleteMenuPerm(long roleId, long menuId)
+        public async Task<IActionResult> DeleteMenuPerm(long roleId, long menuId)
         {
             var result = await _menuPermsService.DeleteAsync(mp => mp.RoleId == roleId && mp.MenuId == menuId);
-            return new AjaxResult<string> {};
+            return this.Ok();
         }
 
         /// <summary>
@@ -76,10 +76,10 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// </summary>
         /// <returns>关联列表</returns>
         [HttpGet]
-        public async Task<AjaxResult<List<MenuPerms>>> GetAllMenuPerms()
+        public async Task<IActionResult> GetAllMenuPerms()
         {
-            var menuPerms = await _menuPermsService.GetQueryListAsync();
-            return new AjaxResult<List<MenuPerms>> { Data = menuPerms };
+            var menuPerms = await _menuPermsService.GetQueryListAsync(); 
+            return this.Success(menuPerms, "获取Cookie成功");
         }
     }
 }

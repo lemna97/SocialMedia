@@ -692,58 +692,5 @@
             分页结果 - 不依赖任何 ORM
             </summary>
         </member>
-        <member name="T:Highever.SocialMedia.Domain.Repository.IMenusRepository">
-            <summary>
-            菜单仓储接口
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.AddAsync(Highever.SocialMedia.Domain.Entity.Menus)">
-            <summary>
-            添加菜单
-            </summary>
-            <param name="entity">菜单实体</param>
-            <returns>添加结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.UpdateAsync(Highever.SocialMedia.Domain.Entity.Menus)">
-            <summary>
-            更新菜单
-            </summary>
-            <param name="entity">菜单实体</param>
-            <returns>更新结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.DeleteAsync(System.Int64)">
-            <summary>
-            删除菜单
-            </summary>
-            <param name="id">菜单ID</param>
-            <returns>删除结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.GetByIdAsync(System.Int64)">
-            <summary>
-            根据ID获取菜单
-            </summary>
-            <param name="id">菜单ID</param>
-            <returns>菜单信息</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Menus,System.Boolean}})">
-            <summary>
-            根据条件查询单个菜单
-            </summary>
-            <param name="predicate">查询条件</param>
-            <returns>菜单信息</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.GetAllAsync">
-            <summary>
-            获取所有菜单
-            </summary>
-            <returns>菜单列表</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Domain.Repository.IMenusRepository.GetListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Menus,System.Boolean}})">
-            <summary>
-            根据条件查询菜单列表
-            </summary>
-            <param name="predicate">查询条件</param>
-            <returns>菜单列表</returns>
-        </member>
     </members>
 </doc>

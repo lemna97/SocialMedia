@@ -3,6 +3,9 @@ using MongoDB.Driver;
 
 namespace Highever.SocialMedia.MongoDB
 {
+    /// <summary>
+    /// 可以把数据库的名字提取，支持多库
+    /// </summary>
     public class MongoDBContext : IMongoDBContext
     {
         private readonly IMongoClient _client;

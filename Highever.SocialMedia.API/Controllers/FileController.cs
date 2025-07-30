@@ -54,7 +54,7 @@ namespace Highever.SocialMedia.API.Controllers
             {
                 if (files.Length <= 0)
                 {
-                    result.Msg = "请选择要上传的图片！";
+                    result.msg = "请选择要上传的图片！";
                 }
                 else
                 {
@@ -67,25 +67,25 @@ namespace Highever.SocialMedia.API.Controllers
                         if (resultObj.code == 200)
                         {
                             var img_res = new { ImgUrl = resultObj.data, ImgName = resultObj.imgname };
-                            result.Success = true;
-                            result.HttpCode = HttpCode.成功;
-                            result.Data = img_res;
-                            result.Msg = resultObj.Msg;
+                            result.success = true;
+                            result.httpCode = HttpCode.成功;
+                            result.data = img_res;
+                            result.msg = resultObj.Msg;
                         }
                         else
                         {
-                            result.Msg = resultObj.Msg;
+                            result.msg = resultObj.Msg;
                         }
                     }
                     else
                     {
-                        result.Msg = "上传失败，请检查HttpClient日志！";
+                        result.msg = "上传失败，请检查HttpClient日志！";
                     }
                 }
             }
             catch (Exception e)
             {
-                result.Msg = e.Message;
+                result.msg = e.Message;
             }
             return Json(result);
         }
@@ -137,14 +137,14 @@ namespace Highever.SocialMedia.API.Controllers
                 var files = Request.Form.Files;
                 if (files.Count == 0)
                 {
-                    result.Msg = "没有选择的图片！";
+                    result.msg = "没有选择的图片！";
                     return Json(result);
                 }
                 var file = files[0];
                 string fileName = file.FileName;
                 if (string.IsNullOrEmpty(fileName))//服务器是否存在该文件
                 {
-                    result.Msg = "服务器上已存在该图片！";
+                    result.msg = "服务器上已存在该图片！";
                     return Json(result);
                 }
                 // 获取上传的图片名称和扩展名称
@@ -153,7 +153,7 @@ namespace Highever.SocialMedia.API.Controllers
                 var fileExtNames = AppSettingConifgHelper.ReadAppSettings("UploadImgURL:FileExtName").ToString().Split(',');
                 if (!fileExtNames.Contains(fileExtName))
                 {
-                    result.Msg = "选择的文件不是图片的格式！";
+                    result.msg = "选择的文件不是图片的格式！";
                     return Json(result);
                 }
                 //获取当前项目所在的路径
@@ -175,9 +175,9 @@ namespace Highever.SocialMedia.API.Controllers
                 }
 
                 string PathSrc = AppSettingConifgHelper.ReadAppSettings("UploadImgURL:ImgURL") + newPath;
-                result.Msg = "上传成功！";
-                result.Success = true;
-                result.Data = new
+                result.msg = "上传成功！";
+                result.success = true;
+                result.data = new
                 {
                     data = PathSrc,
                     imgname = newPath
@@ -186,7 +186,7 @@ namespace Highever.SocialMedia.API.Controllers
             }
             catch (Exception e)
             {
-                result.Msg = "上传失败！" + e.Message;
+                result.msg = "上传失败！" + e.Message;
                 return Json(result);
             }
         }

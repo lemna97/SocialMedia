@@ -18,11 +18,13 @@ namespace Highever.SocialMedia.Application.Contracts
         /// <param name="input"></param>
         /// <returns></returns>
         public Task<int> CreateAsync(ProductPropertyRequestRecord input);
-        public Task<int> CreateAsync(List<ProductPropertyRequestRecord> inputs); 
-        Task<int> DeleteAsync(List<ProductPropertyRequestRecord> input);
+        public Task<int> CreateAsync(List<ProductPropertyRequestRecord> inputs);  
         Task<int> DeleteAsync(Expression<Func<ProductPropertyRequestRecord, bool>> predicate);
         Task<List<ProductPropertyRequestRecord>> GetQueryListAsync(Expression<Func<ProductPropertyRequestRecord, bool>> predicate);
-        Task<int> UpdateAsync(List<ProductPropertyRequestRecord> input);
+        Task<(IEnumerable<ProductPropertyRequestRecord> Items, long TotalCount)> GetQueryPageListAsync(Expression<Func<ProductPropertyRequestRecord, bool>> predicate, int pageIndex,
+            int pageSize,
+            Expression<Func<ProductPropertyRequestRecord, object>> sortField = null,
+            bool ascending = true);
     }
 
 }

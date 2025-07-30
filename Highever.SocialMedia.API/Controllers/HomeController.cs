@@ -2,7 +2,6 @@
 using Highever.SocialMedia.Application.Contracts;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Common.Model;
-using Highever.SocialMedia.Domain;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +34,7 @@ namespace Highever.SocialMedia.API.Controllers
         { 
             string html = await AgencyHttpHelper.FetchAsync("https://www.tiktok.com/@get.whit.it");
             Console.WriteLine(html);
-            return Ok();
+            return this.Ok("获取成功");
         }
 
 
@@ -59,7 +58,7 @@ namespace Highever.SocialMedia.API.Controllers
             var headers = new Dictionary<string, string> { ["Authorization"] = token };
 
             var resp = await _httpClientHelper.GetAsync<TkApiResponse>(url, query, headers, ct);
-            return Ok(resp);
+            return this.Success<TkApiResponse>(resp, "搜索成功");
         }
         /// <summary>
         /// 
@@ -69,7 +68,8 @@ namespace Highever.SocialMedia.API.Controllers
         [Route("GetCookie")]
         public async Task<IActionResult> GetCookie()
         {
-            return Ok(await CookieDumper.GetCookie());
+            var cookie = await CookieDumper.GetCookie();
+            return this.Success(cookie, "获取Cookie成功");
         }
         /// <summary>
         /// 测试XML
@@ -99,17 +99,11 @@ namespace Highever.SocialMedia.API.Controllers
         /// <param name="testTable_Para">请求参数</param>
         /// <returns></returns>  
         [HttpPost(Name = "TestMyDbcontext_QueryList")]
-        [Consumes("application/json"), Produces("application/json"), ProducesResponseType(typeof(AjaxResult<IQueryable<DistributionProducts>>), 200)]
+        [Consumes("application/json"), Produces("application/json")]
         public async Task<IActionResult> TestMyDbcontext_QueryList([FromBody] SearchForSemiSupplierModel testTable_Para)
         {
-            var data = await _distributionProductsAppService.GetQueryListAsync();
-            var result = await Task.FromResult(new AjaxResult<IQueryable<DistributionProducts>>()
-            {
-                Msg = string.Empty,
-                Data = data.AsQueryable(),
-                Success = true,
-            });
-            return Json(result);
+            var data = await _distributionProductsAppService.GetQueryListAsync(t => true);
+            return this.Success(data.AsQueryable(), "查询成功");
         }
     }
 }

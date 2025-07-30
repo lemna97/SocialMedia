@@ -293,6 +293,61 @@
             <param name="value">要设置的值。</param>
             <param name="dataStyle">数据单元格样式。</param>
         </member>
+        <member name="T:Highever.SocialMedia.Common.ControllerExtensions">
+            <summary>
+            控制器扩展方法
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Ok(Microsoft.AspNetCore.Mvc.ControllerBase,System.String)">
+            <summary>
+            返回成功响应（无数据）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Ok``1(Microsoft.AspNetCore.Mvc.ControllerBase,``0,System.String)">
+            <summary>
+            返回成功响应（带数据）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Ok(Microsoft.AspNetCore.Mvc.ControllerBase,System.String,Highever.SocialMedia.Common.HttpCode)">
+            <summary>
+            返回失败响应
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Fail(Microsoft.AspNetCore.Mvc.ControllerBase,System.String)">
+            <summary>
+            返回失败响应（指定类型）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Fail``1(Microsoft.AspNetCore.Mvc.ControllerBase,System.String,Highever.SocialMedia.Common.HttpCode)">
+            <summary>
+            返回失败响应（指定类型）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Page``1(Microsoft.AspNetCore.Mvc.ControllerBase,System.Collections.Generic.List{``0},System.Int32,System.String)">
+            <summary>
+            返回分页响应
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.JsonOk``1(Microsoft.AspNetCore.Mvc.ControllerBase,``0,System.String)">
+            <summary>
+            返回JSON格式的成功响应（兼容现有Json方法）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.JsonError(Microsoft.AspNetCore.Mvc.ControllerBase,System.String,Highever.SocialMedia.Common.HttpCode)">
+            <summary>
+            返回JSON格式的失败响应
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Success``1(Microsoft.AspNetCore.Mvc.ControllerBase,``0,System.String)">
+            <summary>
+            返回成功响应 
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Success(Microsoft.AspNetCore.Mvc.ControllerBase,System.String)">
+            <summary>
+            返回成功响应（无数据）
+            </summary>
+        </member>
         <member name="M:Highever.SocialMedia.Common.EnumException.GetDescription(System.Enum)">
             <summary>
             从枚举中获取Description
@@ -912,24 +967,39 @@
             
             </summary>
         </member>
-        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.Success">
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.success">
             <summary>
             是否成功
             </summary>
         </member>
-        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.HttpCode">
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.httpCode">
             <summary>
             状态码 
             </summary>
         </member>
-        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.Msg">
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.msg">
             <summary>
             返回消息
             </summary>
         </member>
-        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.Data">
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.data">
             <summary>
             返回数据
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AjaxResult`1.Success(`0,System.String)">
+            <summary>
+            成功响应
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AjaxResult`1.Fail(System.String,Highever.SocialMedia.Common.HttpCode)">
+            <summary>
+            失败响应
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AjaxResult`1.Page``1(System.Collections.Generic.List{``0},System.Int32,System.String)">
+            <summary>
+            分页响应
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.Common.PageResult`1.Items">

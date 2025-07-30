@@ -28,15 +28,10 @@ namespace Highever.SocialMedia.API.Controllers
         /// </summary>
         /// <returns>菜单列表</returns>
         [HttpGet]
-        public async Task<AjaxResult<List<Menus>>> GetAllMenus()
+        public async Task<IActionResult> GetAllMenus()
         {
             var data = await _menusService.GetAllAsync();
-            return new AjaxResult<List<Menus>>()
-            {
-                Msg = string.Empty,
-                Data = data,
-                Success = true,
-            };
+            return this.Success(data);
         }
 
         /// <summary>
@@ -44,15 +39,10 @@ namespace Highever.SocialMedia.API.Controllers
         /// </summary>
         /// <returns>菜单树</returns>
         [HttpGet("tree")]
-        public async Task<AjaxResult<List<Menus>>> GetMenuTree()
+        public async Task<IActionResult> GetMenuTree()
         {
             var menus = await _menusService.GetMenuTreeAsync();
-            return new AjaxResult<List<Menus>>()
-            {
-                Msg = string.Empty,
-                Data = menus,
-                Success = true,
-            };
+            return this.Success(menus);
         }
     }
 }

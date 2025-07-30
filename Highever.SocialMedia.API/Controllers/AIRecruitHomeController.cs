@@ -50,7 +50,7 @@ namespace Highever.SocialMedia.API.Controllers
                 throw new ArgumentNullException(nameof(jobTitle));
             } 
             await _jobTitleService.CreateAsync(jobTitle);
-            return Json(new AjaxResult<object>() { Data = { }, HttpCode = HttpCode.成功 });
+            return Json(new AjaxResult<object>() { data = { }, httpCode = HttpCode.成功 });
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Highever.SocialMedia.API.Controllers
             var temp_count = await _jobSeekerService.GetQueryListAsync(
       t => t.CollectedAt >= today && t.CollectedAt < tomorrow
   );
-            return Json(new AjaxResult<object>() { Data = temp_count?.Count, HttpCode = HttpCode.成功 });
+            return Json(new AjaxResult<object>() { data = temp_count?.Count, httpCode = HttpCode.成功 });
         }
 
 
@@ -105,7 +105,7 @@ namespace Highever.SocialMedia.API.Controllers
                 throw new ArgumentNullException(nameof(encryptJobId));
             }
             var temp_data = await _jobTitleService.GetQueryListAsync(t => t.EncryptJobId == encryptJobId);
-            return Json(new AjaxResult<object>() { Data = temp_data?.OrderByDescending(t=>t.CollectedAt).FirstOrDefault(), HttpCode = HttpCode.成功 });
+            return Json(new AjaxResult<object>() { data = temp_data?.OrderByDescending(t=>t.CollectedAt).FirstOrDefault(), httpCode = HttpCode.成功 });
         }
     }
 }

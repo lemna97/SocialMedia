@@ -17,6 +17,7 @@ namespace Highever.SocialMedia.MongoDB
     {
         public static IServiceCollection AddMongoDB(this IServiceCollection services)
         {
+            const string _databaseName = "DatabaseName2";
             #region 检查 INLogger 是否已注册 
             if (!services.Any(service => service.ServiceType == typeof(INLogger)))
             {
@@ -31,7 +32,7 @@ namespace Highever.SocialMedia.MongoDB
 
                 // 从配置中读取主库连接字符串和数据库名称
                 string connectionString = configuration.GetConnectionString("Mongodb");
-                string databaseName = configuration["Mongodb:DatabaseName"];
+                string databaseName = configuration[$"Mongodb:{_databaseName}"];
 
                 if (string.IsNullOrWhiteSpace(connectionString))
                     throw new ArgumentException("Mongodb 连接字符串不能为空！");
@@ -45,7 +46,8 @@ namespace Highever.SocialMedia.MongoDB
                 return new MongoDBContext(connectionString, databaseName, logger);
             });
             // 注入 仓储接口
-            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>)); 
+            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+
             return services;
         }
     }
