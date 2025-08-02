@@ -223,12 +223,7 @@ builder.Services.AddHangfire(config => config
 );
 builder.Services.AddHangfireServer(); // 启动 Hangfire 服务器
 #endregion
-
-  // 只保留配置绑定
-builder.Services.Configure<TikhubSettings>(
-    builder.Configuration.GetSection("TikTok"));
  
-
 // 指定端口号
 builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("ADMIN_PORT") ?? "5193"}").UseIIS();
 

@@ -32,10 +32,11 @@ namespace Highever.SocialMedia.SqlSugar
             {
                 db.Ado.IsDisableMasterSlaveSeparation = false;
                 
-                // 优化日志记录
+                // 优化日志记录 - 只记录错误，不记录所有SQL
                 db.Aop.OnLogExecuting = (sql, pars) =>
                 {
-                    _nLogger.Info($"SQL: {sql}, Parameters: {string.Join(",", pars?.Select(p => $"{p.ParameterName}={p.Value}") ?? new string[0])}");
+                    // 注释掉或删除这行，不记录所有SQL执行
+                    // _nLogger.Info($"SQL: {sql}, Parameters: {string.Join(",", pars?.Select(p => $"{p.ParameterName}={p.Value}") ?? new string[0])}");
                 };
                 
                 // 添加错误处理

@@ -202,6 +202,17 @@ app.Use(async (context, next) =>
 });
 
 app.UseAuthorization();
+
+// 添加Areas路由支持
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+// 默认路由
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllers();
 
 app.Run();

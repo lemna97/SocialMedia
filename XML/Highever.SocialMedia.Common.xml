@@ -917,6 +917,76 @@
             <param name="message"></param>
             <returns></returns>
         </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.TaskStart(System.String,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务开始 - 关键日志，入库
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.TaskComplete(System.String,System.Int64,System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务完成 - 关键日志，入库
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.TaskError(System.String,System.Exception,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务错误 - 关键日志，入库
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.TaskBatchInfo(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{System.Int64})">
+            <summary>
+            记录批次处理信息 - 详细日志，仅文件
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.TaskApiCall(System.String,System.String,System.Boolean,System.String,System.Nullable{System.Int64})">
+            <summary>
+            记录API调用信息 - 详细日志，仅文件
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.TaskInfo(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务一般信息 - 详细日志，仅文件
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.INLogger.TaskMilestone(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            记录任务里程碑信息 - 关键日志，入库
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskStart(System.String,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务开始 - 关键日志，入库
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskComplete(System.String,System.Int64,System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务完成 - 关键日志，入库
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskError(System.String,System.Exception,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务错误 - 关键日志，入库
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskBatchInfo(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{System.Int64})">
+            <summary>
+            记录批次处理信息 - 详细日志，仅文件
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskApiCall(System.String,System.String,System.Boolean,System.String,System.Nullable{System.Int64})">
+            <summary>
+            记录API调用信息 - 详细日志，仅文件
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskInfo(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            记录任务一般信息 - 详细日志，仅文件
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskMilestone(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            记录任务里程碑信息 - 关键日志，入库
+            </summary>
+        </member>
         <member name="M:Highever.SocialMedia.Common.NLogAdapter.DateBaseErrorByCode(System.Exception,System.String)">
             <summary>
             异常记录到数据库（code）

@@ -9,9 +9,9 @@ namespace Highever.SocialMedia.Admin.Controllers
 {
     [EnableCors("AllowSpecificOrigins")] // 应用指定的 CORS 策略
     [ApiGroup(SwaggerApiGroup.Login)]
-    [Route("Home")]
+    [Route("Test")]
     [ApiController]
-    public class HomeController : Controller
+    public class TestController : Controller
     {
         private readonly HttpClientHelper _httpClientHelper;
 
@@ -23,7 +23,7 @@ namespace Highever.SocialMedia.Admin.Controllers
         /// <summary>
         /// 
         /// </summary>
-        public HomeController(IServiceProvider serviceProvider, HttpClientHelper httpClientHelper)
+        public TestController(IServiceProvider serviceProvider, HttpClientHelper httpClientHelper)
         {
             this._serviceProvider = serviceProvider;
             this._httpClientHelper = httpClientHelper;

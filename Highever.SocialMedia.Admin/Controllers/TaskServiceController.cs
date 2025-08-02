@@ -19,6 +19,7 @@ namespace Highever.SocialMedia.Admin.Controllers
         private readonly IRepository<TaskEntity> _taskrepository;
         private readonly IRepository<TaskRunEntity> _task_run_repository;
         private readonly ITaskExecutorFactory _taskExecutorFactory;
+        private readonly INLogger _logger; // 添加日志记录器
 
         /// <summary>
         /// 任务管理
@@ -27,15 +28,19 @@ namespace Highever.SocialMedia.Admin.Controllers
         /// <param name="taskrepository"></param>
         /// <param name="task_run_repository"></param>
         /// <param name="taskExecutorFactory"></param>
-        public TaskServiceController(IRecurringJobManager recurringJobManager
-            , IRepository<TaskEntity> taskrepository
-            , IRepository<TaskRunEntity> task_run_repository
-            , ITaskExecutorFactory taskExecutorFactory)
+        /// <param name="logger"></param>
+        public TaskServiceController(
+            IRecurringJobManager recurringJobManager,
+            IRepository<TaskEntity> taskrepository,
+            IRepository<TaskRunEntity> task_run_repository,
+            ITaskExecutorFactory taskExecutorFactory,
+            INLogger logger) // 注入日志记录器
         {
             _recurringJobManager = recurringJobManager;
             _taskrepository = taskrepository;
             _task_run_repository = task_run_repository;
             _taskExecutorFactory = taskExecutorFactory;
+            _logger = logger;
         }
 
         /// <summary>
@@ -60,7 +65,7 @@ namespace Highever.SocialMedia.Admin.Controllers
             _recurringJobManager.AddOrUpdate(
                 taskId.ToString(),  // 任务的唯一标识符 
                 () => ExecuteTask(newTask.TaskName),  // 执行任务的方法
-                () => newTask.CronExpression,  // Cron 表达式的获取（Func<string>）
+                newTask.CronExpression,  // Cron 表达式的获取
                 new RecurringJobOptions
                 {
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Shanghai"), // 设置时区为中国标准时间
@@ -78,20 +83,20 @@ namespace Highever.SocialMedia.Admin.Controllers
         /// <param name="cronExpression"></param>
         /// <returns></returns>
         [HttpPost("update-task")]
-        public async Task<IActionResult> UpdateTask(int taskId,string cronExpression)
+        public async Task<IActionResult> UpdateTask(int taskId, string cronExpression)
         {
             var task = await _taskrepository.FirstOrDefaultAsync(t => t.Id == taskId);
             if (task == null)
             {
                 return NotFound("Task not found");
-            } 
+            }
             task.CronExpression = cronExpression;
             task.UpdatedAt = DateTime.Now;
             await _taskrepository.UpdateAsync(task);
 
             // 更新任务的 Cron 表达式
             _recurringJobManager.AddOrUpdate(
-                taskId.ToString(), 
+                taskId.ToString(),
                 () => ExecuteTask(task.TaskName),  // 执行任务的方法
                 () => task.CronExpression,        // Cron 表达式的获取
                 new RecurringJobOptions()         // 可选的任务选项
@@ -126,43 +131,53 @@ namespace Highever.SocialMedia.Admin.Controllers
         /// 执行任务的实际方法
         /// </summary>
         /// <param name="taskName"></param>
-        [ApiExplorerSettings(IgnoreApi = true)] 
-        [Queue("tk_queue")]
-        public void ExecuteTask(string taskName)
+        /// <remarks>
+        ///  [Queue("tk_queue")] 可以分成多个队列来处理这些作业
+        /// </remarks>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task ExecuteTask(string taskName)
         {
+            var task = await _taskrepository.FirstOrDefaultAsync(t => t.TaskName == taskName);
+            if (task == null)
+            {
+                _logger.TaskError(taskName, new InvalidOperationException($"未找到任务: {taskName}"));
+                return;
+            }
+
             // 记录任务开始时间
             var taskRun = new TaskRunEntity
             {
-                TaskId = _taskrepository.FirstOrDefaultAsync(t => t.TaskName == taskName).Id,
-                Status = 0,  // 默认任务状态为失败
+                TaskId = task.Id,
+                Status = 0,
                 StartTime = DateTime.Now,
                 ErrorMessage = ""
             };
 
-            _task_run_repository.InsertByIdentity(taskRun);
+            var taskRunId = await _task_run_repository.InsertByIdentityAsync(taskRun);
+            _logger.TaskStart(taskName, task.Id, taskRunId);
 
             try
             {
-                // 通过反射获取任务执行器并执行任务
                 var executor = _taskExecutorFactory.GetExecutor(taskName);
-                executor.Execute(taskName);
+                await executor.Execute(taskName);
 
-                taskRun.Status = 1; // 成功
+                taskRun.Status = 1;
                 taskRun.EndTime = DateTime.Now;
+                await _task_run_repository.UpdateAsync(taskRun);
+                
+                var executionTime = (long)(taskRun.EndTime - taskRun.StartTime).TotalMilliseconds;
+                _logger.TaskComplete(taskName, executionTime, 0, 0, 0, 0, task.Id, taskRunId);
             }
             catch (Exception ex)
             {
-                taskRun.Status = 0; // 失败
-                taskRun.ErrorMessage = ex.Message;
+                taskRun.Status = 0;
                 taskRun.EndTime = DateTime.Now;
-                Console.WriteLine($"Error executing task {taskName}: {ex.Message}");
+                taskRun.ErrorMessage = ex.Message;
+                await _task_run_repository.UpdateAsync(taskRun);
+                
+                _logger.TaskError(taskName, ex, task.Id, taskRunId);
+                throw;
             }
-            finally
-            {
-                _task_run_repository.Update(taskRun);
-            }
-
-            Console.WriteLine($"Task {taskName} executed at: {DateTime.Now}");
         }
 
 

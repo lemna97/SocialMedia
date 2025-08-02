@@ -129,7 +129,7 @@
             任务管理
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskRunEntity},Highever.SocialMedia.Admin.TaskService.ITaskExecutorFactory)">
+        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskRunEntity},Highever.SocialMedia.Admin.TaskService.ITaskExecutorFactory,Highever.SocialMedia.Common.INLogger)">
             <summary>
             任务管理
             </summary>
@@ -137,6 +137,7 @@
             <param name="taskrepository"></param>
             <param name="task_run_repository"></param>
             <param name="taskExecutorFactory"></param>
+            <param name="logger"></param>
         </member>
         <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.AddTask(Highever.SocialMedia.Domain.Entity.TaskEntity)">
             <summary>
@@ -165,6 +166,9 @@
             执行任务的实际方法
             </summary>
             <param name="taskName"></param>
+            <remarks>
+             [Queue("tk_queue")] 可以分成多个队列来处理这些作业
+            </remarks>
         </member>
         <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.GetTasks">
             <summary>

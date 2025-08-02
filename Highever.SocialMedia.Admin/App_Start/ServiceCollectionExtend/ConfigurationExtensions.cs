@@ -19,7 +19,7 @@ namespace Highever.SocialMedia.Admin
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             
             // TikTok配置
-            services.Configure<TikhubSettings>(configuration.GetSection("Tikhub"));
+            services.Configure<TikhubSettings>(configuration.GetSection("TikhubSettings"));
             
             // 可以继续添加其他配置... 
             
