@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>..\XML\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>D:\项目文件\HigheverTrusteeship\Highever.SocialMedia\XML\Highever.SocialMedia.API.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,3 +1,4 @@
+using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using System.Linq.Expressions;
 
@@ -6,7 +7,7 @@ namespace Highever.SocialMedia.Application.Contracts.Services
     /// <summary>
     /// 角色菜单关联服务接口
     /// </summary>
-    public interface IMenuPermsService
+    public interface IMenuPermsService : ITransientDependency
     {
         /// <summary>
         /// 创建角色菜单关联

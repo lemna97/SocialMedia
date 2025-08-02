@@ -1,10 +1,6 @@
-using Highever.SocialMedia.Admin;
 using Highever.SocialMedia.Application.Contracts.Services;
 using Highever.SocialMedia.Common;
-using Highever.SocialMedia.Domain;
-using Highever.SocialMedia.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
-using NPOI.POIFS.Crypt.Dsig;
 
 namespace Highever.SocialMedia.API.Controllers
 {

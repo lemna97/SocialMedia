@@ -15,7 +15,7 @@ using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Highever.SocialMedia.API.Controllers
+namespace Highever.SocialMedia.Admin.Controllers
 {
     /// <summary>
     /// Temu 平台

@@ -26,9 +26,9 @@ namespace Highever.SocialMedia.Common
         /// <summary>
         /// 返回失败响应
         /// </summary>
-        public static IActionResult Ok(this ControllerBase controller, string message = "操作失败", HttpCode httpCode = HttpCode.失败)
+        public static IActionResult Ok(this ControllerBase controller, string message = "操作失败", HttpCode code = HttpCode.失败)
         {
-            return controller.Ok(AjaxResult<object>.Fail(message, httpCode));
+            return controller.Ok(AjaxResult<object>.Fail(message, code));
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace Highever.SocialMedia.Common
         /// <summary>
         /// 返回失败响应（指定类型）
         /// </summary>
-        public static IActionResult Fail<T>(this ControllerBase controller, string message = "操作失败", HttpCode httpCode = HttpCode.失败) where T : class
+        public static IActionResult Fail<T>(this ControllerBase controller, string message = "操作失败", HttpCode code = HttpCode.失败) where T : class
         {
-            return controller.Ok(AjaxResult<T>.Fail(message, httpCode));
+            return controller.Ok(AjaxResult<T>.Fail(message, code));
         }
 
         /// <summary>
@@ -66,9 +66,9 @@ namespace Highever.SocialMedia.Common
         /// <summary>
         /// 返回JSON格式的失败响应
         /// </summary>
-        public static IActionResult JsonError(this ControllerBase controller, string message = "操作失败", HttpCode httpCode = HttpCode.失败)
+        public static IActionResult JsonError(this ControllerBase controller, string message = "操作失败", HttpCode code = HttpCode.失败)
         {
-            return controller.Ok(AjaxResult<object>.Fail(message, httpCode));
+            return controller.Ok(AjaxResult<object>.Fail(message, code));
         }
 
         /// <summary>

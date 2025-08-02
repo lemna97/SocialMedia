@@ -1,5 +1,4 @@
 using Highever.SocialMedia.Admin;
-using Highever.SocialMedia.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -12,18 +11,22 @@ using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using Highever.SocialMedia.Common.Models;
 using Highever.SocialMedia.Common.Helpers;
+using Hangfire;
+using Hangfire.MySql;
+using Highever.SocialMedia.Common;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     EnvironmentName = Environments.Development
 });
 
-// JWT配置
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
-var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+// 注册所有配置服务
+builder.Services.AddConfigurations(builder.Configuration);
+builder.Services.AddLegacyConfigurations(builder.Configuration);
 
+// 获取JWT设置用于认证配置
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 // 注册JWT帮助类
-builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddScoped<JwtHelper>();
 
 // 配置JWT认证
@@ -203,6 +206,29 @@ builder.Services.AddCors(options =>
 });
 #endregion
 
+#region Hangfire
+// 配置 Hangfire 使用 MySQL 存储
+builder.Services.AddHangfire(config => config
+    .UseStorage(new MySqlStorage(
+        builder.Configuration.GetConnectionString("Mysql"),
+        new MySqlStorageOptions
+        {
+            // 配置存储选项
+            TablesPrefix = "task_",
+            QueuePollInterval = TimeSpan.FromSeconds(3),
+            TransactionIsolationLevel = System.Transactions.IsolationLevel.ReadCommitted,
+            PrepareSchemaIfNecessary = true
+        }
+    ))
+);
+builder.Services.AddHangfireServer(); // 启动 Hangfire 服务器
+#endregion
+
+  // 只保留配置绑定
+builder.Services.Configure<TikhubSettings>(
+    builder.Configuration.GetSection("TikTok"));
+ 
+
 // 指定端口号
 builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("ADMIN_PORT") ?? "5193"}").UseIIS();
 
@@ -217,6 +243,9 @@ ServiceLocator.SetLocatorProvider(app.Services);
 // DI容器中的服务列表
 app.RegisteredServicesPage(builder.Services);
 
+// 配置 Hangfire Dashboard（任务管理界面）
+app.UseHangfireDashboard("/hangfire");
+
 // 加载静态资源
 app.UseStaticFiles();
 
@@ -228,6 +257,7 @@ app.UseCors("AllowSpecificOrigins");
 
 // 直接使用标准的JWT认证，不需要自定义中间件
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 // Configure the HTTP request pipeline.

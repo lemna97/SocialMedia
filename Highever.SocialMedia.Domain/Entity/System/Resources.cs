@@ -5,7 +5,7 @@ namespace Highever.SocialMedia.Domain.Entity
     /// <summary>
     /// 资源表
     /// </summary>
-    [SugarTable("resources")]
+    [SugarTable("system_resources")]
     public class Resources : BaseEntity
     {
         /// <summary>

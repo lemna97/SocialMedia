@@ -5,7 +5,7 @@ using Highever.SocialMedia.Common.Model;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Highever.SocialMedia.API.Controllers
+namespace Highever.SocialMedia.Admin.Controllers
 {
     [EnableCors("AllowSpecificOrigins")] // 应用指定的 CORS 策略
     [ApiGroup(SwaggerApiGroup.Login)]

@@ -1,4 +1,3 @@
-using Highever.SocialMedia.Admin;
 using Highever.SocialMedia.Application.Contracts.Services;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;

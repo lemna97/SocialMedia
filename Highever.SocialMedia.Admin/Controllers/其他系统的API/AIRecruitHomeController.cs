@@ -1,19 +1,12 @@
-﻿using Azure;
-using Highever.SocialMedia.API.Model;
-using Highever.SocialMedia.Application;
-using Highever.SocialMedia.Application.Contracts;
+﻿using Highever.SocialMedia.Application.Contracts;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain;
 using Highever.SocialMedia.Domain.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using NLog.Filters;
-using NPOI.POIFS.Crypt.Dsig;
-using NPOI.SS.Formula.Functions;
-using System.Linq.Expressions;
 
-namespace Highever.SocialMedia.API.Controllers
+namespace Highever.SocialMedia.Admin.Controllers
 {
     /// <summary>
     /// AI-Boss直聘平台
@@ -50,7 +43,7 @@ namespace Highever.SocialMedia.API.Controllers
                 throw new ArgumentNullException(nameof(jobTitle));
             } 
             await _jobTitleService.CreateAsync(jobTitle);
-            return Json(new AjaxResult<object>() { data = { }, httpCode = HttpCode.成功 });
+            return Json(new AjaxResult<object>() { data = { }, code = HttpCode.成功 });
         }
 
         /// <summary>
@@ -84,7 +77,7 @@ namespace Highever.SocialMedia.API.Controllers
             var temp_count = await _jobSeekerService.GetQueryListAsync(
       t => t.CollectedAt >= today && t.CollectedAt < tomorrow
   );
-            return Json(new AjaxResult<object>() { data = temp_count?.Count, httpCode = HttpCode.成功 });
+            return Json(new AjaxResult<object>() { data = temp_count?.Count, code = HttpCode.成功 });
         }
 
 
@@ -105,7 +98,7 @@ namespace Highever.SocialMedia.API.Controllers
                 throw new ArgumentNullException(nameof(encryptJobId));
             }
             var temp_data = await _jobTitleService.GetQueryListAsync(t => t.EncryptJobId == encryptJobId);
-            return Json(new AjaxResult<object>() { data = temp_data?.OrderByDescending(t=>t.CollectedAt).FirstOrDefault(), httpCode = HttpCode.成功 });
+            return Json(new AjaxResult<object>() { data = temp_data?.OrderByDescending(t=>t.CollectedAt).FirstOrDefault(), code = HttpCode.成功 });
         }
     }
 }

@@ -752,9 +752,16 @@
             <exception cref="T:System.Net.Http.HttpRequestException"></exception>
         </member>
         <member name="M:Highever.SocialMedia.Common.HttpClientHelper.GetAsync``1(System.String,System.Object,System.Collections.Generic.Dictionary{System.String,System.String},System.Threading.CancellationToken)">
-            <summary> 
+            <summary>
             
             </summary>
+            <typeparam name="T"></typeparam>
+            <param name="url"></param>
+            <param name="queryParams"></param>
+            <param name="headers"></param>
+            <param name="ct"></param>
+            <returns></returns>
+            <exception cref="T:Highever.SocialMedia.Common.Model.ApiException"></exception>
         </member>
         <member name="M:Highever.SocialMedia.Common.HttpClientHelper.GetAsync``1(System.String)">
             <summary>
@@ -785,6 +792,39 @@
             <summary>
             创建 JSON 格式的 HttpContent
             </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.BuildQueryString(System.Object)">
+            <summary>
+            将对象转换为查询字符串格式
+            </summary>
+            <param name="src">源对象</param>
+            <returns>查询字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.GetAsync(System.String)">
+            <summary>
+            发送 GET 请求并返回字符串响应
+            </summary>
+            <param name="url">请求地址</param>
+            <returns>响应字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.GetAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.TimeSpan})">
+            <summary>
+            发送 GET 请求并返回字符串响应（支持自定义Headers）
+            </summary>
+            <param name="url">请求地址</param>
+            <param name="headers">请求头</param>
+            <param name="timeout">超时时间</param>
+            <returns>响应字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.GetWithQueryAsync(System.String,System.Object,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.TimeSpan})">
+            <summary>
+            发送 GET 请求并返回字符串响应（支持查询参数）
+            </summary>
+            <param name="url">基础URL</param>
+            <param name="queryParams">查询参数对象</param>
+            <param name="headers">请求头</param>
+            <param name="timeout">超时时间</param>
+            <returns>响应字符串</returns>
         </member>
         <member name="T:Highever.SocialMedia.Common.IScopedDependency">
             <summary>
@@ -972,7 +1012,7 @@
             是否成功
             </summary>
         </member>
-        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.httpCode">
+        <member name="P:Highever.SocialMedia.Common.AjaxResult`1.code">
             <summary>
             状态码 
             </summary>

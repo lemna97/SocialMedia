@@ -5,7 +5,7 @@ namespace Highever.SocialMedia.Domain.Entity
     /// <summary>
     /// 角色权限关联表
     /// </summary>
-    [SugarTable("role_perms")]
+    [SugarTable("system_role_perms")]
     public class RolePerms
     {
         /// <summary>

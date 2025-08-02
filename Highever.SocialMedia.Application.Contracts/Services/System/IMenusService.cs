@@ -1,3 +1,4 @@
+using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using System.Linq.Expressions;
 
@@ -6,7 +7,7 @@ namespace Highever.SocialMedia.Application.Contracts.Services
     /// <summary>
     /// 菜单服务接口
     /// </summary>
-    public interface IMenusService
+    public interface IMenusService : ITransientDependency
     {
         /// <summary>
         /// 添加菜单

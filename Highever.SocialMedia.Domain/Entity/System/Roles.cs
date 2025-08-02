@@ -5,7 +5,7 @@ namespace Highever.SocialMedia.Domain.Entity
     /// <summary>
     /// 角色表
     /// </summary>
-    [SugarTable("roles")]
+    [SugarTable("system_roles")]
     public class Roles : BaseEntity
     {
         /// <summary>

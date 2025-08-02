@@ -65,9 +65,21 @@ namespace Highever.SocialMedia.SqlSugar
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
-        public long InsertById(T entity)
+        public long InsertBySnowflakeId(T entity)
         {
             return _db.Insertable(entity).ExecuteReturnSnowflakeId();
+        }
+        public int InsertByIdentity(T entity)
+        {
+            return _db.Insertable(entity).ExecuteReturnIdentity();
+        }   
+        public Task<int> InsertByIdentityAsync(T entity)
+        {
+            return _db.Insertable(entity).ExecuteReturnIdentityAsync();
+        }
+        public void Insert(T entity)
+        {
+            _db.Insertable(entity).ExecuteCommand();
         }
 
         public async Task<int> InsertRangeAsync(IEnumerable<T> entities)
@@ -78,6 +90,10 @@ namespace Highever.SocialMedia.SqlSugar
         public async Task<int> UpdateAsync(T entity)
         {
             return await _db.Updateable(entity).ExecuteCommandAsync();
+        }
+        public int Update(T entity)
+        {
+            return _db.Updateable(entity).ExecuteCommand();
         }
 
         public async Task<int> UpdateRangeAsync(IEnumerable<T> entities)

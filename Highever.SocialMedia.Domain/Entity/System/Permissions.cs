@@ -5,7 +5,7 @@ namespace Highever.SocialMedia.Domain.Entity
     /// <summary>
     /// 权限表
     /// </summary>
-    [SugarTable("permissions")]
+    [SugarTable("system_permissions")]
     public class Permissions : BaseEntity
     {
         /// <summary>

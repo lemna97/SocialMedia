@@ -140,25 +140,17 @@ namespace Highever.SocialMedia.Common
                 }
             }
         }
-
-        // ==================  放在 HttpClientHelper 里  ==================
-
-        // 把任意对象拼成 key=value&key2=value2
-        private static string BuildQueryString(object? src)
-        {
-            if (src == null) return string.Empty;
-
-            var props = src.GetType().GetProperties()
-                           .Where(p => p.GetValue(src) != null)
-                           .Select(p =>
-                               $"{Uri.EscapeDataString(p.Name)}={Uri.EscapeDataString(p.GetValue(src)!.ToString()!)}");
-
-            return string.Join("&", props);
-        }
-
-        /// <summary> 
+         
+        /// <summary>
         /// 
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="url"></param>
+        /// <param name="queryParams"></param>
+        /// <param name="headers"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        /// <exception cref="ApiException"></exception>
         public async Task<T?> GetAsync<T>(
     string url,
     object? queryParams = null,
@@ -314,7 +306,115 @@ namespace Highever.SocialMedia.Common
             return new StringContent(data, encoding ?? Encoding.UTF8, "application/json");
         }
 
+        /// <summary>
+        /// 将对象转换为查询字符串格式
+        /// </summary>
+        /// <param name="src">源对象</param>
+        /// <returns>查询字符串</returns>
+        public static string BuildQueryString(object? src)
+        {
+            if (src == null) return string.Empty;
+
+            return src switch
+            {
+                string s when !string.IsNullOrWhiteSpace(s) => s,
+                IDictionary<string, object?> dict => string.Join('&', 
+                    dict.Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value?.ToString() ?? string.Empty)}")),
+                _ => string.Join('&',
+                    src.GetType().GetProperties()
+                       .Where(p => p.GetValue(src) != null)
+                       .Select(p => $"{Uri.EscapeDataString(p.Name)}={Uri.EscapeDataString(p.GetValue(src)!.ToString()!)}"))
+            };
+        }
 
         #endregion
+
+        /// <summary>
+        /// 发送 GET 请求并返回字符串响应
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <returns>响应字符串</returns>
+        public async Task<string> GetAsync(string url)
+        {
+            try
+            {
+                var httpClient = _httpClientFactory.CreateClient();
+                var response = await httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new HttpRequestException($"GET 请求失败: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// 发送 GET 请求并返回字符串响应（支持自定义Headers）
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="headers">请求头</param>
+        /// <param name="timeout">超时时间</param>
+        /// <returns>响应字符串</returns>
+        public async Task<string> GetAsync(string url, Dictionary<string, string>? headers = null, TimeSpan? timeout = null)
+        {
+            try
+            {
+                using var httpClient = _httpClientFactory.CreateClient();
+                
+                // 设置超时
+                if (timeout.HasValue)
+                {
+                    httpClient.Timeout = timeout.Value;
+                }
+
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+                // 添加Headers
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        if (header.Key.Equals("Authorization", StringComparison.OrdinalIgnoreCase))
+                        {
+                            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", 
+                                header.Value.Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase));
+                        }
+                        else
+                        {
+                            request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                        }
+                    }
+                }
+
+                var response = await httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new HttpRequestException($"GET 请求失败: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// 发送 GET 请求并返回字符串响应（支持查询参数）
+        /// </summary>
+        /// <param name="url">基础URL</param>
+        /// <param name="queryParams">查询参数对象</param>
+        /// <param name="headers">请求头</param>
+        /// <param name="timeout">超时时间</param>
+        /// <returns>响应字符串</returns>
+        public async Task<string> GetWithQueryAsync(string url, object? queryParams = null, 
+            Dictionary<string, string>? headers = null, TimeSpan? timeout = null)
+        {
+            // 构建查询字符串
+            string query = BuildQueryString(queryParams);
+            string fullUrl = string.IsNullOrWhiteSpace(query) 
+                ? url 
+                : $"{url}{(url.Contains('?') ? "&" : "?")}{query}";
+
+            return await GetAsync(fullUrl, headers, timeout);
+        }
     }
 }

@@ -22,19 +22,23 @@ namespace Highever.SocialMedia.Application
             var assemblies = new[]
             {
                 Assembly.Load("Highever.SocialMedia.Application"),
-                Assembly.Load("Highever.SocialMedia.Application.Contracts")
+                Assembly.Load("Highever.SocialMedia.Application.Contracts"),
+                Assembly.Load("Highever.SocialMedia.Admin")
             };
 
             services.Scan(scan => scan
                 .FromAssemblies(assemblies)
                 .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())
                 .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
                 .WithSingletonLifetime()
                 .AddClasses(classes => classes.AssignableTo<IScopedDependency>())
                 .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
                 .WithScopedLifetime()
                 .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
                 .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
                 .WithTransientLifetime());
 
             return services;

@@ -45,13 +45,13 @@ namespace Highever.SocialMedia.API
         {
             var message = exception.Message;
 
-            var result = new AjaxResult<string>() {  httpCode = HttpCode.失败, msg = message }; 
+            var result = new AjaxResult<string>() {  code = HttpCode.失败, msg = message }; 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             if (message.ToLower().Contains("ssl") || message.ToLower().Contains("connection"))
             {
-                result.httpCode =HttpCode.接口请求超时;
+                result.code = HttpCode.接口请求超时;
             } 
             return context.Response.WriteAsync(JsonSerializer.Serialize(result));
         }

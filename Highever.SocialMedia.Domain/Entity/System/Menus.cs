@@ -5,7 +5,7 @@ namespace Highever.SocialMedia.Domain.Entity
     /// <summary>
     /// 菜单表
     /// </summary>
-    [SugarTable("menus")]
+    [SugarTable("system_menus")]
     public class Menus : BaseEntity
     {
         /// <summary>

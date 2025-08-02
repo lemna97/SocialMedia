@@ -1,12 +1,9 @@
-﻿using Highever.SocialMedia.Domain.Entity;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using Highever.SocialMedia.Application.Contracts;
+﻿using Highever.SocialMedia.Application.Contracts;
 using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Domain.Entity;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Highever.SocialMedia.API.Controllers
+namespace Highever.SocialMedia.Admin.Controllers
 {
     [Route("/")]
     [ApiGroup(SwaggerApiGroup.AIRecruit)]

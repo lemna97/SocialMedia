@@ -13,7 +13,7 @@
         {
             success = true;
             msg = "";
-            httpCode = HttpCode.成功;
+            code = HttpCode.成功;
         }  
 
         /// <summary>
@@ -24,7 +24,7 @@
         /// <summary>
         /// 状态码 
         /// </summary>
-        public HttpCode httpCode { get; set; }
+        public HttpCode code { get; set; }
 
         /// <summary>
         /// 返回消息
@@ -44,7 +44,7 @@
             return new AjaxResult<T>
             {
                 success = true,
-                httpCode = HttpCode.成功,
+                code = HttpCode.成功,
                 msg = message,
                 data = data
             };
@@ -53,12 +53,12 @@
         /// <summary>
         /// 失败响应
         /// </summary>
-        public static AjaxResult<T> Fail(string message = "操作失败", HttpCode httpCode = HttpCode.失败)
+        public static AjaxResult<T> Fail(string message = "操作失败", HttpCode code = HttpCode.失败)
         {
             return new AjaxResult<T>
             {
                 success = false,
-                httpCode = httpCode,
+                code = code,
                 msg = message,
                 data = null
             };
@@ -72,7 +72,7 @@
             return new AjaxResult<PageResult<TItem>>
             {
                 success = true,
-                httpCode = HttpCode.成功,
+                code = HttpCode.成功,
                 msg = message,
                 data = new PageResult<TItem> { Items = items, Total = total }
             };

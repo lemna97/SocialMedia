@@ -1,10 +1,11 @@
-﻿using Highever.SocialMedia.Common;
+﻿using Highever.SocialMedia.Application.Contracts;
+using Highever.SocialMedia.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Highever.SocialMedia.API.Controllers
+namespace Highever.SocialMedia.Admin.Controllers
 {
     /// <summary>
     /// Temu 平台
@@ -68,7 +69,7 @@ namespace Highever.SocialMedia.API.Controllers
                         {
                             var img_res = new { ImgUrl = resultObj.data, ImgName = resultObj.imgname };
                             result.success = true;
-                            result.httpCode = HttpCode.成功;
+                            result.code = HttpCode.成功;
                             result.data = img_res;
                             result.msg = resultObj.Msg;
                         }

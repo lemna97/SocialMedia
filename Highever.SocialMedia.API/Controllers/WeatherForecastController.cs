@@ -1,4 +1,3 @@
-using Highever.SocialMedia.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Highever.SocialMedia.API.Controllers

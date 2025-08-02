@@ -5,7 +5,7 @@ namespace Highever.SocialMedia.Domain.Entity
     /// <summary>
     /// 用户账号信息表
     /// </summary>
-    [SugarTable("users")]
+    [SugarTable("system_users")]
     public class Users : BaseEntity
     {
         /// <summary>
