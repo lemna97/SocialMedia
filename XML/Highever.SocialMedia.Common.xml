@@ -648,12 +648,12 @@
             <param name="str"></param>
             <returns></returns>
         </member>
-        <member name="T:Highever.SocialMedia.Common.Helpers.JwtHelper">
+        <member name="T:Highever.SocialMedia.Common.JwtHelper">
             <summary>
             JWT帮助类
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GenerateToken(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateToken(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
             <summary>
             生成JWT令牌
             </summary>
@@ -663,34 +663,34 @@
             <param name="permissions">权限列表</param>
             <returns>JWT令牌</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GenerateRefreshToken">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateRefreshToken">
             <summary>
             生成刷新令牌
             </summary>
             <returns>刷新令牌</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.ValidateToken(System.String)">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.ValidateToken(System.String)">
             <summary>
             验证JWT令牌
             </summary>
             <param name="token">JWT令牌</param>
             <returns>验证结果</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GetUserIdFromToken(System.String)">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GetUserIdFromToken(System.String)">
             <summary>
             从令牌中获取用户ID
             </summary>
             <param name="token">JWT令牌</param>
             <returns>用户ID</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.GetUserNameFromToken(System.String)">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GetUserNameFromToken(System.String)">
             <summary>
             从令牌中获取用户名
             </summary>
             <param name="token">JWT令牌</param>
             <returns>用户名</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Common.Helpers.JwtHelper.IsTokenExpired(System.String)">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.IsTokenExpired(System.String)">
             <summary>
             检查令牌是否过期
             </summary>

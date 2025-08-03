@@ -1,13 +1,17 @@
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using Highever.SocialMedia.API;
 using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Common.Models;
 using IGeekFan.AspNetCore.Knife4jUI;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 
@@ -16,11 +20,55 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     EnvironmentName = Environments.Development
 });
 
+
+// 注册所有配置服务
+builder.Services.AddConfigurations(builder.Configuration);
+builder.Services.AddLegacyConfigurations(builder.Configuration);
+// 获取JWT设置用于认证配置
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+// 配置JWT认证
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidateAudience = true,
+        ValidAudience = jwtSettings.Audience,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // 支持从查询参数中获取token
+            var accessToken = context.Request.Query["token"];
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+
 // Body 参数校验过滤器
 builder.Services.AddControllers(options =>
 {
     // 全局模型字段过滤器，可选：SuppressModelStateInvalidFilter 设置成 True
     options.Filters.Add<ValidateInputAtrribute>();
+    
+    // 添加自动HTTP方法约定
+    options.Conventions.Add(new AutoHttpMethodConvention());
 });
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -29,14 +77,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-#region 同步 I/O 配置
-// AllowSynchronousIO 配置默认Kestrel服务器是否允许请求和响应使用同步 I/O
-// builder.Services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true);
-// 配置IIS服务器是否允许请求和响应使用同步 I/O
-// .Configure<IISOptions>(x => x.AllowSynchronousIO = true);
-#endregion 
-
-// 配置HTTP上下文访问器
+// 配置HTTP上下文
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -50,7 +91,7 @@ builder.Services.AddMemoryCache();
 // 配置session
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = "lemna.api.cookie";
+    options.Cookie.Name = "socialMedia.api.cookie";
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.IdleTimeout = TimeSpan.FromMinutes(30); // 默认是20分钟
@@ -60,12 +101,12 @@ builder.Services.AddSession(options =>
 builder.Services.AddDistributedMemoryCache();
 #endregion
 
-#region UI 配置
+#region UI配置
 builder.Services.AddSwaggerGen(c =>
 {
-    // 使用 GetSwaggerGroups 配置每个分组
+    // 使用 ConfigureSwaggerGroups 配置分组
     c.ConfigureSwaggerGroups();
-    
+
     // 判断接口归属哪个分组
     c.DocInclusionPredicate((docName, apiDescription) =>
     {
@@ -76,15 +117,15 @@ builder.Services.AddSwaggerGen(c =>
         }
         return apiDescription.GroupName == docName;
     });
-    
-    // 配置接口唯一标识符
+
+    // 配置接口唯一标识
     c.CustomOperationIds(apiDesc =>
     {
         var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
         var parameters = string.Join("-", apiDesc.ParameterDescriptions.Select(p => p.Name));
         return $"{controllerAction.ControllerName}-{controllerAction.ActionName}-{parameters}";
     });
-    
+     
     // 获取 XML 文件路径，配置数据库实体和方法的注释
     var projectRoot = Directory.GetCurrentDirectory();
     var xmlPath = Path.Combine(projectRoot);
@@ -93,13 +134,25 @@ builder.Services.AddSwaggerGen(c =>
     projectRoot = Path.Combine(Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.Parent.Parent.FullName);
     xmlPath = Path.Combine(projectRoot, "XML");
 #endif
-    
-    // 包含所有 XML 文档
-    c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.API.xml"));
-    c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.Application.Contracts.xml"));
-    c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.Domain.xml"));
-    c.IncludeXmlComments(Path.Combine(xmlPath, "Highever.SocialMedia.Common.xml"));
-    
+
+    // 包含所有 XML 文档 - 检查文件是否存在
+    var xmlFiles = new[]
+    {
+        "Highever.SocialMedia.API.xml",
+        "Highever.SocialMedia.Application.Contracts.xml",
+        "Highever.SocialMedia.Domain.xml",
+        "Highever.SocialMedia.Common.xml"
+    };
+
+    foreach (var xmlFile in xmlFiles)
+    {
+        var xmlFilePath = Path.Combine(xmlPath, xmlFile);
+        if (File.Exists(xmlFilePath))
+        {
+            c.IncludeXmlComments(xmlFilePath);
+        }
+    }
+
     c.SchemaFilter<EnumSchemaFilter>();
     // 自定义 Authorization 参数
     c.OperationFilter<AuthorizationParameterFilter>();
@@ -107,12 +160,14 @@ builder.Services.AddSwaggerGen(c =>
     c.DocumentFilter<HiddenApiFilter>();
     // 注册自定义默认方法操作过滤器
     c.OperationFilter<AutoHttpMethodOperationFilter>();
+    // 添加控制器文档过滤器
+    c.DocumentFilter<ControllerDocumentationFilter>();
 });
-#endregion 
+#endregion
 
-#region Nlog 日志配置
+#region Nlog 配置
 builder.Logging.ClearProviders(); // 删除所有已经注册的日志处理程序
-builder.Logging.SetMinimumLevel(LogLevel.Trace); // 指定日志级别
+builder.Logging.SetMinimumLevel(LogLevel.Trace); // 指定级别
 builder.Host.UseNLog();
 // 添加控制台日志
 builder.Logging.AddConsole();
@@ -120,9 +175,9 @@ builder.Logging.AddConsole();
 
 #region 依赖注入
 builder.Services.Register();
-#endregion 
+#endregion
 
-#region 配置 TextJson 序列化
+#region 配置TextJson
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     // 格式化日期时间格式
@@ -135,17 +190,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     // 取消Unicode编码
     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-    // 数据格式原样输出
-    // options.JsonSerializerOptions.PropertyNamingPolicy = null;
-    // 忽略空值
-    // options.JsonSerializerOptions.IgnoreNullValues = false;
-    // 允许尾随逗号(允许在指定对象末尾的逗号，在序列化时忽略注释或逗号，如果抛出异常，可以设置AllowTrailingCommas属性，默认为false）
-    // options.JsonSerializerOptions.AllowTrailingCommas = false;
-    // 反序列化过程中属性名称是否使用不区分大小写的比较
-    // options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
-    options.JsonSerializerOptions.Converters.Add(new LongToStringConverter()); // 自定义 long 转 string Converter
-    // 所有接收的数字字段都会被解析为 string 类型，这样前端发送的数字只要是参数值
-    // options.JsonSerializerOptions.Converters.Add(new StringJsonConverter());
+    // 自定义 long 转 string Converter
+    options.JsonSerializerOptions.Converters.Add(new LongToStringConverter());
 });
 #endregion
 
@@ -154,18 +200,17 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:8068", "https://example.com", "http://127.0.0.1", "http://erpauth.amz-marketing.com:10001") // 允许特定源
-              .AllowAnyMethod() // 允许所有 HTTP 方法 (GET, POST, PUT, DELETE 等)
-              .AllowAnyHeader() // 允许所有请求头
-              .AllowCredentials(); // 如果需要支持传递凭据的请求 (如 Cookies 或 Authorization Header)
+        policy.WithOrigins("http://localhost:8068", "https://example.com", "http://127.0.0.1", "http://erpauth.amz-marketing.com:10001")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
-    // 如果需要允许所有源，可以在开发时使用
-    // options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 #endregion
+ 
 
 // 指定端口号
-builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("HOST_PORT")}").UseIIS();
+builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("ADMIN_PORT") ?? "8326"}").UseIIS();
 
 var app = builder.Build();
 
@@ -176,7 +221,7 @@ app.UseCustomExceptionHandler();
 ServiceLocator.SetLocatorProvider(app.Services);
 
 // DI容器中的服务列表
-app.RegisteredServicesPage(builder.Services);
+app.RegisteredServicesPage(builder.Services); 
 
 // 加载静态资源
 app.UseStaticFiles();
@@ -187,6 +232,11 @@ app.UseRouting();
 // 使用 CORS 跨域中间件
 app.UseCors("AllowSpecificOrigins");
 
+// 直接使用标准的JWT认证，不需要自定义中间件
+app.UseAuthentication();
+
+app.UseAuthorization();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -194,24 +244,12 @@ if (app.Environment.IsDevelopment())
     app.ConfigureKnife4UI();
 }
 
-// CSP 内容安全策略配置
+// CSP配置
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' http://erpauth.amz-marketing.com:10001;");
     await next();
 });
-
-app.UseAuthorization();
-
-// 添加Areas路由支持
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-// 默认路由
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllers();
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Highever.Amazon.Advertising.Common
+﻿namespace Highever.SocialMedia.API.Model
 {
     #region 【已发布站点】核价
     /// <summary>

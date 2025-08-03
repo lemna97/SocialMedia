@@ -982,6 +982,26 @@
             强制初始化主键
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Domain.Models.LoginRequest">
+            <summary>
+            登录请求模型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Models.LoginRequest.Username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Models.LoginRequest.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Models.LoginRequest.Timestamp">
+            <summary>
+            时间戳（可选，默认当前时间）
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Domain.Repository.IRepository`1">
             <summary>
             通用仓储接口 - 不依赖任何 ORM

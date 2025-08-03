@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Highever.SocialMedia.Common.Models;
 
-namespace Highever.SocialMedia.Common.Helpers
+namespace Highever.SocialMedia.Common
 {
     /// <summary>
     /// JWT帮助类

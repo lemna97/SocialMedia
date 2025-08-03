@@ -1,7 +1,12 @@
+using Hangfire;
+using Hangfire.MySql;
 using Highever.SocialMedia.Admin;
+using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Common.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using System.Text;
@@ -9,11 +14,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
-using Highever.SocialMedia.Common.Models;
-using Highever.SocialMedia.Common.Helpers;
-using Hangfire;
-using Hangfire.MySql;
-using Highever.SocialMedia.Common;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -23,11 +23,8 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 // 注册所有配置服务
 builder.Services.AddConfigurations(builder.Configuration);
 builder.Services.AddLegacyConfigurations(builder.Configuration);
-
 // 获取JWT设置用于认证配置
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
-// 注册JWT帮助类
-builder.Services.AddScoped<JwtHelper>();
 
 // 配置JWT认证
 builder.Services.AddAuthentication(options =>
@@ -67,8 +64,11 @@ builder.Services.AddAuthentication(options =>
 // Body 参数校验过滤器
 builder.Services.AddControllers(options =>
 {
-    // 全局模型字段过滤器，可选：SuppressModelStateInvalidFilter 设置成 True
+    // 全局模型字段过滤器
     options.Filters.Add<ValidateInputAtrribute>();
+    
+    // 添加自动HTTP方法约定
+    options.Conventions.Add(new AutoHttpMethodConvention());
 });
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -91,7 +91,7 @@ builder.Services.AddMemoryCache();
 // 配置session
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = "admin.api.cookie";
+    options.Cookie.Name = "socialMedia.admin.cookie";
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.IdleTimeout = TimeSpan.FromMinutes(30); // 默认是20分钟
@@ -225,7 +225,7 @@ builder.Services.AddHangfireServer(); // 启动 Hangfire 服务器
 #endregion
  
 // 指定端口号
-builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("ADMIN_PORT") ?? "5193"}").UseIIS();
+builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("ADMIN_PORT") ?? "8325"}").UseIIS();
 
 var app = builder.Build();
 

@@ -8,30 +8,51 @@ namespace Highever.SocialMedia.API
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            // 如果没有绑定 HTTP 方法，则设置默认方法
-            if (context.ApiDescription.HttpMethod == null)
+            // 检查是否是通过约定自动分配的HTTP方法
+            var actionName = context.ApiDescription.ActionDescriptor.RouteValues["action"];
+            var httpMethod = context.ApiDescription.HttpMethod;
+            
+            if (!string.IsNullOrEmpty(actionName) && !string.IsNullOrEmpty(httpMethod))
             {
-                // 获取 Action 名称
-                var actionName = context.ApiDescription.ActionDescriptor.RouteValues["action"];
-                // 默认给 POST
-                string defaultMethodName = "POST";
+                // 检查是否是自动推断的方法
+                var expectedMethod = GetExpectedHttpMethod(actionName);
+                if (httpMethod.Equals(expectedMethod, StringComparison.OrdinalIgnoreCase))
+                {
+                    // 添加标记表示这是自动推断的
+                    operation.Tags.Add(new OpenApiTag { Name = $"Auto-detected: {httpMethod}" });
+                }
+            }
+        }
 
-                // 根据 Action 名称前缀自动推断 HTTP 方法
-                if (actionName.StartsWith("get", StringComparison.OrdinalIgnoreCase))
-                {
-                    defaultMethodName = "GET";
-                }
-                else if (actionName.StartsWith("put", StringComparison.OrdinalIgnoreCase))
-                {
-                    defaultMethodName = "PUT";
-                }
-                else if (actionName.StartsWith("delete", StringComparison.OrdinalIgnoreCase))
-                {
-                    defaultMethodName = "DELETE";
-                }
+        private string GetExpectedHttpMethod(string actionName)
+        {
+            var lowerActionName = actionName.ToLower();
 
-                // 将推断结果写入 Swagger 文档元数据
-                operation.Tags.Add(new OpenApiTag { Name = $"Default to {defaultMethodName}" });
+            if (lowerActionName.StartsWith("get") || 
+                lowerActionName.Equals("index") || 
+                lowerActionName.Equals("details") ||
+                lowerActionName.Equals("list"))
+            {
+                return "GET";
+            }
+            else if (lowerActionName.StartsWith("put") || 
+                     lowerActionName.StartsWith("update") ||
+                     lowerActionName.StartsWith("edit"))
+            {
+                return "PUT";
+            }
+            else if (lowerActionName.StartsWith("delete") || 
+                     lowerActionName.StartsWith("remove"))
+            {
+                return "DELETE";
+            }
+            else if (lowerActionName.StartsWith("patch"))
+            {
+                return "PATCH";
+            }
+            else
+            {
+                return "POST";
             }
         }
     }

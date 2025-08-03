@@ -3,14 +3,14 @@ using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Highever.SocialMedia.API.Controllers.System
+namespace Highever.SocialMedia.API.Controllers
 {
     /// <summary>
     /// 角色菜单关联管理
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
-    [ApiExplorerSettings(GroupName = nameof(SwaggerApiGroup.Login))]
+    [Route("api/menu-perms")]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerApiGroup.System))]
     public class MenuPermsController : ControllerBase
     {
         private readonly IMenuPermsService _menuPermsService;
@@ -25,7 +25,7 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// </summary>
         /// <param name="roleId">角色ID</param>
         /// <returns>菜单列表</returns>
-        [HttpGet("role/{roleId}/menus")]
+        [HttpGet("roleMenus")]
         public async Task<IActionResult> GetMenusByRoleId(long roleId)
         {
             var menus = await _menuPermsService.GetMenusByRoleIdAsync(roleId);
@@ -38,7 +38,7 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// <param name="roleId">角色ID</param>
         /// <param name="menuIds">菜单ID列表</param>
         /// <returns>分配结果</returns>
-        [HttpPost("role/{roleId}/assign")]
+        [HttpPost("roleAssign")]
         public async Task<IActionResult> AssignMenusToRole(long roleId, [FromBody] List<long> menuIds)
         {
             var result = await _menuPermsService.AssignMenusToRoleAsync(roleId, menuIds);
@@ -50,7 +50,7 @@ namespace Highever.SocialMedia.API.Controllers.System
         /// </summary>
         /// <param name="menuPerm">关联信息</param>
         /// <returns>添加结果</returns>
-        [HttpPost]
+        [HttpPost("addMenuPerm")]
         public async Task<IActionResult> AddMenuPerm([FromBody] MenuPerms menuPerm)
         {
             var result = await _menuPermsService.CreateAsync(menuPerm);

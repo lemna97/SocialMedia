@@ -1,7 +1,6 @@
 ﻿using Highever.SocialMedia.Common;
 using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.OpenApi.Models;
-using NuGet.Protocol.Plugins;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Highever.SocialMedia.API

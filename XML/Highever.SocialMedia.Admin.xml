@@ -4,6 +4,21 @@
         <name>Highever.SocialMedia.Admin</name>
     </assembly>
     <members>
+        <member name="T:Highever.SocialMedia.Admin.AutoHttpMethodConvention">
+            <summary>
+            自动HTTP方法约定 - 在路由构建时自动为Action分配HTTP方法
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.AutoHttpMethodConvention.HasHttpMethodAttribute(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            检查Action是否已有HTTP方法特性
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.AutoHttpMethodConvention.GetHttpMethod(System.String)">
+            <summary>
+            根据Action名称获取对应的HTTP方法
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Admin.AuthorizationParameterFilter">
             <summary>
             全局Authorizec参数校验
@@ -124,58 +139,6 @@
             分组名称
             </summary>
         </member>
-        <member name="T:Highever.SocialMedia.Admin.Controllers.TaskServiceController">
-            <summary>
-            任务管理
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskRunEntity},Highever.SocialMedia.Admin.TaskService.ITaskExecutorFactory,Highever.SocialMedia.Common.INLogger)">
-            <summary>
-            任务管理
-            </summary>
-            <param name="recurringJobManager"></param>
-            <param name="taskrepository"></param>
-            <param name="task_run_repository"></param>
-            <param name="taskExecutorFactory"></param>
-            <param name="logger"></param>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.AddTask(Highever.SocialMedia.Domain.Entity.TaskEntity)">
-            <summary>
-            增加任务
-            </summary>
-            <param name="task"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.UpdateTask(System.Int32,System.String)">
-            <summary>
-            修改任务定时时间
-            </summary>
-            <param name="taskId"></param>
-            <param name="cronExpression"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.DeleteTask(System.Int32)">
-            <summary>
-            删除任务
-            </summary>
-            <param name="taskId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.ExecuteTask(System.String)">
-            <summary>
-            执行任务的实际方法
-            </summary>
-            <param name="taskName"></param>
-            <remarks>
-             [Queue("tk_queue")] 可以分成多个队列来处理这些作业
-            </remarks>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.TaskServiceController.GetTasks">
-            <summary>
-            获取任务列表
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:Highever.SocialMedia.Admin.Controllers.AIRecruitHomeController">
             <summary>
             AI-Boss直聘平台
@@ -257,59 +220,6 @@
              </remark>
              <param name="formData">表单文件信息</param>
              <returns></returns> 
-        </member>
-        <member name="F:Highever.SocialMedia.Admin.Controllers.HomeController._serviceProvider">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.HomeController.#ctor(System.IServiceProvider,Highever.SocialMedia.Common.HttpClientHelper)">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.HomeController.SearchAsync(System.String,System.Threading.CancellationToken)">
-            <summary>
-            转发调用 TikHub 搜索接口的测试端点
-            </summary>
-            <remarks>
-            GET /api/TikHubTest/search?keyword=pubg
-            </remarks>  
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.HomeController.GetCookie">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.Controllers.HomeController.TestMyDbcontext_QueryList(Highever.Amazon.Advertising.Common.SearchForSemiSupplierModel)">
-             <summary>
-             测试XML
-             </summary>
-             <remarks> 
-             Sample request:
-             ```
-              POST /hotmap
-              { 
-                  "displayName": "演示名称1",
-                  "matchRule": 0,
-                  "matchCondition": "https://www.cnblogs.com/JulianHuang/",
-                  "targetUrl": "https://www.cnblogs.com/JulianHuang/",
-                  "versions": [
-                  {
-                     "versionName": "ver2020",
-                     "startDate": "2020-12-13T10:03:09",
-                     "endDate": "2020-12-13T10:03:09",
-                     "offlinePageUrl": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  //  没有绑定图片和离线网页的对应属性传 null
-                     "pictureUrl": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                     "createDate": "2020-12-13T10:03:09"
-                  }
-                ] 
-              }
-            ```
-             </remarks>
-             <param name="testTable_Para">请求参数</param>
-             <returns></returns>  
         </member>
         <member name="T:Highever.SocialMedia.Admin.Controllers.TemuController">
             <summary>
@@ -430,6 +340,59 @@
             <param name="maxDegreeOfConcurrency">最大并发数</param>
             <returns>按顺序返回的结果集合</returns>
         </member>
+        <member name="F:Highever.SocialMedia.Admin.Controllers.TestController._serviceProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.TestController.#ctor(System.IServiceProvider,Highever.SocialMedia.Common.HttpClientHelper)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.TestController.SearchAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            转发调用 TikHub 搜索接口的测试端点
+            </summary>
+            <remarks>
+            GET /api/TikHubTest/search?keyword=pubg
+            </remarks>  
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.TestController.GetCookie">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.TestController.TestMyDbcontext_QueryList(Highever.Amazon.Advertising.Common.SearchForSemiSupplierModel)">
+             <summary>
+             测试XML
+             </summary>
+             <remarks> 
+             Sample request:
+             ```
+              POST /hotmap
+              { 
+                  "displayName": "演示名称1",
+                  "matchRule": 0,
+                  "matchCondition": "https://www.cnblogs.com/JulianHuang/",
+                  "targetUrl": "https://www.cnblogs.com/JulianHuang/",
+                  "versions": [
+                  {
+                     "versionName": "ver2020",
+                     "startDate": "2020-12-13T10:03:09",
+                     "endDate": "2020-12-13T10:03:09",
+                     "offlinePageUrl": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  //  没有绑定图片和离线网页的对应属性传 null
+                     "pictureUrl": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     "createDate": "2020-12-13T10:03:09"
+                  }
+                ] 
+              }
+            ```
+             </remarks>
+             <param name="testTable_Para">请求参数</param>
+             <returns></returns>  
+        </member>
         <member name="T:Highever.SocialMedia.Admin.TaskService.ITaskExecutor">
             <summary>
             任务执行接口
@@ -526,6 +489,58 @@
             <param name="taskName"></param>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:Highever.SocialMedia.API.TaskServiceController">
+            <summary>
+            任务管理
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskRunEntity},Highever.SocialMedia.Admin.TaskService.ITaskExecutorFactory,Highever.SocialMedia.Common.INLogger)">
+            <summary>
+            任务管理
+            </summary>
+            <param name="recurringJobManager"></param>
+            <param name="taskrepository"></param>
+            <param name="task_run_repository"></param>
+            <param name="taskExecutorFactory"></param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TaskServiceController.AddTask(Highever.SocialMedia.Domain.Entity.TaskEntity)">
+            <summary>
+            增加任务
+            </summary>
+            <param name="task"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TaskServiceController.UpdateTask(System.Int32,System.String)">
+            <summary>
+            修改任务定时时间
+            </summary>
+            <param name="taskId"></param>
+            <param name="cronExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TaskServiceController.DeleteTask(System.Int32)">
+            <summary>
+            删除任务
+            </summary>
+            <param name="taskId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TaskServiceController.ExecuteTask(System.String)">
+            <summary>
+            执行任务的实际方法
+            </summary>
+            <param name="taskName"></param>
+            <remarks>
+             [Queue("tk_queue")] 可以分成多个队列来处理这些作业
+            </remarks>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TaskServiceController.GetTasks">
+            <summary>
+            获取任务列表
+            </summary>
+            <returns></returns>
         </member>
         <member name="P:Highever.SocialMedia.API.Model.ProductPicture.controlType">
             <summary>

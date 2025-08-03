@@ -1,11 +1,12 @@
 ﻿using Hangfire;
+using Highever.SocialMedia.Admin;
 using Highever.SocialMedia.Admin.TaskService;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Highever.SocialMedia.Admin.Controllers
+namespace Highever.SocialMedia.API
 {
     /// <summary>
     /// 任务管理
@@ -13,7 +14,7 @@ namespace Highever.SocialMedia.Admin.Controllers
     [ApiController]
     [ApiGroup(SwaggerApiGroup.System)]
     [Route("api/task")]
-    public class TaskServiceController : ControllerBase
+    public class TaskServiceController : Controller
     {
         private readonly IRecurringJobManager _recurringJobManager;
         private readonly IRepository<TaskEntity> _taskrepository;

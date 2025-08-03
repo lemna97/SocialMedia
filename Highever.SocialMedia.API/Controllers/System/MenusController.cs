@@ -8,8 +8,8 @@ namespace Highever.SocialMedia.API.Controllers
     /// 菜单管理
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
-    [ApiExplorerSettings(GroupName = nameof(SwaggerApiGroup.Login))]
+    [Route("api/menus")]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerApiGroup.System))]
     public class MenusController : Controller
     {
         private readonly IMenusService _menusService;
@@ -23,7 +23,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// 获取所有菜单
         /// </summary>
         /// <returns>菜单列表</returns>
-        [HttpGet]
+        [HttpGet("getAllMenus")]
         public async Task<IActionResult> GetAllMenus()
         {
             var data = await _menusService.GetAllAsync();
