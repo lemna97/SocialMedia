@@ -30,8 +30,8 @@ namespace Highever.SocialMedia.Domain.Entity
         /// </summary>
 
         [SugarColumn(ColumnName = "cron_expression", Length = 100)]
-        public string CronExpression { get; set; }
-        
+        public string CronExpression { get; set; } = "0 30 9 * * *";
+
         /// <summary>
         /// IP
         /// </summary>

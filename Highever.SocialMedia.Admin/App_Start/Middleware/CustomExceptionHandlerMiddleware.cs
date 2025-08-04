@@ -36,8 +36,8 @@ namespace Highever.SocialMedia.Admin
             }
             catch (Exception ex)
             {
-                // 使用NLogger记录异常到数据库
-                var nLogger = _serviceProvider.GetRequiredService<INLogger>();
+                // 使用 HttpContext 的服务提供程序（已经是正确的作用域）
+                var nLogger = context.RequestServices.GetRequiredService<INLogger>();
                 nLogger.DateBaseError($"Admin异常: {ex.Message} | StackTrace: {ex.StackTrace}");
                 
                 // 使用ILogger记录到控制台

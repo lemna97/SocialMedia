@@ -41,7 +41,7 @@ namespace Highever.SocialMedia.Admin.Controllers
         /// </remark>
         /// <param name="files">表单文件信息</param>
         /// <returns></returns> 
-        [ApiGroup(SwaggerApiGroup.Login)]
+        [ApiGroup(SwaggerApiGroup.Test)]
         [Consumes("application/json")]
         [Produces("text/plain")]
         [ProducesResponseType(typeof(AjaxResult<object>), 200)]
@@ -123,7 +123,7 @@ namespace Highever.SocialMedia.Admin.Controllers
         /// </remark>
         /// <param name="formData">表单文件信息</param>
         /// <returns></returns> 
-        [ApiGroup(SwaggerApiGroup.Login)]
+        [ApiGroup(SwaggerApiGroup.Test)]
         [Consumes("application/json")]
         [Produces("text/plain")]
         [ProducesResponseType(typeof(AjaxResult<object>), 200)]

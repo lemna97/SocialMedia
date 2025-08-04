@@ -42,8 +42,7 @@ namespace Highever.SocialMedia.API
             //AI
             services.AddChatGPT();
             //注入业务
-            services.AddApplicationServices();
-
+            services.AddApplicationServices("Highever.SocialMedia.Admin"); 
             //业务层的事件
             services.AddApplicationEventBusServices();
 

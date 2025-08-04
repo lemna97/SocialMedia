@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Highever.SocialMedia.Admin.Controllers
 {
     [EnableCors("AllowSpecificOrigins")] // 应用指定的 CORS 策略
-    [ApiGroup(SwaggerApiGroup.Login)]
+    [ApiGroup(SwaggerApiGroup.Test)]
     [Route("Test")]
     [ApiController]
     public class TestController : Controller

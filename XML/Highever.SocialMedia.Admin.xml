@@ -103,14 +103,14 @@
             
             </summary>
         </member>
-        <member name="F:Highever.SocialMedia.Admin.SwaggerApiGroup.System">
+        <member name="F:Highever.SocialMedia.Admin.SwaggerApiGroup.Media">
             <summary>
             授权认证
             </summary>
         </member>
-        <member name="F:Highever.SocialMedia.Admin.SwaggerApiGroup.Login">
+        <member name="F:Highever.SocialMedia.Admin.SwaggerApiGroup.Test">
             <summary>
-            授权认证
+            测试接口
             </summary>
         </member>
         <member name="F:Highever.SocialMedia.Admin.SwaggerApiGroup.FullSocialMedia">
@@ -393,6 +393,57 @@
              <param name="testTable_Para">请求参数</param>
              <returns></returns>  
         </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskServiceController">
+            <summary>
+            任务管理
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Common.INLogger,Highever.SocialMedia.Admin.TaskService.ITaskExecutionService)">
+            <summary>
+            任务管理
+            </summary>
+            <param name="recurringJobManager"></param>
+            <param name="taskrepository"></param> 
+            <param name="logger"></param>
+            <param name="taskExecutionService"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.AddTask(Highever.SocialMedia.Domain.Entity.TaskEntity)">
+            <summary>
+            增加任务
+            </summary>
+            <param name="task"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.UpdateTask(System.Int32,System.String)">
+            <summary>
+            修改任务定时时间
+            </summary>
+            <param name="taskId"></param>
+            <param name="cronExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.DeleteTask(System.Int32)">
+            <summary>
+            删除任务
+            </summary>
+            <param name="taskId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.GetTasks">
+            <summary>
+            获取任务列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.TaskExecutionService.ExecuteTask(System.String)">
+            <summary>
+            执行任务的实际方法
+            </summary>
+            <param name="taskName"></param>
+            <remarks>
+             [Queue("tk_queue")] 可以分成多个队列来处理这些作业
+            </remarks>
+        </member>
         <member name="T:Highever.SocialMedia.Admin.TaskService.ITaskExecutor">
             <summary>
             任务执行接口
@@ -437,14 +488,429 @@
         </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.Execute(System.String)">
             <summary>
-            这里需要传入令牌的
+            执行视频数据同步任务
             </summary>
             <param name="taskName"></param>
             <returns></returns>
         </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.ProcessBatchAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.AccountConfig},System.Int32)">
+            <summary>
+            并发处理一批用户的视频数据
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.ProcessSingleUserVideosAsync(Highever.SocialMedia.Domain.Entity.AccountConfig)">
+            <summary>
+            处理单个用户的视频数据
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.FetchUserVideosWithRetryAsync(System.String,System.String)">
+            <summary>
+            带重试机制的视频API调用
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.UpdateTiktokVideosAsync(Highever.SocialMedia.Admin.TaskService.Models.VideoItem)">
+            <summary>
+            更新TiktokVideos表
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.UpdateTiktokVideosDailyAsync(Highever.SocialMedia.Admin.TaskService.Models.VideoItem)">
+            <summary>
+            更新TiktokVideosDaily表
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Admin.TaskService.Models.TikTokApiResponse">
             <summary>
             TikTok API响应数据模型
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.TikTokVideoApiResponse">
+            <summary>
+            TikTok 视频 API 响应数据模型
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoItem">
+            <summary>
+            视频项目信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.AwemeId">
+            <summary>
+            视频ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Desc">
+            <summary>
+            视频描述
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.CreateTime">
+            <summary>
+            创建时间戳
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Author">
+            <summary>
+            作者信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Video">
+            <summary>
+            视频信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Music">
+            <summary>
+            音乐信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Statistics">
+            <summary>
+            统计数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Status">
+            <summary>
+            状态信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.VideoControl">
+            <summary>
+            视频控制设置
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.PoiData">
+            <summary>
+            位置信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ChaList">
+            <summary>
+            话题标签列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Region">
+            <summary>
+            地区信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.AigcInfo">
+            <summary>
+            AI生成内容信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ShareInfo">
+            <summary>
+            分享信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ContentDesc">
+            <summary>
+            内容描述
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.IsAds">
+            <summary>
+            是否为广告
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.IsTop">
+            <summary>
+            是否置顶
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ContentOriginalType">
+            <summary>
+            内容原创类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.MiscInfo">
+            <summary>
+            其他信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.PromoteIconText">
+            <summary>
+            推广图标文本
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.CoverLabels">
+            <summary>
+            封面标签
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor">
+            <summary>
+            视频作者信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.Uid">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.UniqueId">
+            <summary>
+            唯一标识符
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.Nickname">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.Signature">
+            <summary>
+            个人签名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.FollowerCount">
+            <summary>
+            粉丝数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.FollowingCount">
+            <summary>
+            关注数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.AwemeCount">
+            <summary>
+            作品数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.TotalFavorited">
+            <summary>
+            获赞总数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.FavoritingCount">
+            <summary>
+            点赞数量
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo">
+            <summary>
+            视频信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.Duration">
+            <summary>
+            视频时长（秒）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.Ratio">
+            <summary>
+            视频比例
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.Cover">
+            <summary>
+            封面图片
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.PlayAddr">
+            <summary>
+            播放地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.HasWatermark">
+            <summary>
+            是否有水印
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.UrlList">
+            <summary>
+            URL列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.UrlList.UrlListData">
+            <summary>
+            URL列表数据
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo">
+            <summary>
+            音乐信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.IdStr">
+            <summary>
+            音乐ID字符串
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.Title">
+            <summary>
+            音乐标题
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.Author">
+            <summary>
+            音乐作者
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.IsOriginalSound">
+            <summary>
+            是否为原声
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.IsCommerceMusic">
+            <summary>
+            是否为商业音乐
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics">
+            <summary>
+            视频统计数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.PlayCount">
+            <summary>
+            播放次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.DiggCount">
+            <summary>
+            点赞次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.CommentCount">
+            <summary>
+            评论次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.DownloadCount">
+            <summary>
+            下载次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.ShareCount">
+            <summary>
+            分享次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.CollectCount">
+            <summary>
+            收藏次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.ForwardCount">
+            <summary>
+            转发次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.WhatsappShareCount">
+            <summary>
+            WhatsApp分享次数
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoStatus">
+            <summary>
+            视频状态信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatus.AllowComment">
+            <summary>
+            是否允许评论
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatus.AllowShare">
+            <summary>
+            是否允许分享
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoControl">
+            <summary>
+            视频控制设置
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoControl.AllowDownload">
+            <summary>
+            是否允许下载
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoControl.AllowDuet">
+            <summary>
+            是否允许合拍
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoControl.AllowStitch">
+            <summary>
+            是否允许拼接
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.PoiData">
+            <summary>
+            位置数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.PoiData.PoiName">
+            <summary>
+            位置名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.PoiData.AddressInfo">
+            <summary>
+            地址信息
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo">
+            <summary>
+            地址信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo.Address">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.HashtagInfo">
+            <summary>
+            话题标签信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.HashtagInfo.ChaName">
+            <summary>
+            话题名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.HashtagInfo.Cid">
+            <summary>
+            话题ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.AigcInfo">
+            <summary>
+            AI生成内容信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AigcInfo.CreatedByAi">
+            <summary>
+            是否由AI创建
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AigcInfo.AigcLabelType">
+            <summary>
+            AIGC标签类型
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.ShareInfo">
+            <summary>
+            分享信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.ShareInfo.ShareUrl">
+            <summary>
+            分享链接
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Admin.TaskService.RateLimitController">
@@ -489,58 +955,6 @@
             <param name="taskName"></param>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="T:Highever.SocialMedia.API.TaskServiceController">
-            <summary>
-            任务管理
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.API.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskRunEntity},Highever.SocialMedia.Admin.TaskService.ITaskExecutorFactory,Highever.SocialMedia.Common.INLogger)">
-            <summary>
-            任务管理
-            </summary>
-            <param name="recurringJobManager"></param>
-            <param name="taskrepository"></param>
-            <param name="task_run_repository"></param>
-            <param name="taskExecutorFactory"></param>
-            <param name="logger"></param>
-        </member>
-        <member name="M:Highever.SocialMedia.API.TaskServiceController.AddTask(Highever.SocialMedia.Domain.Entity.TaskEntity)">
-            <summary>
-            增加任务
-            </summary>
-            <param name="task"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.TaskServiceController.UpdateTask(System.Int32,System.String)">
-            <summary>
-            修改任务定时时间
-            </summary>
-            <param name="taskId"></param>
-            <param name="cronExpression"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.TaskServiceController.DeleteTask(System.Int32)">
-            <summary>
-            删除任务
-            </summary>
-            <param name="taskId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.TaskServiceController.ExecuteTask(System.String)">
-            <summary>
-            执行任务的实际方法
-            </summary>
-            <param name="taskName"></param>
-            <remarks>
-             [Queue("tk_queue")] 可以分成多个队列来处理这些作业
-            </remarks>
-        </member>
-        <member name="M:Highever.SocialMedia.API.TaskServiceController.GetTasks">
-            <summary>
-            获取任务列表
-            </summary>
-            <returns></returns>
         </member>
         <member name="P:Highever.SocialMedia.API.Model.ProductPicture.controlType">
             <summary>

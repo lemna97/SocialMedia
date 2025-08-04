@@ -54,7 +54,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// <param name="request">登录请求</param>
         /// <returns>登录结果，包含JWT Token</returns>
         [HttpPost("login")]
-        [AllowAnonymous]
+        [AllowAnonymous] 
         public async Task<IActionResult> Login([FromForm] LoginRequest request)
         {
             try

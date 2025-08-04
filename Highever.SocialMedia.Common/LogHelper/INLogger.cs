@@ -1,6 +1,6 @@
 ﻿namespace Highever.SocialMedia.Common
 {
-    public interface INLogger
+    public interface INLogger: IScopedDependency
     {
         #region 文件
         /// <summary>

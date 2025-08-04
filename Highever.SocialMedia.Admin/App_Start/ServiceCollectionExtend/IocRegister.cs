@@ -28,9 +28,11 @@ namespace Highever.SocialMedia.Admin
 .Build();
             services.AddSingleton(new AppSettingConifgHelper(configuration)); 
             //日志注入
-            services.AddScoped<INLogger, NLogAdapter>();
+            //services.AddScoped<INLogger, NLogAdapter>(); 
+            // 注册JwtHelper
+            services.AddScoped<JwtHelper>();
             //注入ORM
-            services.AddSqlSugar();
+            services.AddSqlSugar(); 
             //MongoDB服务
             services.AddMongoDB();  
             //AI

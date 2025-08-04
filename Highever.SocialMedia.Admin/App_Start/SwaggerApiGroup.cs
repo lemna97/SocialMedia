@@ -11,13 +11,13 @@ namespace Highever.SocialMedia.Admin
         /// <summary>
         /// 授权认证
         /// </summary>
-        [GroupInfo(Title = "系统设置", Description = "系统设置", Version = "v1", Url = "https://auth.example.com/v1", UrlDescription = "系统设置")]
-        System,
+        [GroupInfo(Title = "媒体项目", Description = "媒体项目", Version = "v1", Url = "https://auth.example.com/v1", UrlDescription = "媒体项目")]
+        Media,
         /// <summary>
-        /// 授权认证
+        /// 测试接口
         /// </summary>
-        [GroupInfo(Title = "认证授权", Description = "授权相关接口", Version = "v1", Url = "https://auth.example.com/v1", UrlDescription = "认证服务")]
-        Login, 
+        [GroupInfo(Title = "测试接口", Description = "测试接口接口", Version = "v1", Url = "https://auth.example.com/v1", UrlDescription = "测试接口")]
+        Test, 
         /// <summary>
         /// 全托管的接口
         /// </summary>

@@ -19,7 +19,7 @@ namespace Highever.SocialMedia.API
                 if (httpMethod.Equals(expectedMethod, StringComparison.OrdinalIgnoreCase))
                 {
                     // 添加标记表示这是自动推断的
-                    operation.Tags.Add(new OpenApiTag { Name = $"Auto-detected: {httpMethod}" });
+                    //operation.Tags.Add(new OpenApiTag { Name = $"Auto-detected: {httpMethod}" });
                 }
             }
         }

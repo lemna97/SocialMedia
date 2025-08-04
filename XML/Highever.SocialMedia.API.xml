@@ -75,6 +75,36 @@
             <param name="swaggerDoc"></param>
             <param name="context"></param>
         </member>
+        <member name="T:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler">
+            <summary>
+            自定义JWT认证事件处理器
+            处理认证过程中的各种失败情况，返回统一的错误格式
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler.HandleAuthenticationFailed(Microsoft.AspNetCore.Authentication.JwtBearer.AuthenticationFailedContext)">
+            <summary>
+            处理Token验证失败事件
+            触发场景：Token格式错误、签名无效、解析异常等
+            </summary>
+            <param name="context">认证失败上下文</param>
+            <returns>异步任务</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler.HandleChallenge(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerChallengeContext)">
+            <summary>
+            处理认证挑战事件
+            触发场景：访问需要认证的接口但未提供有效Token
+            </summary>
+            <param name="context">JWT Bearer挑战上下文</param>
+            <returns>异步任务</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler.HandleForbidden(Microsoft.AspNetCore.Authentication.JwtBearer.ForbiddenContext)">
+            <summary>
+            处理权限禁止事件
+            触发场景：Token有效但用户权限不足
+            </summary>
+            <param name="context">禁止访问上下文</param>
+            <returns>异步任务</returns>
+        </member>
         <member name="T:Highever.SocialMedia.API.CustomExceptionHandlerMiddleware">
             <summary>
             异常日志中间件
@@ -189,7 +219,7 @@
         </member>
         <member name="T:Highever.SocialMedia.API.Areas.Account.Controllers.AccountConfigController">
             <summary>
-            账户配置管理控制器
+            账户配置
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.API.Areas.Account.Controllers.AccountConfigController.GetAccountConfigList(Highever.SocialMedia.API.Areas.Account.DTO.AccountConfigQueryRequest)">
@@ -496,7 +526,7 @@
         </member>
         <member name="T:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController">
             <summary>
-            Token管理控制器（管理员专用）
+            Token管理
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.CleanupExpiredTokens">
@@ -623,36 +653,6 @@
             获取菜单树
             </summary>
             <returns>菜单树</returns>
-        </member>
-        <member name="T:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler">
-            <summary>
-            自定义JWT认证事件处理器
-            处理认证过程中的各种失败情况，返回统一的错误格式
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler.HandleAuthenticationFailed(Microsoft.AspNetCore.Authentication.JwtBearer.AuthenticationFailedContext)">
-            <summary>
-            处理Token验证失败事件
-            触发场景：Token格式错误、签名无效、解析异常等
-            </summary>
-            <param name="context">认证失败上下文</param>
-            <returns>异步任务</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler.HandleChallenge(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerChallengeContext)">
-            <summary>
-            处理认证挑战事件
-            触发场景：访问需要认证的接口但未提供有效Token
-            </summary>
-            <param name="context">JWT Bearer挑战上下文</param>
-            <returns>异步任务</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler.HandleForbidden(Microsoft.AspNetCore.Authentication.JwtBearer.ForbiddenContext)">
-            <summary>
-            处理权限禁止事件
-            触发场景：Token有效但用户权限不足
-            </summary>
-            <param name="context">禁止访问上下文</param>
-            <returns>异步任务</returns>
         </member>
         <member name="P:Highever.SocialMedia.API.Model.ProductPicture.controlType">
             <summary>

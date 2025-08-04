@@ -21,7 +21,7 @@ namespace Highever.SocialMedia.Application
         public static IServiceCollection AddApplicationEventBusServices(this IServiceCollection services)
         {
 
-            // 后台服务（可选）
+            // 后台服务
             services.AddHostedService<TokenCleanupService>();
 
             // 其他服务...
