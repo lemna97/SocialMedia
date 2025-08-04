@@ -9,7 +9,7 @@ namespace Highever.SocialMedia.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/menus")]
-    [ApiExplorerSettings(GroupName = nameof(SwaggerApiGroup.System))]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerApiGroup.系统功能))] 
     public class MenusController : Controller
     {
         private readonly IMenusService _menusService;

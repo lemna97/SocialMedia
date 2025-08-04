@@ -4,6 +4,61 @@
         <name>Highever.SocialMedia.Application.Contracts</name>
     </assembly>
     <members>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.AssignMenusToRoleRequest">
+            <summary>
+            角色菜单分配请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.AssignMenusToRoleRequest.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.AssignMenusToRoleRequest.MenuIds">
+            <summary>
+            菜单ID列表
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuPermRequest">
+            <summary>
+            删除角色菜单关联请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuPermRequest.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuPermRequest.MenuId">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.AddMenuPermRequest">
+            <summary>
+            添加角色菜单关联请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.AddMenuPermRequest.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.AddMenuPermRequest.MenuId">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.GetMenusByRoleRequest">
+            <summary>
+            角色菜单查询请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetMenusByRoleRequest.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.ICSVTestService">
             <summary>
             ICSVTestService 的应用服务接口
@@ -469,6 +524,86 @@
             </summary>
             <param name="predicate">查询条件</param>
             <returns>是否存在</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.ITokenService">
+            <summary>
+            Token管理服务接口
+            负责处理JWT Token的业务逻辑，包括刷新、撤销等操作
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RefreshTokenAsync(System.String)">
+            <summary>
+            刷新访问令牌
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>新的Token对</returns>
+            <exception cref="T:System.UnauthorizedAccessException">当刷新令牌无效或已过期时抛出</exception>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeRefreshTokenAsync(System.Int64)">
+            <summary>
+            撤销用户的刷新令牌
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>是否撤销成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.UpdateRefreshTokenAsync(System.Int64,System.String,System.DateTime)">
+            <summary>
+            更新用户的刷新令牌
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="refreshToken">新的刷新令牌</param>
+            <param name="expiry">过期时间</param>
+            <returns>是否更新成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.ValidateRefreshTokenAsync(System.String)">
+            <summary>
+            验证刷新令牌是否有效
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>是否有效</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetRefreshTokenInfoAsync(System.Int64)">
+            <summary>
+            获取用户的刷新令牌信息
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>刷新令牌信息，如果不存在则返回null</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.CleanupExpiredTokensAsync">
+            <summary>
+            清理过期的刷新令牌
+            </summary>
+            <returns>清理的令牌数量</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo">
+            <summary>
+            刷新令牌信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.RefreshToken">
+            <summary>
+            刷新令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.ExpireTime">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.LastActivityTime">
+            <summary>
+            最后活动时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.IsExpired">
+            <summary>
+            是否已过期
+            </summary>
         </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.IUserRolesService">
             <summary>

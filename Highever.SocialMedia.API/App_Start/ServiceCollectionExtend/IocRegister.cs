@@ -44,6 +44,9 @@ namespace Highever.SocialMedia.API
             //注入业务
             services.AddApplicationServices();
 
+            //业务层的事件
+            services.AddApplicationEventBusServices();
+
             return services;
         }
     }

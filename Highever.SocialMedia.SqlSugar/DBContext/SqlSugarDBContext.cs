@@ -42,7 +42,11 @@ namespace Highever.SocialMedia.SqlSugar
                 // 添加错误处理
                 db.Aop.OnError = (exp) =>
                 {
-                    _nLogger.Error($"SQL Error: {exp.Message}");
+                    // 记录到数据库
+                    _nLogger.DateBaseError($"SQL执行错误: {exp.Message} | SQL: {exp.Sql}");
+                    
+                    // 同时输出到控制台
+                    Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [SQL_ERROR] {exp.Message}");
                 };
             });
         }

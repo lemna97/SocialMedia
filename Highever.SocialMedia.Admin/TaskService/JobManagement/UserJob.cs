@@ -21,7 +21,7 @@ namespace Highever.SocialMedia.Admin.TaskService
 
         private readonly RateLimitController _rateLimitController;
         private HttpClientHelper _httpclient => _serviceProvider.GetRequiredService<HttpClientHelper>();
-        private IRepository<TiktokUserConfig> repositoryTiktokUserConfig => _serviceProvider.GetRequiredService<IRepository<TiktokUserConfig>>();
+        private IRepository<AccountConfig> repositoryAccountConfig => _serviceProvider.GetRequiredService<IRepository<AccountConfig>>();
         private IRepository<TiktokUsers> _repositoryTiktokUsers => _serviceProvider.GetRequiredService<IRepository<TiktokUsers>>();
         private IRepository<TiktokUsersDaily> _repositoryTiktokUsersDaily => _serviceProvider.GetRequiredService<IRepository<TiktokUsersDaily>>();
 
@@ -47,7 +47,7 @@ namespace Highever.SocialMedia.Admin.TaskService
             
             try
             { 
-                var activeConfigs = await repositoryTiktokUserConfig.GetListAsync(x => x.IsActive);
+                var activeConfigs = await repositoryAccountConfig.GetListAsync(x => x.IsActive);
                 
                 totalUsers = activeConfigs.Count;
                 
@@ -123,16 +123,16 @@ namespace Highever.SocialMedia.Admin.TaskService
         /// <summary>
         /// 获取活跃的用户配置列表
         /// </summary>
-        private async Task<List<TiktokUserConfig>> GetActiveUserConfigsAsync()
+        private async Task<List<AccountConfig>> GetActiveUserConfigsAsync()
         {
             try
             {
-                return await repositoryTiktokUserConfig.QueryListAsync(x => x.IsActive == true);
+                return await repositoryAccountConfig.QueryListAsync(x => x.IsActive == true);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"获取用户配置时发生错误: {ex.Message}");
-                return new List<TiktokUserConfig>();
+                return new List<AccountConfig>();
             }
         }
 
@@ -355,7 +355,7 @@ namespace Highever.SocialMedia.Admin.TaskService
         /// 并发处理一批用户数据
         /// </summary>
         private async Task<(int SuccessCount, int FailedCount, int ApiCalls)> ProcessBatchAsync(
-            List<TiktokUserConfig> batch, int startIndex)
+            List<AccountConfig> batch, int startIndex)
         {
             var successCount = 0;
             var failureCount = 0;
@@ -392,7 +392,7 @@ namespace Highever.SocialMedia.Admin.TaskService
         /// <summary>
         /// 处理单个用户数据
         /// </summary>
-        private async Task<bool> ProcessSingleUserAsync(TiktokUserConfig config)
+        private async Task<bool> ProcessSingleUserAsync(AccountConfig config)
         {
             try
             {

@@ -31,6 +31,24 @@ namespace Highever.SocialMedia.Domain.Entity
         /// </summary>
         [SugarColumn(ColumnName = "is_active", IsNullable = false)]
         public bool IsActive { get; set; } = true;
+
+        /// <summary>
+        /// 刷新令牌
+        /// </summary>
+        [SugarColumn(ColumnName = "refresh_token", Length = 500, IsNullable = true)]
+        public string? RefreshToken { get; set; }
+
+        /// <summary>
+        /// 刷新令牌过期时间
+        /// </summary>
+        [SugarColumn(ColumnName = "refresh_token_expiry", IsNullable = true)]
+        public DateTime? RefreshTokenExpiry { get; set; }
+
+        /// <summary>
+        /// 最后活动时间
+        /// </summary>
+        [SugarColumn(ColumnName = "last_activity_time", IsNullable = true)]
+        public DateTime? LastActivityTime { get; set; }
     }
 }
 

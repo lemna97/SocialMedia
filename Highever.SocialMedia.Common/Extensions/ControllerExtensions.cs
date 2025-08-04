@@ -44,16 +44,7 @@ namespace Highever.SocialMedia.Common
         public static IActionResult Fail<T>(this ControllerBase controller, string message = "操作失败", HttpCode code = HttpCode.失败) where T : class
         {
             return controller.Ok(AjaxResult<T>.Fail(message, code));
-        }
-
-        /// <summary>
-        /// 返回分页响应
-        /// </summary>
-        public static IActionResult Page<T>(this ControllerBase controller, List<T> items, int total, string message = "查询成功") where T : class
-        {
-            var pageResult = new PageResult<T> { Items = items, Total = total };
-            return controller.Ok(AjaxResult<PageResult<T>>.Success(pageResult, message));
-        }
+        } 
 
         /// <summary>
         /// 返回JSON格式的成功响应（兼容现有Json方法）
@@ -86,8 +77,60 @@ namespace Highever.SocialMedia.Common
         {
             return controller.Ok(AjaxResult<object>.Success(null, message));
         }
+
+        /// <summary>
+        /// 返回完整分页响应（包含页码、页大小、总页数等信息）
+        /// </summary>
+        public static IActionResult PagedResult<T>(this ControllerBase controller, PageResult<T> pageResult, string message = "查询成功") where T : class
+        {
+            return controller.Ok(new AjaxResult<object>
+            {
+                code = HttpCode.成功,
+                msg = message,
+                data = new
+                {
+                    items = pageResult.Items,
+                    totalCount = pageResult.Total,
+                    pageIndex = pageResult.PageIndex,
+                    pageSize = pageResult.PageSize,
+                    totalPages = pageResult.TotalPages
+                }
+            });
+        }
+
+        /// <summary>
+        /// 返回完整分页响应（直接传入参数）
+        /// </summary>
+        public static IActionResult PagedResult<T>(this ControllerBase controller, 
+            List<T> items, 
+            int totalCount, 
+            int pageIndex, 
+            int pageSize, 
+            string message = "查询成功") where T : class
+        {
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            
+            return controller.Ok(new AjaxResult<object>
+            {
+                code = HttpCode.成功,
+                msg = message,
+                data = new
+                {
+                    items,
+                    totalCount,
+                    pageIndex,
+                    pageSize,
+                    totalPages
+                }
+            });
+        } 
     }
 }
+
+
+
+
+
 
 
 

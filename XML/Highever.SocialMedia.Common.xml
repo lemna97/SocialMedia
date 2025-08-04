@@ -323,11 +323,6 @@
             返回失败响应（指定类型）
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Page``1(Microsoft.AspNetCore.Mvc.ControllerBase,System.Collections.Generic.List{``0},System.Int32,System.String)">
-            <summary>
-            返回分页响应
-            </summary>
-        </member>
         <member name="M:Highever.SocialMedia.Common.ControllerExtensions.JsonOk``1(Microsoft.AspNetCore.Mvc.ControllerBase,``0,System.String)">
             <summary>
             返回JSON格式的成功响应（兼容现有Json方法）
@@ -346,6 +341,16 @@
         <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Success(Microsoft.AspNetCore.Mvc.ControllerBase,System.String)">
             <summary>
             返回成功响应（无数据）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.PagedResult``1(Microsoft.AspNetCore.Mvc.ControllerBase,Highever.SocialMedia.Common.PageResult{``0},System.String)">
+            <summary>
+            返回完整分页响应（包含页码、页大小、总页数等信息）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.PagedResult``1(Microsoft.AspNetCore.Mvc.ControllerBase,System.Collections.Generic.List{``0},System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            返回完整分页响应（直接传入参数）
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.Common.EnumException.GetDescription(System.Enum)">
@@ -667,7 +672,28 @@
             <summary>
             生成刷新令牌
             </summary>
-            <returns>刷新令牌</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateTokenPair(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            生成Token对（访问令牌 + 刷新令牌）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.RefreshToken(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            验证刷新令牌并生成新的Token对
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="userName">用户名</param>
+            <param name="roles">用户角色列表</param>
+            <param name="permissions">用户权限列表</param>
+            <returns>新的Token对</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.IsValidRefreshTokenFormat(System.String)">
+            <summary>
+            验证刷新令牌的有效性（仅验证格式和基本规则）
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>是否为有效格式</returns>
         </member>
         <member name="M:Highever.SocialMedia.Common.JwtHelper.ValidateToken(System.String)">
             <summary>
@@ -964,7 +990,7 @@
         </member>
         <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskError(System.String,System.Exception,System.Nullable{System.Int64},System.Nullable{System.Int64})">
             <summary>
-            记录任务错误 - 关键日志，入库
+            任务错误 - 关键日志，入库并输出控制台
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.Common.NLogAdapter.TaskBatchInfo(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{System.Int64})">
@@ -987,19 +1013,19 @@
             记录任务里程碑信息 - 关键日志，入库
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.NLogAdapter.DateBaseErrorByCode(System.Exception,System.String)">
-            <summary>
-            异常记录到数据库（code）
-            </summary>
-            <param name="e"></param>
-            <param name="message"></param>
-            <returns></returns>
-        </member>
         <member name="M:Highever.SocialMedia.Common.NLogAdapter.DateBaseError(System.String)">
             <summary>
             异常记录到数据库
             </summary>
             <param name="message"></param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.NLogAdapter.DateBaseErrorByCode(System.Exception,System.String)">
+            <summary>
+            异常记录到数据库（带错误码）
+            </summary>
+            <param name="e"></param>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Highever.SocialMedia.Common.NLogAdapter.Error(System.String)">
             <summary>
@@ -1066,6 +1092,41 @@
             刷新令牌过期时间（天）
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Common.Models.TokenResult">
+            <summary>
+            Token结果
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.AccessToken">
+            <summary>
+            访问令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.RefreshToken">
+            <summary>
+            刷新令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.ExpiresIn">
+            <summary>
+            访问令牌过期时间（秒）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.TokenType">
+            <summary>
+            令牌类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Common.AjaxResult`1">
             <summary>
             统一响应模型
@@ -1110,11 +1171,6 @@
         <member name="M:Highever.SocialMedia.Common.AjaxResult`1.Page``1(System.Collections.Generic.List{``0},System.Int32,System.String)">
             <summary>
             分页响应
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.PageResult`1.Items">
-            <summary>
-            
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.Model.ApiException">

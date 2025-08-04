@@ -1,142 +1,126 @@
 ﻿using Highever.SocialMedia.Application.Contracts;
+using Highever.SocialMedia.Application.EventBus;
+using Highever.SocialMedia.Application.Services.System;
 using Highever.SocialMedia.Common;
+using LinqKit;
 using Microsoft.Extensions.DependencyInjection;
+using NPOI.SS.Formula.Functions;
+using NuGet.Packaging;
+using SQLBuilder.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Highever.SocialMedia.Application
 {
     public static class DependencyInjectionExtensions
     {
+        public static IServiceCollection AddApplicationEventBusServices(this IServiceCollection services)
+        {
+
+            // 后台服务（可选）
+            services.AddHostedService<TokenCleanupService>();
+
+            // 其他服务...
+
+            return services;
+        }
         /// <summary>
-        /// 注册应用服务 - 自动检测调用程序集
+        /// Application.Contracts 接口注入
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, string nowAssemblyName)
+        {
+            var assemblies = new[]
+            {
+                Assembly.Load("Highever.SocialMedia.Application"),
+                Assembly.Load("Highever.SocialMedia.Application.Contracts"),
+                Assembly.Load($"{nowAssemblyName}")
+            };
+
+            services.Scan(scan => scan
+                .FromAssemblies(assemblies)
+                .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())
+                .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
+                .WithSingletonLifetime()
+                .AddClasses(classes => classes.AssignableTo<IScopedDependency>())
+                .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
+                .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
+                .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
+                .WithTransientLifetime());
+
+            return services;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, Assembly[] assemblies)
+        {
+            var now_assemblies = new[]
+            {
+                Assembly.Load("Highever.SocialMedia.Application"),
+                Assembly.Load("Highever.SocialMedia.Application.Contracts")
+            };
+            now_assemblies.AddRange(assemblies);
+            services.Scan(scan => scan
+                .FromAssemblies(now_assemblies)
+                .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())
+                .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
+                .WithSingletonLifetime()
+                .AddClasses(classes => classes.AssignableTo<IScopedDependency>())
+                .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
+                .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
+                .AsImplementedInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
+                .WithTransientLifetime());
+
+            return services;
+        }
+
+        /// <summary>
+        /// 
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            // 获取调用程序集
-            var callingAssembly = Assembly.GetCallingAssembly();
-            return AddApplicationServices(services, callingAssembly);
-        }
-
-        /// <summary>
-        /// 注册应用服务 - 指定程序集名称
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="assemblyName">程序集名称</param>
-        /// <returns></returns>
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, string assemblyName)
-        {
-            try
+            var assemblies = new[]
             {
-                var assembly = Assembly.Load(assemblyName);
-                return AddApplicationServices(services, assembly);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"无法加载程序集 '{assemblyName}': {ex.Message}", ex);
-            }
-        }
-
-        /// <summary>
-        /// 注册应用服务 - 指定程序集实例
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="additionalAssembly">额外的程序集</param>
-        /// <returns></returns>
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, Assembly additionalAssembly)
-        {
-            var assemblies = GetRequiredAssemblies(additionalAssembly);
-            return RegisterServices(services, assemblies);
-        }
-
-        /// <summary>
-        /// 注册应用服务 - 指定多个程序集
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="additionalAssemblies">额外的程序集数组</param>
-        /// <returns></returns>
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, Assembly[] additionalAssemblies)
-        {
-            var assemblies = GetRequiredAssemblies(additionalAssemblies);
-            return RegisterServices(services, assemblies);
-        }
-
-        /// <summary>
-        /// 获取必需的程序集
-        /// </summary>
-        /// <param name="additionalAssemblies">额外程序集</param>
-        /// <returns></returns>
-        private static Assembly[] GetRequiredAssemblies(params Assembly[] additionalAssemblies)
-        {
-            var coreAssemblies = new List<Assembly>();
-
-            // 核心程序集
-            var coreAssemblyNames = new[]
-            {
-                "Highever.SocialMedia.Application",
-                "Highever.SocialMedia.Application.Contracts"
+                Assembly.Load("Highever.SocialMedia.Application"),
+                Assembly.Load("Highever.SocialMedia.Application.Contracts")
             };
-
-            foreach (var assemblyName in coreAssemblyNames)
-            {
-                try
-                {
-                    var assembly = Assembly.Load(assemblyName);
-                    coreAssemblies.Add(assembly);
-                }
-                catch (Exception ex)
-                {
-                    // 记录警告但不中断程序
-                    Console.WriteLine($"警告: 无法加载核心程序集 '{assemblyName}': {ex.Message}");
-                }
-            }
-
-            // 添加额外程序集
-            if (additionalAssemblies?.Length > 0)
-            {
-                coreAssemblies.AddRange(additionalAssemblies.Where(a => a != null));
-            }
-
-            return coreAssemblies.ToArray();
-        }
-
-        /// <summary>
-        /// 注册服务到容器
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="assemblies"></param>
-        /// <returns></returns>
-        private static IServiceCollection RegisterServices(IServiceCollection services, Assembly[] assemblies)
-        {
-            if (assemblies?.Length == 0)
-            {
-                throw new InvalidOperationException("没有找到可用的程序集进行服务注册");
-            }
 
             services.Scan(scan => scan
                 .FromAssemblies(assemblies)
-                // 注册单例服务
                 .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())
                 .AsImplementedInterfaces()
-                .AsSelfWithInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
                 .WithSingletonLifetime()
-                // 注册作用域服务
                 .AddClasses(classes => classes.AssignableTo<IScopedDependency>())
                 .AsImplementedInterfaces()
-                .AsSelfWithInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
                 .WithScopedLifetime()
-                // 注册瞬态服务
                 .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
                 .AsImplementedInterfaces()
-                .AsSelfWithInterfaces()
+                .AsSelfWithInterfaces()//同时注册自身和接口
                 .WithTransientLifetime());
 
             return services;
-        }
+        } 
     }
 }
 

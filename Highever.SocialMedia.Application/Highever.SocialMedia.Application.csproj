@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="EventBus\" />
     <Folder Include="Services\System\" />
   </ItemGroup>
 

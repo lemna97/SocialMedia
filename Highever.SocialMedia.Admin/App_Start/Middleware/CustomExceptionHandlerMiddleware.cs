@@ -23,20 +23,26 @@ namespace Highever.SocialMedia.Admin
         {
             try
             {
-                // 一定要在任何读取 Body 之前先 EnableBuffering
-                context.Request.EnableBuffering();
+                // 跳过Swagger相关路径的异常处理
+                if (context.Request.Path.StartsWithSegments("/swagger") || 
+                    context.Request.Path.StartsWithSegments("/doc.html"))
+                {
+                    await _next(context);
+                    return;
+                }
 
-                // 如果你想记录 Body，就按下面流程做：
-                // using var reader = new StreamReader(context.Request.Body, leaveOpen: true);
-                // var bodyText = await reader.ReadToEndAsync();
-                // _logger.LogDebug("RequestBody: {body}", bodyText);
-                // context.Request.Body.Position = 0;
+                context.Request.EnableBuffering();
                 await _next(context);
             }
             catch (Exception ex)
             {
-                //_serviceProvider.GetRequiredService<NLogger>().DateBaseError(ex.Message);
-                _logger.LogError(ex, ex.Message);
+                // 使用NLogger记录异常到数据库
+                var nLogger = _serviceProvider.GetRequiredService<INLogger>();
+                nLogger.DateBaseError($"Admin异常: {ex.Message} | StackTrace: {ex.StackTrace}");
+                
+                // 使用ILogger记录到控制台
+                _logger.LogError(ex, "Admin请求发生异常: {Message}", ex.Message);
+                
                 await HandleExceptionAsync(context, ex);
             }
         }

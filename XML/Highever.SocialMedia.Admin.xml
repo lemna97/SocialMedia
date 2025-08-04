@@ -425,12 +425,12 @@
             更新TiktokUsersDaily表（插入或更新当天记录）
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.ProcessBatchAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.TiktokUserConfig},System.Int32)">
+        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.ProcessBatchAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.AccountConfig},System.Int32)">
             <summary>
             并发处理一批用户数据
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.ProcessSingleUserAsync(Highever.SocialMedia.Domain.Entity.TiktokUserConfig)">
+        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.ProcessSingleUserAsync(Highever.SocialMedia.Domain.Entity.AccountConfig)">
             <summary>
             处理单个用户数据
             </summary>

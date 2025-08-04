@@ -6,7 +6,7 @@ namespace Highever.SocialMedia.Domain.Entity
     /// 角色菜单关联表
     /// </summary>
     [SugarTable("system_menu_perms")]
-    public class MenuPerms:BaseEntity
+    public class MenuPerms
     {
         /// <summary>
         /// 角色ID

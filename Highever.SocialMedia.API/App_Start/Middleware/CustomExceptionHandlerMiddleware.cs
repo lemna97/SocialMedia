@@ -23,20 +23,26 @@ namespace Highever.SocialMedia.API
         {
             try
             {
-                // 一定要在任何读取 Body 之前先 EnableBuffering
-                context.Request.EnableBuffering();
+                // 跳过Swagger相关路径的异常处理
+                if (context.Request.Path.StartsWithSegments("/swagger") || 
+                    context.Request.Path.StartsWithSegments("/doc.html"))
+                {
+                    await _next(context);
+                    return;
+                }
 
-                // 如果你想记录 Body，就按下面流程做：
-                // using var reader = new StreamReader(context.Request.Body, leaveOpen: true);
-                // var bodyText = await reader.ReadToEndAsync();
-                // _logger.LogDebug("RequestBody: {body}", bodyText);
-                // context.Request.Body.Position = 0;
+                context.Request.EnableBuffering();
                 await _next(context);
             }
             catch (Exception ex)
             {
-                //_serviceProvider.GetRequiredService<NLogger>().DateBaseError(ex.Message);
-                _logger.LogError(ex, ex.Message);
+                // 使用 HttpContext 的服务提供程序（已经是正确的作用域）
+                var nLogger = context.RequestServices.GetRequiredService<INLogger>();
+                nLogger.DateBaseError($"API异常: {ex.Message} | Path: {context.Request.Path} | StackTrace: {ex.StackTrace}");
+                
+                // 使用ILogger记录到控制台
+                _logger.LogError(ex, "API请求发生异常: {Message} | Path: {Path}", ex.Message, context.Request.Path);
+                
                 await HandleExceptionAsync(context, ex);
             }
         }

@@ -4,6 +4,46 @@
         <name>Highever.SocialMedia.Domain</name>
     </assembly>
     <members>
+        <member name="T:Highever.SocialMedia.Domain.Entity.AccountConfig">
+            <summary>
+            账户配置表（原TikTok用户配置表）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.AccountConfig.Id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.AccountConfig.UniqueId">
+            <summary>
+            用户名(用户自定义的唯一标识符)
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.AccountConfig.SecUid">
+            <summary>
+            安全用户ID(TikTok内部安全标识)
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.AccountConfig.SystemUid">
+            <summary>
+            系统用户ID(数据权限关联)
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.AccountConfig.IsActive">
+            <summary>
+            是否启用(配置状态标识)
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.AccountConfig.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.AccountConfig.UpdatedAt">
+            <summary>
+            更新时间
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Domain.Entity.BaseEntity">
             <summary>
             实体基类
@@ -484,6 +524,21 @@
             是否激活
             </summary>
         </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Users.RefreshToken">
+            <summary>
+            刷新令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Users.RefreshTokenExpiry">
+            <summary>
+            刷新令牌过期时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Users.LastActivityTime">
+            <summary>
+            最后活动时间
+            </summary>
+        </member>
         <member name="P:Highever.SocialMedia.Domain.Entity.TaskEntity.TaskName">
             <summary>
             任务名称（对应TaskService中的Job结尾的文件）
@@ -512,41 +567,6 @@
         <member name="P:Highever.SocialMedia.Domain.Entity.TaskEntity.CreatedAt">
             <summary>
             当前时间
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Domain.Entity.TiktokUserConfig">
-            <summary>
-            TikTok用户配置表
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUserConfig.Id">
-            <summary>
-            主键ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUserConfig.UniqueId">
-            <summary>
-            用户名(用户自定义的唯一标识符)
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUserConfig.SecUid">
-            <summary>
-            安全用户ID(TikTok内部安全标识)
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUserConfig.IsActive">
-            <summary>
-            是否启用(配置状态标识)
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUserConfig.CreatedAt">
-            <summary>
-            创建时间
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUserConfig.UpdatedAt">
-            <summary>
-            更新时间
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Domain.Entity.TiktokUsers">

@@ -1,19 +1,19 @@
+using Highever.SocialMedia.API;
+using Highever.SocialMedia.API.Handlers;
+using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Common.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.IdentityModel.Tokens;
+using NLog.Web;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
-using Highever.SocialMedia.API;
-using Highever.SocialMedia.Common;
-using Highever.SocialMedia.Common.Models;
-using IGeekFan.AspNetCore.Knife4jUI;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -27,11 +27,7 @@ builder.Services.AddLegacyConfigurations(builder.Configuration);
 // 获取JWT设置用于认证配置
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 // 配置JWT认证
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -44,31 +40,85 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings.Audience,
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
-    };
-
+    }; 
     options.Events = new JwtBearerEvents
     {
+        /// <summary>
+        /// OnMessageReceived: 接收到HTTP请求时触发
+        /// 作用：自定义Token获取方式，支持从多个地方获取Token
+        /// 触发时机：每次HTTP请求到达时，在验证Token之前
+        /// </summary>
         OnMessageReceived = context =>
         {
-            // 支持从查询参数中获取token
+            // 1. 优先从Authorization Header获取 (默认方式)
+            // 格式: Authorization: Bearer <token>
+            // 这个是JWT Bearer认证的标准方式，框架会自动处理
+
+            // 2. 支持从Cookie中获取token
+            var token = context.Request.Cookies["auth_token"];
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+            }
+
+            // 3. 支持从查询参数中获取token
             var accessToken = context.Request.Query["token"];
             if (!string.IsNullOrEmpty(accessToken))
             {
                 context.Token = accessToken;
             }
             return Task.CompletedTask;
-        }
+        },
+
+        /// <summary>
+        /// OnAuthenticationFailed: Token验证失败时触发
+        /// 作用：处理Token验证失败的情况（如Token格式错误、签名无效等）
+        /// 触发时机：Token解析或验证过程中发生异常时
+        /// 常见原因：Token格式错误、签名无效、密钥不匹配等
+        /// </summary>
+        OnAuthenticationFailed = CustomAuthenticationHandler.HandleAuthenticationFailed,
+
+        /// <summary>
+        /// OnChallenge: 需要身份验证但未提供有效Token时触发
+        /// 作用：处理未登录或Token过期的情况
+        /// 触发时机：访问需要认证的接口但没有有效Token时
+        /// 常见原因：未提供Token、Token已过期、Token无效等
+        /// </summary>
+        OnChallenge = CustomAuthenticationHandler.HandleChallenge,
+
+        /// <summary>
+        /// OnForbidden: 身份验证成功但权限不足时触发
+        /// 作用：处理权限不足的情况
+        /// 触发时机：Token有效但用户没有访问特定资源的权限时
+        /// 常见原因：用户角色不匹配、缺少特定权限等
+        /// </summary>
+        OnForbidden = CustomAuthenticationHandler.HandleForbidden
     };
 });
 
 // Body 参数校验过滤器
 builder.Services.AddControllers(options =>
 {
-    // 全局模型字段过滤器，可选：SuppressModelStateInvalidFilter 设置成 True
+    // 全局模型字段过滤器
     options.Filters.Add<ValidateInputAtrribute>();
     
     // 添加自动HTTP方法约定
     options.Conventions.Add(new AutoHttpMethodConvention());
+    
+    // 添加全局授权过滤器 - 默认所有接口都需要认证
+    options.Filters.Add(new AuthorizeFilter());
+}) 
+.ConfigureApplicationPartManager(manager =>
+{
+    // 添加 Areas 支持
+    manager.FeatureProviders.Add(new ControllerFeatureProvider());
+});
+
+// 添加 Areas 服务
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true; // URL 小写
+    options.LowercaseQueryStrings = false;
 });
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -110,12 +160,13 @@ builder.Services.AddSwaggerGen(c =>
     // 判断接口归属哪个分组
     c.DocInclusionPredicate((docName, apiDescription) =>
     {
+        // 如果是默认分组，包含所有没有明确分组的接口
         if (docName == SwaggerGroups.Name)
         {
-            return string.IsNullOrEmpty(apiDescription.GroupName)
-                   || string.IsNullOrWhiteSpace(apiDescription.GroupName);
+            return string.IsNullOrEmpty(apiDescription.GroupName);
         }
-        return apiDescription.GroupName == docName;
+        // 其他分组只包含明确指定的接口
+        return !string.IsNullOrEmpty(apiDescription.GroupName) && apiDescription.GroupName == docName;
     });
 
     // 配置接口唯一标识
@@ -125,7 +176,7 @@ builder.Services.AddSwaggerGen(c =>
         var parameters = string.Join("-", apiDesc.ParameterDescriptions.Select(p => p.Name));
         return $"{controllerAction.ControllerName}-{controllerAction.ActionName}-{parameters}";
     });
-     
+
     // 获取 XML 文件路径，配置数据库实体和方法的注释
     var projectRoot = Directory.GetCurrentDirectory();
     var xmlPath = Path.Combine(projectRoot);
@@ -207,7 +258,16 @@ builder.Services.AddCors(options =>
     });
 });
 #endregion
- 
+
+// 配置全局认证策略
+builder.Services.AddAuthorization(options =>
+{
+    // 默认策略：需要认证
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()  // 要求用户必须已认证
+            .Build();
+
+});
 
 // 指定端口号
 builder.WebHost.UseKestrel().UseUrls($"http://*:{AppSettingConifgHelper.ReadAppSettings("ADMIN_PORT") ?? "8326"}").UseIIS();
@@ -221,7 +281,7 @@ app.UseCustomExceptionHandler();
 ServiceLocator.SetLocatorProvider(app.Services);
 
 // DI容器中的服务列表
-app.RegisteredServicesPage(builder.Services); 
+app.RegisteredServicesPage(builder.Services);
 
 // 加载静态资源
 app.UseStaticFiles();
@@ -232,16 +292,36 @@ app.UseRouting();
 // 使用 CORS 跨域中间件
 app.UseCors("AllowSpecificOrigins");
 
-// 直接使用标准的JWT认证，不需要自定义中间件
+// 1. JWT认证中间件 - 验证Token有效性
 app.UseAuthentication();
 
+// 2. Token刷新中间件 - 检查是否需要刷新
+app.UseMiddleware<TokenRefreshMiddleware>();
+
+// 3. 数据权限中间件 - 加载用户数据权限上下文
+app.UseMiddleware<DataPermissionMiddleware>();
+
+// 4. 授权中间件 - 检查权限
 app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
+    app.UseSwagger(c =>
+    {
+        c.SerializeAsV2 = false;
+    });
     app.ConfigureKnife4UI();
+    
+    // 添加详细日志
+    app.Use(async (context, next) =>
+    {
+        if (context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            Console.WriteLine($"Swagger请求: {context.Request.Path}");
+        }
+        await next();
+    });
 }
 
 // CSP配置
@@ -251,6 +331,23 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.MapControllers();
+// 配置路由映射
+app.UseEndpoints(endpoints =>
+{
+    // Areas API 路由
+    endpoints.MapControllerRoute(
+        name: "areas-api",
+        pattern: "api/{area:exists}/{controller}/{action=Index}/{id?}"
+    );
+    
+    // 默认 API 路由
+    endpoints.MapControllerRoute(
+        name: "default-api", 
+        pattern: "api/{controller}/{action=Index}/{id?}"
+    );
+    
+    // 支持特性路由的控制器
+    endpoints.MapControllers();
+});
 
 app.Run();

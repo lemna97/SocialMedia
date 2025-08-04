@@ -55,7 +55,7 @@ namespace Highever.SocialMedia.Common
         }
 
         /// <summary>
-        /// 记录任务错误 - 关键日志，入库
+        /// 任务错误 - 关键日志，入库并输出控制台
         /// </summary>
         public void TaskError(string taskName, Exception exception, long? taskId = null, long? taskRunId = null)
         {
@@ -64,7 +64,15 @@ namespace Highever.SocialMedia.Common
             logEvent.Properties["TaskName"] = taskName;
             logEvent.Properties["TaskId"] = taskId;
             logEvent.Properties["TaskRunId"] = taskRunId;
+            
+            // 记录到数据库
             _taskCriticalLogger.Log(logEvent);
+            
+            // 同时记录到错误文件
+            _errorLogger.Error($"[TASK_ERROR] 任务:{taskName}, 错误:{exception.Message}, StackTrace:{exception.StackTrace}");
+            
+            // 输出到控制台
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [TASK_ERROR] 任务:{taskName}, 错误:{exception.Message}");
         }
 
         /// <summary>
@@ -132,7 +140,20 @@ namespace Highever.SocialMedia.Common
         #endregion
 
         /// <summary>
-        /// 异常记录到数据库（code）
+        /// 异常记录到数据库
+        /// </summary>
+        /// <param name="message"></param>
+        public void DateBaseError(string message)
+        {
+            // 同时记录到数据库和控制台
+            _databaseLogger.Error(message);
+            _errorLogger.Error($"[DATABASE_ERROR] {message}");
+            
+            // 输出到控制台
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ERROR] {message}");
+        }
+        /// <summary>
+        /// 异常记录到数据库（带错误码）
         /// </summary>
         /// <param name="e"></param>
         /// <param name="message"></param>
@@ -140,16 +161,16 @@ namespace Highever.SocialMedia.Common
         public string DateBaseErrorByCode(Exception e, string message)
         {
             string errorCode = string.Empty;
-            _databaseLogger.Error(PackageErrorMsg(e, ref errorCode, message));
+            var errorMsg = PackageErrorMsg(e, ref errorCode, message);
+            
+            // 同时记录到数据库和控制台
+            _databaseLogger.Error(errorMsg);
+            _errorLogger.Error($"[DATABASE_ERROR] {errorMsg}");
+            
+            // 输出到控制台
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ERROR] {errorMsg}");
+            
             return string.IsNullOrEmpty(errorCode) ? errorCode : $"DATABASE错误编码：{errorCode}";
-        }
-        /// <summary>
-        /// 异常记录到数据库
-        /// </summary>
-        /// <param name="message"></param>
-        public void DateBaseError(string message)
-        {
-            _databaseLogger.Error(message);
         }
         /// <summary>
         /// 异常记录到文件

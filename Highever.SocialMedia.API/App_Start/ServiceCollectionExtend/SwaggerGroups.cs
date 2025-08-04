@@ -68,19 +68,6 @@ namespace Highever.SocialMedia.API
         /// <param name="app"></param>
         public static void ConfigureKnife4UI(this IApplicationBuilder app)
         {
-            //Swagger换成另外一种UI
-            //app.UseSwaggerUI(options =>
-            //{
-            //    // 遍历ApiGroupNames所有枚举值生成接口文档
-            //    typeof(SwaggerApiGroup).GetFields().Skip(1).ToList().ForEach(f =>
-            //    {
-            //        //获取枚举值上的特性
-            //        var info = f.GetCustomAttributes(typeof(GroupInfoAttribute), false).OfType<GroupInfoAttribute>().FirstOrDefault();
-            //        options.SwaggerEndpoint($"/swagger/{f.Name}/swagger.json", info != null ? info.Title : f.Name);
-            //    });
-            //    options.SwaggerEndpoint("/swagger/Default/swagger.json", "无分组");
-            //    options.RoutePrefix = string.Empty;
-            //});
             app.UseKnife4UI(c =>
             {
                 c.ShowExtensions();
@@ -107,7 +94,7 @@ namespace Highever.SocialMedia.API
                     c.SwaggerEndpoint($"/swagger/{group.Name}/swagger.json", group.Title);
                 });
 
-                // 添加默认分组 endpoint
+                // 添加默认分组 endpoint - 确保最后添加
                 c.SwaggerEndpoint($"/swagger/{Name}/swagger.json", Title);
 
                 c.RoutePrefix = string.Empty;

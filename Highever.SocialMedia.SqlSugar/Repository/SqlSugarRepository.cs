@@ -33,7 +33,15 @@ namespace Highever.SocialMedia.SqlSugar
                 query = query.Where(predicate);
             return await query.ToListAsync();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="ascending"></param>
+        /// <returns></returns>
         public async Task<PagedResult<T>> GetPagedListAsync(
             Expression<Func<T, bool>>? predicate = null,
             int pageIndex = 1,
