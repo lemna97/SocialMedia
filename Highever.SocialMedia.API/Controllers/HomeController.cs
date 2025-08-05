@@ -54,7 +54,8 @@ namespace Highever.SocialMedia.API.Controllers
         /// <param name="request">登录请求</param>
         /// <returns>登录结果，包含JWT Token</returns>
         [HttpPost("login")]
-        [AllowAnonymous] 
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Login([FromForm] LoginRequest request)
         {
             try
@@ -143,6 +144,8 @@ namespace Highever.SocialMedia.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("logout")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
             try
@@ -171,8 +174,9 @@ namespace Highever.SocialMedia.API.Controllers
         /// </summary>
         /// <param name="refreshToken">刷新令牌</param>
         /// <returns></returns>
-        [HttpPost("refresh-token")]
+        [HttpPost("refreshToken")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> RefreshToken([FromForm] string refreshToken)
         {
             try

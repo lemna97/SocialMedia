@@ -1,11 +1,11 @@
-﻿using Hangfire;
+﻿using Highever.SocialMedia.Admin.TaskService.Models;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
+using Highever.SocialMedia.SqlSugar;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
-using Highever.SocialMedia.Admin.TaskService.Models;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Highever.SocialMedia.Admin.TaskService
@@ -165,21 +165,38 @@ namespace Highever.SocialMedia.Admin.TaskService
 
                 if (apiResponse != null && apiResponse.Data?.AwemeList != null)
                 {
+                    var videoCount = 0;
+                    
+                    // 手动控制事务
+                    await _repositoryTiktokVideos.BeginTransactionAsync();
                     try
                     {
-                        var videoCount = 0;
                         foreach (var video in apiResponse.Data.AwemeList)
                         {
                             await UpdateTiktokVideosAsync(video);
                             await UpdateTiktokVideosDailyAsync(video);
                             videoCount++;
                         }
-
+                        
+                        await _repositoryTiktokVideos.CommitTransactionAsync();
+                        
                         _logger.TaskApiCall("VideoDataSync", config.UniqueId, true, null, null);
+                        Console.WriteLine($"✓ 用户 {config.UniqueId} 事务提交成功，处理了 {videoCount} 个视频");
                         return (true, videoCount);
                     }
                     catch (Exception ex)
                     {
+                        try
+                        {
+                            await _repositoryTiktokVideos.RollbackTransactionAsync();
+                            Console.WriteLine($"✓ 用户 {config.UniqueId} 事务回滚成功");
+                        }
+                        catch (Exception rollbackEx)
+                        {
+                            Console.WriteLine($"✗ 用户 {config.UniqueId} 事务回滚失败: {rollbackEx.Message}");
+                            _logger.TaskError($"VideoDataSync-{config.UniqueId}-Rollback", rollbackEx, null, null);
+                        }
+                        
                         Console.WriteLine($"数据库操作失败，用户: {config.UniqueId}, 错误: {ex.Message}");
                         _logger.TaskApiCall("VideoDataSync", config.UniqueId, false, $"EXCEPTION:数据库操作失败: {ex.Message}", null);
                         _logger.TaskError($"VideoDataSync-{config.UniqueId}", ex, null, null);
@@ -188,12 +205,6 @@ namespace Highever.SocialMedia.Admin.TaskService
                 }
 
                 _logger.TaskApiCall("VideoDataSync", config.UniqueId, false, $"API_FAIL:{errorMessage}", null);
-                _logger.TaskMilestone("VideoDataSync", $"用户失败: {config.UniqueId}", null, null, new Dictionary<string, object>
-                {
-                    ["FailedUser"] = config.UniqueId,
-                    ["ErrorMessage"] = errorMessage ?? "未知错误"
-                });
-
                 return (false, 0);
             }
             catch (Exception ex)
@@ -254,11 +265,7 @@ namespace Highever.SocialMedia.Admin.TaskService
                         throw new InvalidOperationException(lastErrorMessage);
                     }
 
-                    var apiResponse = JsonSerializer.Deserialize<TikTokVideoApiResponse>(responseJson, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true,
-                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-                    });
+                    var apiResponse = JsonSerializer.Deserialize<TikTokVideoApiResponse>(responseJson, Highever.SocialMedia.Common.JsonHelper.DefaultOptions);
 
                     if (apiResponse?.Code == 200 && apiResponse.Data?.AwemeList != null)
                     {
@@ -320,13 +327,13 @@ namespace Highever.SocialMedia.Admin.TaskService
         {
             try
             {
-                var videoId = long.Parse(video.AwemeId);
+                var videoId = video.AwemeId; // 改为字符串
                 var existingVideo = await _repositoryTiktokVideos.FirstOrDefaultAsync(x => x.Id == videoId);
 
                 var tiktokVideo = new TiktokVideos
                 {
                     Id = videoId,
-                    UserId = long.Parse(video.Author.Uid),
+                    UserId = video.Author.Uid,
                     UniqueId = video.Author.UniqueId,
                     Nickname = video.Author.Nickname,
                     Desc = video.Desc,
@@ -335,15 +342,15 @@ namespace Highever.SocialMedia.Admin.TaskService
                     Ratio = video.Video?.Ratio ?? "",
                     CoverUrl = video.Video?.Cover?.UrlListData?.FirstOrDefault() ?? "",
                     PlayUrl = video.Video?.PlayAddr?.UrlListData?.FirstOrDefault() ?? "",
-                    MusicId = string.IsNullOrEmpty(video.Music?.IdStr) ? null : long.Parse(video.Music.IdStr),
+                    MusicId = video.Music?.IdStr, // 直接使用字符串，不需要转换
                     MusicTitle = video.Music?.Title ?? "",
                     MusicAuthor = video.Music?.Author ?? "",
                     IsOriginalSound = video.Music?.IsOriginalSound ?? false,
                     Hashtags = video.ChaList != null ? JsonSerializer.Serialize(video.ChaList.Select(x => x.ChaName)) : null,
                     PoiName = video.PoiData?.PoiName,
                     Address = video.PoiData?.AddressInfo?.Address,
-                    Latitude = video.PoiData?.AddressInfo?.Lat,
-                    Longitude = video.PoiData?.AddressInfo?.Lng,
+                    Latitude = video.PoiData?.AddressInfo?.Lat?.ToString(),
+                    Longitude = video.PoiData?.AddressInfo?.Lng?.ToString(),
                     Region = video.Region ?? "",
                     PlayCount = video.Statistics?.PlayCount ?? 0,
                     DiggCount = video.Statistics?.DiggCount ?? 0,
@@ -407,7 +414,7 @@ namespace Highever.SocialMedia.Admin.TaskService
         {
             try
             {
-                var videoId = long.Parse(video.AwemeId);
+                var videoId = video.AwemeId; // 改为字符串
                 var today = DateTime.Today;
 
                 var existingDaily = await _repositoryTiktokVideosDaily.FirstOrDefaultAsync(
@@ -416,36 +423,59 @@ namespace Highever.SocialMedia.Admin.TaskService
                 var tiktokVideoDaily = new TiktokVideosDaily
                 {
                     Id = videoId,
-                    UserId = long.Parse(video.Author.Uid),
+                    UserId = video.Author.Uid, // 改为字符串
                     UniqueId = video.Author.UniqueId,
                     Nickname = video.Author.Nickname,
                     Desc = video.Desc,
                     CreateTime = video.CreateTime,
+                    Duration = video.Video?.Duration,
+                    CoverUrl = video.Video?.Cover?.UrlListData?.FirstOrDefault(),
+                    Hashtags = video.ChaList != null ? JsonSerializer.Serialize(video.ChaList.Select(x => x.ChaName)) : null,
+                    Region = video.Region,
                     PlayCount = video.Statistics?.PlayCount ?? 0,
                     DiggCount = video.Statistics?.DiggCount ?? 0,
                     CommentCount = video.Statistics?.CommentCount ?? 0,
                     DownloadCount = video.Statistics?.DownloadCount ?? 0,
                     ShareCount = video.Statistics?.ShareCount ?? 0,
                     RecordDate = today,
-                    UpdatedAt = DateTime.Now
+                    UpdatedAt = DateTime.Now,
+                    FollowerCount = video.Author?.FollowerCount ?? 0,
+                    FollowingCount = video.Author?.FollowingCount ?? 0,
+                    AwemeCount = video.Author?.AwemeCount ?? 0,
+                    TotalFavorited = video.Author?.TotalFavorited ?? 0,
+                    FavoritingCount = video.Author?.FavoritingCount ?? 0,
+                    CollectCount = video.Statistics?.CollectCount ?? 0,
+                    ForwardCount = video.Statistics?.ForwardCount ?? 0,
+                    WhatsappShareCount = video.Statistics?.WhatsappShareCount ?? 0,
+                    AllowComment = video.Status?.AllowComment ?? false,
+                    AllowShare = video.Status?.AllowShare ?? false,
+                    AllowDownload = video.VideoControl?.AllowDownload ?? false,
+                    AllowDuet = video.VideoControl?.AllowDuet ?? false,
+                    AllowStitch = video.VideoControl?.AllowStitch ?? false,
+                    IsTop = video.IsTop ?? false,
+                    IsAds = video.IsAds ?? false,
+                    PromoteIconText = video.PromoteIconText,
+                    ChaNames = video.ChaList != null ? JsonSerializer.Serialize(video.ChaList.Select(x => x.ChaName)) : null,
+                    CoverLabels = video.CoverLabels != null ? JsonSerializer.Serialize(video.CoverLabels) : null,
+                    AigcLabelType = video.AigcInfo?.AigcLabelType ?? 0,
+                    CreatedByAi = video.AigcInfo?.CreatedByAi ?? false,
+                    HasWatermark = video.Video?.HasWatermark ?? false
                 };
 
                 if (existingDaily != null)
                 {
                     tiktokVideoDaily.CreatedAt = existingDaily.CreatedAt;
                     await _repositoryTiktokVideosDaily.UpdateAsync(tiktokVideoDaily);
-                    Console.WriteLine($"更新视频 {video.AwemeId} 今日的TiktokVideosDaily记录");
                 }
                 else
                 {
                     tiktokVideoDaily.CreatedAt = DateTime.Now;
                     await _repositoryTiktokVideosDaily.InsertAsync(tiktokVideoDaily);
-                    Console.WriteLine($"插入视频 {video.AwemeId} 今日的TiktokVideosDaily记录");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"更新TiktokVideosDaily表时发生错误: {ex.Message}");
+                Console.WriteLine($"更新TiktokVideosDaily失败: {ex.Message}");
                 throw;
             }
         }

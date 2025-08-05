@@ -1,6 +1,7 @@
 using Highever.SocialMedia.API;
 using Highever.SocialMedia.API.Handlers;
 using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Common.Extension;
 using Highever.SocialMedia.Common.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -233,6 +234,10 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     // 格式化日期时间格式
     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonExtension.DatetimeJsonConverter());
+    // 灵活的可空类型转换器
+    options.JsonSerializerOptions.Converters.Add(new TextJsonExtension.FlexibleDateTimeNullableConverter());
+    options.JsonSerializerOptions.Converters.Add(new TextJsonExtension.FlexibleLongNullableConverter());
+    options.JsonSerializerOptions.Converters.Add(new TextJsonExtension.FlexibleIntNullableConverter());
     // 忽略循环引用
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     // 格式化缩进
@@ -243,6 +248,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
     // 自定义 long 转 string Converter
     options.JsonSerializerOptions.Converters.Add(new LongToStringConverter());
+    // 添加灵活的布尔值转换器
+    options.JsonSerializerOptions.Converters.Add(new FlexibleBooleanConverter()); 
 });
 #endregion
 

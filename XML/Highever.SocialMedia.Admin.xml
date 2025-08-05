@@ -4,21 +4,6 @@
         <name>Highever.SocialMedia.Admin</name>
     </assembly>
     <members>
-        <member name="T:Highever.SocialMedia.Admin.AutoHttpMethodConvention">
-            <summary>
-            自动HTTP方法约定 - 在路由构建时自动为Action分配HTTP方法
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.AutoHttpMethodConvention.HasHttpMethodAttribute(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
-            <summary>
-            检查Action是否已有HTTP方法特性
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.AutoHttpMethodConvention.GetHttpMethod(System.String)">
-            <summary>
-            根据Action名称获取对应的HTTP方法
-            </summary>
-        </member>
         <member name="T:Highever.SocialMedia.Admin.AuthorizationParameterFilter">
             <summary>
             全局Authorizec参数校验
@@ -137,6 +122,31 @@
         <member name="P:Highever.SocialMedia.Admin.ApiGroupAttribute.GroupName">
             <summary>
             分组名称
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Admin.Controllers.HangfireManagementController">
+            <summary>
+            Hangfire 管理
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.HangfireManagementController.ClearAllJobs">
+            <summary>
+            清理所有队列任务
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.HangfireManagementController.ClearRecurringJobs">
+            <summary>
+            清理所有循环任务
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.HangfireManagementController.ResetAll">
+            <summary>
+            完全重置 Hangfire（清理所有数据）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.Controllers.HangfireManagementController.GetStats">
+            <summary>
+            获取 Hangfire 统计信息
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Admin.Controllers.AIRecruitHomeController">

@@ -42,5 +42,16 @@ namespace Highever.SocialMedia.Domain.Repository
         Task<int> BulkDeleteAsync(Expression<Func<T, bool>> predicate);
         Task<List<T>> QueryListAsync(Expression<Func<T, bool>>? predicate = null);
         Task<int> InsertByIdentityAsync(T entity);
+
+        // 事务操作
+        Task ExecuteTransactionAsync(Func<Task> operations);
+        Task<TResult> ExecuteTransactionAsync<TResult>(Func<Task<TResult>> operations);
+        void BeginTransaction();
+        Task BeginTransactionAsync();
+        void CommitTransaction();
+        Task CommitTransactionAsync();
+        void RollbackTransaction();
+        Task RollbackTransactionAsync();
     }
 }
+

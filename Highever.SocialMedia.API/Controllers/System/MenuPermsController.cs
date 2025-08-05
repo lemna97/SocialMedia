@@ -29,6 +29,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// <param name="request">查询请求</param>
         /// <returns>菜单列表</returns>
         [HttpGet("roleMenus")]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetMenusByRoleId([FromQuery] GetMenusByRoleRequest request)
         {
             var menus = await _menuPermsService.GetMenusByRoleIdAsync(request.RoleId);
@@ -41,6 +42,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// <param name="request">分配请求</param>
         /// <returns>分配结果</returns>
         [HttpPost("roleAssign")]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AssignMenusToRole([FromBody] AssignMenusToRoleRequest request)
         {
             var result = await _menuPermsService.AssignMenusToRoleAsync(request.RoleId, request.MenuIds);
@@ -53,6 +55,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// <param name="request">关联信息</param>
         /// <returns>添加结果</returns>
         [HttpPost("addMenuPerm")]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddMenuPerm([FromBody] AddMenuPermRequest request)
         {
             var menuPerm = new MenuPerms
@@ -70,6 +73,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// <param name="request">删除请求</param>
         /// <returns>删除结果</returns>
         [HttpPost("removeRoleMenu")]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteMenuPerm([FromBody] DeleteMenuPermRequest request)
         {
             var result = await _menuPermsService.DeleteAsync(mp => mp.RoleId == request.RoleId && mp.MenuId == request.MenuId);
@@ -81,6 +85,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// </summary>
         /// <returns>关联列表</returns>
         [HttpGet("getAllMenuPerms")]
+        [ProducesResponseType(typeof(AjaxResult<List<MenuPerms>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllMenuPerms()
         {
             var menuPerms = await _menuPermsService.GetQueryListAsync(); 

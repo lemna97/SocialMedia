@@ -1,14 +1,11 @@
-﻿using Hangfire;
+﻿using Highever.SocialMedia.Admin.TaskService.Models;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
-using SQLBuilder.Core.Repositories;
-using System.Text.Json;
-using Highever.SocialMedia.Admin.TaskService.Models;
-using System.Diagnostics;
-using System.Text.Json.Serialization;
-using System.Transactions;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Highever.SocialMedia.Admin.TaskService
 {

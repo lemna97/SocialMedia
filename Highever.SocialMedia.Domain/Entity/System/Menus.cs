@@ -51,3 +51,4 @@ namespace Highever.SocialMedia.Domain.Entity
         public bool IsActive { get; set; } = true;
     }
 }
+

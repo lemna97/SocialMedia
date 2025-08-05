@@ -28,10 +28,7 @@ namespace Highever.SocialMedia.API
             IConfiguration configuration = new ConfigurationBuilder()
 .AddJsonFile("appsettings.json")
 .Build();
-            services.AddSingleton(new AppSettingConifgHelper(configuration)); 
-            //日志注入
-            services.AddScoped<INLogger, NLogAdapter>();
-            
+            services.AddSingleton(new AppSettingConifgHelper(configuration));  
             // 注册JwtHelper
             services.AddScoped<JwtHelper>();
             
@@ -42,7 +39,7 @@ namespace Highever.SocialMedia.API
             //AI
             services.AddChatGPT();
             //注入业务
-            services.AddApplicationServices("Highever.SocialMedia.Admin"); 
+            services.AddApplicationServices(); 
             //业务层的事件
             services.AddApplicationEventBusServices();
 

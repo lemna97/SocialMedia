@@ -23,9 +23,10 @@ namespace Highever.SocialMedia.Admin
         {
             try
             {
-                // 跳过Swagger相关路径的异常处理
+                // 跳过Swagger和Hangfire相关路径的异常处理
                 if (context.Request.Path.StartsWithSegments("/swagger") || 
-                    context.Request.Path.StartsWithSegments("/doc.html"))
+                    context.Request.Path.StartsWithSegments("/doc.html") ||
+                    context.Request.Path.StartsWithSegments("/hangfire"))
                 {
                     await _next(context);
                     return;

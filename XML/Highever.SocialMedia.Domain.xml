@@ -1119,6 +1119,11 @@
             视频创建时间戳(Unix时间戳)
             </summary>
         </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokVideosDaily.Duration">
+            <summary>
+            视频时长(毫秒)
+            </summary>
+        </member>
         <member name="P:Highever.SocialMedia.Domain.Entity.TiktokVideosDaily.PlayCount">
             <summary>
             播放次数(视频观看数量)
@@ -1262,6 +1267,21 @@
         <member name="P:Highever.SocialMedia.Domain.Entity.TiktokVideosDaily.HasWatermark">
             <summary>
             是否有水印
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokVideosDaily.CoverUrl">
+            <summary>
+            封面图片URL
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokVideosDaily.Hashtags">
+            <summary>
+            话题标签(JSON格式)
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokVideosDaily.Region">
+            <summary>
+            发布地区代码
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Domain.DistributionProducts">

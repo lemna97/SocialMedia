@@ -1,5 +1,6 @@
 using Highever.SocialMedia.Application.Contracts.Services;
 using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Highever.SocialMedia.API.Controllers
@@ -24,6 +25,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// </summary>
         /// <returns>菜单列表</returns>
         [HttpGet("getAllMenus")]
+        [ProducesResponseType(typeof(AjaxResult<List<Menus>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllMenus()
         {
             var data = await _menusService.GetAllAsync();
@@ -35,6 +37,7 @@ namespace Highever.SocialMedia.API.Controllers
         /// </summary>
         /// <returns>菜单树</returns>
         [HttpGet("tree")]
+        [ProducesResponseType(typeof(AjaxResult<List<Menus>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetMenuTree()
         {
             var menus = await _menusService.GetMenuTreeAsync();

@@ -26,9 +26,7 @@ namespace Highever.SocialMedia.Admin
             IConfiguration configuration = new ConfigurationBuilder()
 .AddJsonFile("appsettings.json")
 .Build();
-            services.AddSingleton(new AppSettingConifgHelper(configuration)); 
-            //日志注入
-            //services.AddScoped<INLogger, NLogAdapter>(); 
+            services.AddSingleton(new AppSettingConifgHelper(configuration));
             // 注册JwtHelper
             services.AddScoped<JwtHelper>();
             //注入ORM
@@ -38,7 +36,7 @@ namespace Highever.SocialMedia.Admin
             //AI
             services.AddChatGPT();
             //注入业务
-            services.AddApplicationServices();
+            services.AddApplicationServices("Highever.SocialMedia.Admin");
 
             return services;
         }

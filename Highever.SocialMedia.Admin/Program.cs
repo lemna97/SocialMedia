@@ -190,6 +190,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
     // 自定义 long 转 string Converter
     options.JsonSerializerOptions.Converters.Add(new LongToStringConverter());
+    // 添加灵活的布尔值转换器
+    options.JsonSerializerOptions.Converters.Add(new FlexibleBooleanConverter()); 
 });
 #endregion
 
@@ -198,7 +200,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:8068", "https://example.com", "http://127.0.0.1", "http://erpauth.amz-marketing.com:10001")
+        policy.WithOrigins("http://localhost:8325", "https://example.com", "http://127.0.0.1", "http://erpauth.amz-marketing.com:10001")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -239,7 +241,11 @@ ServiceLocator.SetLocatorProvider(app.Services);
 app.RegisteredServicesPage(builder.Services);
 
 // 配置 Hangfire Dashboard（任务管理界面）
-app.UseHangfireDashboard("/hangfire");
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{ 
+    IgnoreAntiforgeryToken = true, // 忽略防伪令牌，避免表单提交问题
+    Authorization = new[] { new CustomerHangfireDashboardFilter() },//hangfire 身份验证过滤器
+});
 
 // 加载静态资源
 app.UseStaticFiles();

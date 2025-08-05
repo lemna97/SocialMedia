@@ -128,6 +128,21 @@
             全局模型验证
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Common.AutoHttpMethodConvention">
+            <summary>
+            自动HTTP方法约定 - 在路由构建时自动为Action分配HTTP方法
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AutoHttpMethodConvention.HasHttpMethodAttribute(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            检查Action是否已有HTTP方法特性
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AutoHttpMethodConvention.GetHttpMethod(System.String)">
+            <summary>
+            根据Action名称获取对应的HTTP方法
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Common.DictionaryHelper">
             <summary>
             
@@ -652,6 +667,21 @@
             </summary>
             <param name="str"></param>
             <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Extension.TextJsonExtension.FlexibleDateTimeNullableConverter">
+            <summary>
+            灵活的可空DateTime转换器，支持空字符串转null
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Extension.TextJsonExtension.FlexibleLongNullableConverter">
+            <summary>
+            灵活的可空long转换器，支持空字符串转null
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Extension.TextJsonExtension.FlexibleIntNullableConverter">
+            <summary>
+            灵活的可空int转换器，支持空字符串转null
+            </summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.JwtHelper">
             <summary>

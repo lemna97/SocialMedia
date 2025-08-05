@@ -21,3 +21,4 @@ namespace Highever.SocialMedia.Domain.Entity
         public long MenuId { get; set; }
     }
 }
+

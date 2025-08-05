@@ -61,6 +61,12 @@ namespace Highever.SocialMedia.Application.Services
             // 先删除该角色的所有菜单关联
             await _repository.DeleteAsync(mp => mp.RoleId == roleId);
 
+            // 如果菜单ID列表为空，直接返回成功
+            if (!menuIds.Any())
+            {
+                return true;
+            }
+
             // 添加新的菜单关联
             var menuPerms = menuIds.Select(menuId => new MenuPerms
             {

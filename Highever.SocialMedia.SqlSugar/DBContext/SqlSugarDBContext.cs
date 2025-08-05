@@ -24,7 +24,9 @@ namespace Highever.SocialMedia.SqlSugar
                 MoreSettings = new ConnMoreSettings
                 {
                     IsWithNoLockQuery = true, 
-                    IsAutoRemoveDataCache = true
+                    IsAutoRemoveDataCache = true,
+                    // 添加连接池配置
+                    SqlServerCodeFirstNvarchar = true
                 },
                 SlaveConnectionConfigs = slaveConnections
             },

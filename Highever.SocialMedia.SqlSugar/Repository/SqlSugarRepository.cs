@@ -185,5 +185,94 @@ namespace Highever.SocialMedia.SqlSugar
         }
 
         #endregion
+
+        #region 事务操作
+
+        /// <summary>
+        /// 执行事务操作（异步）
+        /// </summary>
+        public async Task ExecuteTransactionAsync(Func<Task> operations)
+        {
+            await _db.Ado.BeginTranAsync();
+            try
+            {
+                await operations();
+                await _db.Ado.CommitTranAsync();
+            }
+            catch
+            {
+                await _db.Ado.RollbackTranAsync();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 执行事务操作并返回结果（异步）
+        /// </summary>
+        public async Task<TResult> ExecuteTransactionAsync<TResult>(Func<Task<TResult>> operations)
+        {
+            await _db.Ado.BeginTranAsync();
+            try
+            {
+                var result = await operations();
+                await _db.Ado.CommitTranAsync();
+                return result;
+            }
+            catch
+            {
+                await _db.Ado.RollbackTranAsync();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 开始事务（同步）
+        /// </summary>
+        public void BeginTransaction()
+        {
+            _db.Ado.BeginTran();
+        }
+
+        /// <summary>
+        /// 开始事务（异步）
+        /// </summary>
+        public async Task BeginTransactionAsync()
+        {
+            await _db.Ado.BeginTranAsync();
+        }
+
+        /// <summary>
+        /// 提交事务（同步）
+        /// </summary>
+        public void CommitTransaction()
+        {
+            _db.Ado.CommitTran();
+        }
+
+        /// <summary>
+        /// 提交事务（异步）
+        /// </summary>
+        public async Task CommitTransactionAsync()
+        {
+            await _db.Ado.CommitTranAsync();
+        }
+
+        /// <summary>
+        /// 回滚事务（同步）
+        /// </summary>
+        public void RollbackTransaction()
+        {
+            _db.Ado.RollbackTran();
+        }
+
+        /// <summary>
+        /// 回滚事务（异步）
+        /// </summary>
+        public async Task RollbackTransactionAsync()
+        {
+            await _db.Ado.RollbackTranAsync();
+        }
+
+        #endregion
     }
 }
