@@ -408,7 +408,7 @@
             任务管理
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Common.INLogger,Highever.SocialMedia.Admin.TaskService.ITaskExecutionService)">
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.#ctor(Hangfire.IRecurringJobManager,Highever.SocialMedia.Domain.Repository.IRepository{Highever.SocialMedia.Domain.Entity.TaskEntity},Highever.SocialMedia.Common.INLogger,Highever.SocialMedia.Admin.TaskService.ITaskExecutionService,Highever.SocialMedia.Admin.TaskService.ITaskExecutionService)">
             <summary>
             任务管理
             </summary>
@@ -445,6 +445,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.TestTasks(System.String)">
+            <summary>
+            测试任务（本地调用）
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.TaskExecutionService.ExecuteTask(System.String)">
             <summary>
             执行任务的实际方法
@@ -478,12 +484,12 @@
         </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.UpdateTiktokUsersAsync(Highever.SocialMedia.Admin.TaskService.Models.TikTokApiResponse)">
             <summary>
-            更新TiktokUsers表（插入或更新）
+            更新TiktokUsers表（插入或更新）- 在外层事务中执行
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.UpdateTiktokUsersDailyAsync(Highever.SocialMedia.Admin.TaskService.Models.TikTokApiResponse)">
             <summary>
-            更新TiktokUsersDaily表（插入或更新当天记录）
+            更新TiktokUsersDaily表（插入或更新当天记录）- 在外层事务中执行
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.ProcessBatchAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.AccountConfig},System.Int32)">
@@ -493,7 +499,7 @@
         </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.ProcessSingleUserAsync(Highever.SocialMedia.Domain.Entity.AccountConfig)">
             <summary>
-            处理单个用户数据
+            处理单个用户数据 - 使用事务确保数据一致性
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.Execute(System.String)">

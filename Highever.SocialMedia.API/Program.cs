@@ -205,7 +205,9 @@ builder.Services.AddSwaggerGen(c =>
         }
     }
 
+    c.SchemaFilter<PropertyDescriptionSchemaFilter>();
     c.SchemaFilter<EnumSchemaFilter>();
+    c.SchemaFilter<CustomExcludeFilter>();
     // 自定义 Authorization 参数
     c.OperationFilter<AuthorizationParameterFilter>();
     // 自定义 隐藏接口

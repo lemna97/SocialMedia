@@ -51,7 +51,7 @@
         </member>
         <member name="P:Highever.SocialMedia.Domain.Entity.BaseEntity.Id">
             <summary>
-            主键ID（雪花ID）
+            主键ID（自增ID）
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.Domain.Entity.BaseEntity.CreatedAt">
@@ -394,6 +394,11 @@
             菜单图标
             </summary>
         </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.Menus.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
         <member name="P:Highever.SocialMedia.Domain.Entity.Menus.Sort">
             <summary>
             排序
@@ -667,11 +672,6 @@
         <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUsers.FriendCount">
             <summary>
             朋友数量(互相关注的好友数)
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUsers.RecordDate">
-            <summary>
-            记录日期(数据采集日期)
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.Domain.Entity.TiktokUsers.CreatedAt">
@@ -1282,6 +1282,66 @@
         <member name="P:Highever.SocialMedia.Domain.Entity.TiktokVideosDaily.Region">
             <summary>
             发布地区代码
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.UserTokenSessions">
+            <summary>
+            用户Token会话表 - 支持多设备登录
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.Id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.RefreshToken">
+            <summary>
+            刷新令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.RefreshTokenExpiry">
+            <summary>
+            刷新令牌过期时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.DeviceId">
+            <summary>
+            设备标识（浏览器指纹、设备ID等）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.DeviceInfo">
+            <summary>
+            设备信息（User-Agent等）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.IpAddress">
+            <summary>
+            IP地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.LastActivityTime">
+            <summary>
+            最后活动时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.IsActive">
+            <summary>
+            是否活跃
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.UserTokenSessions.UpdatedAt">
+            <summary>
+            更新时间
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Domain.DistributionProducts">

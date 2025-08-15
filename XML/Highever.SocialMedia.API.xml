@@ -60,6 +60,11 @@
             <param name="swaggerDoc"></param>
             <param name="context"></param>
         </member>
+        <member name="T:Highever.SocialMedia.API.PropertyDescriptionSchemaFilter">
+            <summary>
+            属性描述增强过滤器
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.API.Handlers.CustomAuthenticationHandler">
             <summary>
             自定义JWT认证事件处理器
@@ -125,21 +130,19 @@
             3. 自动更新Cookie中的Token
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.ShouldProcessAuthentication(Microsoft.AspNetCore.Http.Endpoint)">
+        <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.IsValidTokenFormat(System.String)">
             <summary>
-            判断当前请求是否需要处理认证逻辑
+            验证Token格式是否有效
             </summary>
-            <param name="endpoint">当前请求的端点</param>
-            <returns>是否需要处理认证</returns>
         </member>
         <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.ProcessAuthenticatedRequestAsync(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
-            处理已认证的请求
+            处理已认证的请求 - 完善版
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.AutoRefreshTokenAsync(Microsoft.AspNetCore.Http.HttpContext,System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
+        <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.ExtendTokenExpiryAsync(Microsoft.AspNetCore.Http.HttpContext,System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
             <summary>
-            自动刷新Token
+            延长Token过期时间（滑动过期）- 延期2小时
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.GetTokenFromRequest(Microsoft.AspNetCore.Http.HttpContext)">
@@ -150,6 +153,11 @@
         <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.UpdateUserLastActivityAsync(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
             更新用户最后活动时间
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.TryRefreshTokenAsync(Microsoft.AspNetCore.Http.HttpContext,System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
+            <summary>
+            尝试刷新Token（仅在即将过期时）
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.API.ConfigurationExtensions">
@@ -300,28 +308,35 @@
         </member>
         <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.AccountController.GetAccountStatistics(Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsRequest)">
             <summary>
-            获取账号增量统计数据
+            获取账号增量统计数据 - 修复版本
             </summary>
-            <param name="request">统计请求参数</param>
-            <returns>账号增量统计数据</returns>
         </member>
         <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.AccountController.CalculateGrowthStatistics(System.Collections.Generic.List{System.Int32},System.Int32,System.Int32)">
             <summary>
-            计算增长统计数据
+            计算增长统计数据 - 修复版本
             </summary>
-            <param name="values">所有值列表</param>
-            <param name="currentValue">当前值</param>
-            <param name="previousValue">前一个值</param>
+            <param name="values">期间内所有值列表</param>
+            <param name="currentValue">期间结束值</param>
+            <param name="startValue">期间开始值</param>
             <returns>增长统计</returns>
         </member>
         <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.AccountController.CalculateAccountLikeRate(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.TiktokUsersDaily},Highever.SocialMedia.Domain.Entity.TiktokUsersDaily,Highever.SocialMedia.Domain.Entity.TiktokUsersDaily)">
             <summary>
-            计算账号点赞率统计
+            计算账号每条视频平均获赞数
             </summary>
             <param name="accountData">账号历史数据</param>
             <param name="latestData">最新数据</param>
             <param name="previousData">前一天数据</param>
             <returns>点赞率统计</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.AccountController.CalculateAccountEngagementTrend(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.TiktokUsersDaily},Highever.SocialMedia.Domain.Entity.TiktokUsersDaily,Highever.SocialMedia.Domain.Entity.TiktokUsersDaily)">
+            <summary>
+            计算账号互动趋势统计
+            </summary>
+            <param name="accountData">账号历史数据</param>
+            <param name="latestData">最新数据</param>
+            <param name="firstData">期间开始数据</param>
+            <returns>互动趋势统计</returns>
         </member>
         <member name="T:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController">
             <summary>
@@ -407,6 +422,33 @@
             <summary>
             计算视频收藏率统计
             </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController.CalculateAccountAggregateGrowth(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.TiktokVideosDaily},System.Func{Highever.SocialMedia.Domain.Entity.TiktokVideosDaily,System.Int32},System.DateTime,System.DateTime)">
+            <summary>
+            计算账号聚合增长统计
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController.CalculateAccountOverallEngagementRate(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.TiktokVideosDaily})">
+            <summary>
+            计算账号整体互动率
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController.CalculateAccountOverallLikeRate(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.TiktokVideosDaily})">
+            <summary>
+            计算账号整体点赞率
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController.CalculateVideoPerformanceDistribution(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.TiktokVideosDaily})">
+            <summary>
+            计算视频表现分布
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController.GetAccountVideoStatistics(Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsRequest)">
+            <summary>
+            获取账号维度的视频统计数据
+            </summary>
+            <param name="request">统计请求参数</param>
+            <returns>账号维度的视频统计数据</returns>
         </member>
         <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountConfigQueryRequest">
             <summary>
@@ -603,6 +645,11 @@
             关键词（用户名或昵称，可为null或空字符串）
             </summary>
         </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.TiktokUsersDailyQueryRequest.Id">
+            <summary>
+            用户的主键Id（long类型）
+            </summary>
+        </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.TiktokUsersDailyQueryRequest.PageIndex">
             <summary>
             页码（从1开始）
@@ -685,37 +732,42 @@
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.FollowerGrowth">
             <summary>
-            粉丝数增量统计
+            粉丝数增量统计 - 包含当前值、增长量、增长率等详细数据
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.FollowingGrowth">
             <summary>
-            关注数增量统计
+            关注数增量统计 - 包含当前值、增长量、增长率等详细数据
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.VideoGrowth">
             <summary>
-            视频数增量统计
+            视频数增量统计 - 包含当前值、增长量、增长率等详细数据
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.HeartGrowth">
             <summary>
-            获赞总数增量统计
+            获赞总数增量统计 - 包含当前值、增长量、增长率等详细数据
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.DiggGrowth">
             <summary>
-            点赞数增量统计
+            点赞数增量统计 - 包含当前值、增长量、增长率等详细数据
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.FriendGrowth">
             <summary>
-            朋友数增量统计
+            朋友数增量统计 - 包含当前值、增长量、增长率等详细数据
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.LikeRate">
             <summary>
-            点赞率统计（获赞总数/视频总数）
+            点赞率统计 - 获赞总数/视频总数，包含当前比率、变化趋势等
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.AverageHeartCount">
+            <summary>
+            平均获赞数统计 - 获赞总数/视频总数，反映内容质量
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsResponse.DailyTrends">
@@ -863,11 +915,6 @@
             每日数据趋势
             </summary>
         </member>
-        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.GrowthStatistics">
-            <summary>
-            增长统计数据
-            </summary>
-        </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.GrowthStatistics.CurrentValue">
             <summary>
             当前值
@@ -901,11 +948,6 @@
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.GrowthStatistics.AvgValue">
             <summary>
             期间平均值
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatistics">
-            <summary>
-            比率统计数据
             </summary>
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatistics.CurrentRate">
@@ -1001,6 +1043,203 @@
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.DailyTrend.EngagementRate">
             <summary>
             互动率（视频专用）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsRequest">
+            <summary>
+            账号视频统计请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsRequest.StartDate">
+            <summary>
+            开始日期（默认30天前）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsRequest.EndDate">
+            <summary>
+            结束日期（默认今天）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsRequest.UniqueId">
+            <summary>
+            账号UniqueId（可选，为空则查询所有有权限的账号）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse">
+            <summary>
+            账号视频统计响应（重构版）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse.UniqueId">
+            <summary>
+            账号UniqueId
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse.Nickname">
+            <summary>
+            账号昵称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse.DateRange">
+            <summary>
+            统计日期范围
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse.VideoCount">
+            <summary>
+            视频总数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse.GrowthStatistics">
+            <summary>
+            增量统计项列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse.RateStatistics">
+            <summary>
+            比率统计项列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountVideoStatisticsResponse.VideoPerformanceDistribution">
+            <summary>
+            视频表现分布
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.VideoPerformanceDistribution">
+            <summary>
+            视频表现分布
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.VideoPerformanceDistribution.TotalVideos">
+            <summary>
+            视频总数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.VideoPerformanceDistribution.HighPerformanceVideos">
+            <summary>
+            高表现视频数（互动率>=5%）
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Highever.SocialMedia.API.Areas.TikTok.DTO.VideoPerformanceDistribution.MediumPerformanceVideos" -->
+        <!-- Badly formed XML comment ignored for member "P:Highever.SocialMedia.API.Areas.TikTok.DTO.VideoPerformanceDistribution.LowPerformanceVideos" -->
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.VideoPerformanceDistribution.AverageEngagementRate">
+            <summary>
+            平均互动率
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType">
+            <summary>
+            统计项类型枚举
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType.Play">
+            <summary>
+            播放数
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType.Digg">
+            <summary>
+            点赞数
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType.Comment">
+            <summary>
+            评论数
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType.Share">
+            <summary>
+            分享数
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType.Collect">
+            <summary>
+            收藏数
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType.Forward">
+            <summary>
+            转发数
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType.Download">
+            <summary>
+            下载数
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsItem">
+            <summary>
+            统计项
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsItem.Type">
+            <summary>
+            统计类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsItem.TypeName">
+            <summary>
+            统计类型名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsItem.Growth">
+            <summary>
+            增长统计数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsItem.Rate">
+            <summary>
+            比率统计数据（可选，如点赞率、互动率等）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.RateType">
+            <summary>
+            比率项类型枚举
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.RateType.LikeRate">
+            <summary>
+            点赞率
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.RateType.EngagementRate">
+            <summary>
+            互动率
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.RateType.CommentRate">
+            <summary>
+            评论率
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.RateType.ShareRate">
+            <summary>
+            分享率
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.API.Areas.TikTok.DTO.RateType.CollectRate">
+            <summary>
+            收藏率
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatisticsItem">
+            <summary>
+            比率统计项
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatisticsItem.Type">
+            <summary>
+            比率类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatisticsItem.TypeName">
+            <summary>
+            比率类型名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatisticsItem.Rate">
+            <summary>
+            比率统计数据
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.TiktokVideosQueryRequest">
@@ -1288,6 +1527,31 @@
             更新时间
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.Extensions.StatisticsExtensions">
+            <summary>
+            统计数据扩展方法
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Extensions.StatisticsExtensions.GetGrowthByType(System.Collections.Generic.List{Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsItem},Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsType)">
+            <summary>
+            根据类型获取增长统计
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Extensions.StatisticsExtensions.GetRateByType(System.Collections.Generic.List{Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatisticsItem},Highever.SocialMedia.API.Areas.TikTok.DTO.RateType)">
+            <summary>
+            根据类型获取比率统计
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Extensions.StatisticsExtensions.ToGrowthDictionary(System.Collections.Generic.List{Highever.SocialMedia.API.Areas.TikTok.DTO.StatisticsItem})">
+            <summary>
+            转换为字典格式（便于前端使用）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Extensions.StatisticsExtensions.ToRateDictionary(System.Collections.Generic.List{Highever.SocialMedia.API.Areas.TikTok.DTO.RateStatisticsItem})">
+            <summary>
+            转换为字典格式（便于前端使用）
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController">
             <summary>
             Token管理
@@ -1299,14 +1563,14 @@
             </summary>
             <returns>清理结果</returns>
         </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.RevokeUserToken(System.Int64)">
+        <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.RevokeUserToken(System.Int32)">
             <summary>
             撤销指定用户的令牌
             </summary>
             <param name="userId">用户ID</param>
             <returns>撤销结果</returns>
         </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.GetUserTokenInfo(System.Int64)">
+        <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.GetUserTokenInfo(System.Int32)">
             <summary>
             获取用户令牌信息
             </summary>
@@ -1355,6 +1619,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.HomeController.LogoutAll">
+            <summary>
+            登出所有设备
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Highever.SocialMedia.API.Controllers.HomeController.RefreshToken(System.String)">
             <summary>
             刷新Token
@@ -1378,15 +1648,11 @@
             <summary>
             为角色分配菜单
             </summary>
+            <remarks>
+            注意：MenuIds 是当前角色所有的菜单Id
+            </remarks>
             <param name="request">分配请求</param>
             <returns>分配结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.MenuPermsController.AddMenuPerm(Highever.SocialMedia.Application.Contracts.DTOs.System.AddMenuPermRequest)">
-            <summary>
-            添加角色菜单关联
-            </summary>
-            <param name="request">关联信息</param>
-            <returns>添加结果</returns>
         </member>
         <member name="M:Highever.SocialMedia.API.Controllers.MenuPermsController.DeleteMenuPerm(Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuPermRequest)">
             <summary>
@@ -1394,12 +1660,6 @@
             </summary>
             <param name="request">删除请求</param>
             <returns>删除结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.MenuPermsController.GetAllMenuPerms">
-            <summary>
-            获取所有角色菜单关联
-            </summary>
-            <returns>关联列表</returns>
         </member>
         <member name="T:Highever.SocialMedia.API.Controllers.MenusController">
             <summary>
@@ -1412,11 +1672,172 @@
             </summary>
             <returns>菜单列表</returns>
         </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.GetMenuTree">
+        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.GetMenusWithRoleAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.GetMenusRequest)">
             <summary>
-            获取菜单树
+            获取所有菜单
             </summary>
-            <returns>菜单树</returns>
+            <param name="request">查询请求</param>
+            <returns>菜单列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.CreateMenu(Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest)">
+            <summary>
+            创建菜单
+            </summary>
+            <param name="request">创建请求</param>
+            <returns>创建结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.UpdateMenu(Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest)">
+            <summary>
+            更新菜单
+            </summary>
+            <param name="request">更新请求</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.DeleteMenu(Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuRequest)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="request">删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.BatchDeleteMenu(Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteMenuRequest)">
+            <summary>
+            批量删除菜单
+            </summary>
+            <param name="request">批量删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.GetMenuById(System.Int32)">
+            <summary>
+            获取菜单详情
+            </summary>
+            <param name="id">菜单ID</param>
+            <returns>菜单详情</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.MenusController.CheckMenuCode(System.String,System.Nullable{System.Int32})">
+            <summary>
+            检查菜单代码是否存在
+            </summary>
+            <param name="code">菜单代码</param>
+            <param name="excludeId">排除的菜单ID</param>
+            <returns>检查结果</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Controllers.System.RolesController">
+            <summary>
+            角色管理
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.RolesController.GetAllRoles(Highever.SocialMedia.Application.Contracts.DTOs.System.GetRolesRequest)">
+            <summary>
+            获取所有角色
+            </summary>
+            <param name="request">查询请求</param>
+            <returns>角色列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.RolesController.CreateRole(Highever.SocialMedia.Application.Contracts.DTOs.System.CreateRoleRequest)">
+            <summary>
+            创建角色
+            </summary>
+            <param name="request">创建请求</param>
+            <returns>创建结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.RolesController.UpdateRole(Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest)">
+            <summary>
+            更新角色
+            </summary>
+            <param name="request">更新请求</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.RolesController.DeleteRole(Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteRoleRequest)">
+            <summary>
+            删除角色
+            </summary>
+            <param name="request">删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.RolesController.BatchDeleteRole(Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteRoleRequest)">
+            <summary>
+            批量删除角色
+            </summary>
+            <param name="request">批量删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.RolesController.GetRoleById(System.Int32)">
+            <summary>
+            获取角色详情
+            </summary>
+            <param name="id">角色ID</param>
+            <returns>角色详情</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.RolesController.CheckRoleCode(System.String,System.Nullable{System.Int32})">
+            <summary>
+            检查角色代码是否存在
+            </summary>
+            <param name="code">角色代码</param>
+            <param name="excludeId">排除的角色ID</param>
+            <returns>检查结果</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Controllers.System.UserController">
+            <summary>
+            系统用户管理
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.GetAllUsers(Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest)">
+            <summary>
+            获取所有用户
+            </summary>
+            <param name="request">查询请求</param>
+            <returns>用户列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.CreateUser(Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest)">
+            <summary>
+            创建用户
+            </summary>
+            <param name="request">创建请求</param>
+            <returns>创建结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.UpdateUser(Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest)">
+            <summary>
+            更新用户
+            </summary>
+            <param name="request">更新请求</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.DeleteUser(Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteUserRequest)">
+            <summary>
+            删除用户
+            </summary>
+            <param name="request">删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.BatchDeleteUser(Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteUserRequest)">
+            <summary>
+            批量删除用户
+            </summary>
+            <param name="request">批量删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.GetUserById(System.Int32)">
+            <summary>
+            获取用户详情
+            </summary>
+            <param name="id">用户ID</param>
+            <returns>用户详情</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.CheckUsername(System.String,System.Nullable{System.Int32})">
+            <summary>
+            检查用户名是否存在
+            </summary>
+            <param name="username">用户名</param>
+            <param name="excludeId">排除的用户ID</param>
+            <returns>检查结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.System.UserController.ChangePassword(Highever.SocialMedia.Application.Contracts.DTOs.System.ChangePasswordRequest)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="request">修改密码请求</param>
+            <returns>修改结果</returns>
         </member>
         <member name="P:Highever.SocialMedia.API.Model.ProductPicture.controlType">
             <summary>

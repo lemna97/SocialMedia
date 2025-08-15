@@ -4,6 +4,7 @@ using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Highever.SocialMedia.Admin
 {
@@ -16,9 +17,10 @@ namespace Highever.SocialMedia.Admin
     public class TaskServiceController : Controller
     {
         private readonly IRecurringJobManager _recurringJobManager;
-        private readonly IRepository<TaskEntity> _taskrepository; 
+        private readonly IRepository<TaskEntity> _taskrepository;
         private readonly INLogger _logger; // 添加日志记录器
-        private readonly ITaskExecutionService  _taskExecutionService;
+        private readonly ITaskExecutionService _taskExecutionService;
+        private readonly ITaskExecutionService _ITaskExecutor;
 
         /// <summary>
         /// 任务管理
@@ -29,14 +31,16 @@ namespace Highever.SocialMedia.Admin
         /// <param name="taskExecutionService"></param>
         public TaskServiceController(
             IRecurringJobManager recurringJobManager,
-            IRepository<TaskEntity> taskrepository, 
+            IRepository<TaskEntity> taskrepository,
             INLogger logger,
-            ITaskExecutionService taskExecutionService)
+            ITaskExecutionService taskExecutionService,
+            ITaskExecutionService iTaskExecutor)
         {
             _recurringJobManager = recurringJobManager;
-            _taskrepository = taskrepository; 
+            _taskrepository = taskrepository;
             _logger = logger;
             _taskExecutionService = taskExecutionService;
+            _ITaskExecutor = iTaskExecutor;
         }
 
         /// <summary>
@@ -121,7 +125,7 @@ namespace Highever.SocialMedia.Admin
 
             return this.Success("Task deleted successfully");
         }
-         
+
 
         /// <summary>
         /// 获取任务列表
@@ -133,5 +137,30 @@ namespace Highever.SocialMedia.Admin
             var tasks = await _taskrepository.QueryListAsync();
             return this.Success(tasks);
         }
+
+        /// <summary>
+        /// 手动同步用户
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("runUserJob")]
+        public async Task<IActionResult> RunUserJob()
+        {
+            await _ITaskExecutor.ExecuteTask("UserJob");
+            return this.Success();
+        }
+
+
+        /// <summary>
+        /// 手动同步所有用户视频
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("runVideoJob")]
+        public async Task<IActionResult> RunVideoJob()
+        {
+            await _ITaskExecutor.ExecuteTask("VideoJob");
+            return this.Success();
+        }
+
+
     }
 }

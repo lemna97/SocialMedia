@@ -8,10 +8,10 @@ namespace Highever.SocialMedia.Domain.Entity
     public abstract class BaseEntity
     {
         /// <summary>
-        /// 主键ID（雪花ID）
+        /// 主键ID（自增ID）
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = false)]
-        public long Id { get; set; }
+        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        public int Id { get; set; }
 
         /// <summary>
         /// 创建时间
@@ -26,3 +26,4 @@ namespace Highever.SocialMedia.Domain.Entity
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }
+

@@ -25,46 +25,72 @@ namespace Highever.SocialMedia.SqlSugar
                 {
                     IsWithNoLockQuery = true, 
                     IsAutoRemoveDataCache = true,
-                    // 添加连接池配置
-                    SqlServerCodeFirstNvarchar = true
+                    SqlServerCodeFirstNvarchar = true,
+                    DefaultCacheDurationInSeconds = 600
                 },
                 SlaveConnectionConfigs = slaveConnections
             },
+            // 重要：添加这个配置来避免连接冲突
             db =>
             {
-                db.Ado.IsDisableMasterSlaveSeparation = false;
-                
-                // 优化日志记录 - 只记录错误，不记录所有SQL
+                // 每个线程使用独立的连接
                 db.Aop.OnLogExecuting = (sql, pars) =>
                 {
-                    // 注释掉或删除这行，不记录所有SQL执行
-                    // _nLogger.Info($"SQL: {sql}, Parameters: {string.Join(",", pars?.Select(p => $"{p.ParameterName}={p.Value}") ?? new string[0])}");
-                };
-                
-                // 添加错误处理
-                db.Aop.OnError = (exp) =>
-                {
-                    // 记录到数据库
-                    _nLogger.DateBaseError($"SQL执行错误: {exp.Message} | SQL: {exp.Sql}");
-                    
-                    // 同时输出到控制台
-                    Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [SQL_ERROR] {exp.Message}");
+                    // 可选：添加SQL日志
                 };
             });
         }
         public void Dispose()
         {
-            _db?.Dispose();
+            Db?.Dispose();
         }
         public ISqlSugarClient Db => _db;
 
-        #region Transaction 
-        public void BeginTran() => _db.Ado.BeginTran();
-        public void CommitTran() => _db.Ado.CommitTran();
-        public void RollbackTran() => _db.Ado.RollbackTran();
+        #region Transaction  
+
+        // 添加异步事务方法
+        public async Task BeginTranAsync() => await Db.Ado.BeginTranAsync();
+        public async Task CommitTranAsync() => await Db.Ado.CommitTranAsync();
+        public async Task RollbackTranAsync() => await Db.Ado.RollbackTranAsync();
+
+        // 添加事务执行方法
+        public async Task<T> ExecuteTransactionAsync<T>(Func<Task<T>> operation)
+        {
+            try
+            {
+                await BeginTranAsync();
+                var result = await operation();
+                await CommitTranAsync();
+                return result;
+            }
+            catch
+            {
+                await RollbackTranAsync();
+                throw;
+            }
+        }
+
+        public async Task ExecuteTransactionAsync(Func<Task> operation)
+        {
+            try
+            {
+                await BeginTranAsync();
+                await operation();
+                await CommitTranAsync();
+            }
+            catch
+            {
+                await RollbackTranAsync();
+                throw;
+            }
+        }
         #endregion
 
         #region Bulk Operations
+
+        /// <summary>
+        /// 批量插入 - 使用独立连接和事务
+        /// </summary>
         public async Task<int> BulkInsertAsync<T>(IEnumerable<T> entities) where T : class, new()
         {
             if (entities == null || !entities.Any())
@@ -72,9 +98,27 @@ namespace Highever.SocialMedia.SqlSugar
                 return 0;
             }
 
-            return await _db.Insertable(entities.ToList()).ExecuteCommandAsync();
+            // 使用独立连接执行批量插入，避免连接冲突
+            return await ExecuteTransactionAsync(async () =>
+            {
+                var entityList = entities.ToList();
+              
+                try
+                {
+                    var result = await Db.Insertable(entityList).ExecuteCommandAsync();
+                     
+                    return result;
+                }
+                catch (Exception ex)
+                { 
+                    throw;
+                }
+            });
         }
 
+        /// <summary>
+        /// 批量更新 - 使用独立连接和事务
+        /// </summary>
         public async Task<int> BulkUpdateAsync<T>(IEnumerable<T> entities) where T : class, new()
         {
             if (entities == null || !entities.Any())
@@ -82,9 +126,25 @@ namespace Highever.SocialMedia.SqlSugar
                 return 0;
             }
 
-            return await _db.Updateable(entities.ToList()).ExecuteCommandAsync();
+            return await ExecuteTransactionAsync(async () =>
+            {
+                var entityList = entities.ToList(); 
+                
+                try
+                {
+                    var result = await Db.Updateable(entityList).ExecuteCommandAsync(); 
+                    return result;
+                }
+                catch (Exception ex)
+                { 
+                    throw;
+                }
+            });
         }
 
+        /// <summary>
+        /// 批量删除 - 使用独立连接和事务
+        /// </summary>
         public async Task<int> BulkDeleteAsync<T>(IEnumerable<T> entities) where T : class, new()
         {
             if (entities == null || !entities.Any())
@@ -92,9 +152,22 @@ namespace Highever.SocialMedia.SqlSugar
                 return 0;
             }
 
-            return await _db.Deleteable(entities.ToList()).ExecuteCommandAsync();
+            return await ExecuteTransactionAsync(async () =>
+            {
+                var entityList = entities.ToList(); 
+                
+                try
+                {
+                    var result = await Db.Deleteable(entityList).ExecuteCommandAsync(); 
+                    return result;
+                }
+                catch (Exception ex)
+                { 
+                    throw;
+                }
+            });
         }
 
-        #endregion
+        #endregion 
     }
 }

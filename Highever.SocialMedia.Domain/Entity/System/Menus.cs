@@ -12,7 +12,7 @@ namespace Highever.SocialMedia.Domain.Entity
         /// 父级菜单ID
         /// </summary>
         [SugarColumn(ColumnName = "parent_id", IsNullable = true)]
-        public long? ParentId { get; set; } = 0;
+        public int? ParentId { get; set; } = 0;
 
         /// <summary>
         /// 菜单名称
@@ -37,6 +37,12 @@ namespace Highever.SocialMedia.Domain.Entity
         /// </summary>
         [SugarColumn(ColumnName = "icon", Length = 50, IsNullable = true)]
         public string? Icon { get; set; }
+        
+        /// <summary>
+        /// 描述
+        /// </summary>
+        [SugarColumn(ColumnName = "description", Length = 255, IsNullable = true)]
+        public string? Description { get; set; }
 
         /// <summary>
         /// 排序

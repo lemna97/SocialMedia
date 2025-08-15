@@ -49,7 +49,7 @@ namespace Highever.SocialMedia.Application.Contracts.Services
         /// </summary>
         /// <param name="roleId">角色ID</param>
         /// <returns>菜单列表</returns>
-        Task<List<Menus>> GetMenusByRoleIdAsync(long roleId);
+        Task<List<Menus>> GetMenusByRoleIdAsync(int? roleId);
 
         /// <summary>
         /// 为角色分配菜单
@@ -57,6 +57,6 @@ namespace Highever.SocialMedia.Application.Contracts.Services
         /// <param name="roleId">角色ID</param>
         /// <param name="menuIds">菜单ID列表</param>
         /// <returns>分配结果</returns>
-        Task<bool> AssignMenusToRoleAsync(long roleId, List<long> menuIds);
+        Task<bool> AssignMenusToRoleAsync(int roleId, List<int> menuIds);
     }
 }

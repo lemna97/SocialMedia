@@ -22,42 +22,36 @@ namespace Highever.SocialMedia.SqlSugar
                 // 主库连接字符串
                 string masterConnectionString = configuration.GetConnectionString("Mysql") 
                     ?? throw new InvalidOperationException("未找到主库连接字符串 'Mysql'");
-                
+                 
                 // 从库连接配置
                 List<SlaveConnectionConfig> slaveConnections = new List<SlaveConnectionConfig>();
                 
                 // 从库1配置
-                var slave1Connection = configuration.GetConnectionString("Mysql1");
-                if (!string.IsNullOrEmpty(slave1Connection))
-                {
-                    slaveConnections.Add(new SlaveConnectionConfig
-                    {
-                        HitRate = 10, // 命中率10%
-                        ConnectionString = slave1Connection
-                    });
-                }
+                //var slave1Connection = configuration.GetConnectionString("Mysql1");
+                //if (!string.IsNullOrEmpty(slave1Connection))
+                //{
+                //    slaveConnections.Add(new SlaveConnectionConfig
+                //    {
+                //        HitRate = 10,
+                //        ConnectionString = slave1Connection
+                //    });
+                //}
                 
                 // 从库2配置
-                var slave2Connection = configuration.GetConnectionString("Mysql2");
-                if (!string.IsNullOrEmpty(slave2Connection))
-                {
-                    slaveConnections.Add(new SlaveConnectionConfig
-                    {
-                        HitRate = 90, // 命中率90%
-                        ConnectionString = slave2Connection
-                    });
-                }
+                //var slave2Connection = configuration.GetConnectionString("Mysql2");
+                //if (!string.IsNullOrEmpty(slave2Connection))
+                //{
+                //    slaveConnections.Add(new SlaveConnectionConfig
+                //    {
+                //        HitRate = 90,
+                //        ConnectionString = slave2Connection
+                //    });
+                //}
                 
                 return new SqlSugarDBContext(masterConnectionString, slaveConnections, logger);
-            });
-             
-            // 注册 ISqlSugarClient
-            services.AddScoped(provider =>
-            {
-                var context = provider.GetRequiredService<ISqlSugarDBContext>();
-                return context.Db;
-            });
+            }); 
 
+            // 注册仓储 - 使用 DBContext
             services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
 
             return services;

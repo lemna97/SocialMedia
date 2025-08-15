@@ -18,6 +18,11 @@ namespace Highever.SocialMedia.Application
 {
     public static class DependencyInjectionExtensions
     {
+        /// <summary>
+        /// 应该写在 AddApplicationServices 中，不可以再开其他入口
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddApplicationEventBusServices(this IServiceCollection services)
         {
 

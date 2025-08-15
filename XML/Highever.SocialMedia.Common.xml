@@ -313,17 +313,17 @@
             控制器扩展方法
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Ok(Microsoft.AspNetCore.Mvc.ControllerBase,System.String)">
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.JsonOk(Microsoft.AspNetCore.Mvc.ControllerBase)">
             <summary>
             返回成功响应（无数据）
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Ok``1(Microsoft.AspNetCore.Mvc.ControllerBase,``0,System.String)">
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.JsonOk(Microsoft.AspNetCore.Mvc.ControllerBase,System.String)">
             <summary>
-            返回成功响应（带数据）
+            返回成功响应（无数据）
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.Ok(Microsoft.AspNetCore.Mvc.ControllerBase,System.String,Highever.SocialMedia.Common.HttpCode)">
+        <member name="M:Highever.SocialMedia.Common.ControllerExtensions.JsonOk(Microsoft.AspNetCore.Mvc.ControllerBase,System.String,Highever.SocialMedia.Common.HttpCode)">
             <summary>
             返回失败响应
             </summary>
@@ -683,12 +683,72 @@
             灵活的可空int转换器，支持空字符串转null
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Common.ImageHelper">
+            <summary>
+            图片处理工具（下载/保存/压缩/格式转换），集成 HEIF 编码。
+            说明：
+            - 依赖 IHttpClientFactory
+            - 使用 HostingEnvironmentHelper.WebPath 获取 wwwroot 路径（保持你的现有约定）
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.ImageHelper.SupportedFormats">
+            <summary>
+            支持的图片格式（作为输入/解码）
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Common.ImageHelper.ConvertFormats">
+            <summary>
+            需要进行解码转换的源格式（常见手机/苹果端）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ImageHelper.NeedsConversion(System.String)">
+            <summary>
+            检查是否需要从 HEIC/HEIF 转 JPG（用于输入兼容）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ImageHelper.IsSupportedFormat(System.String)">
+            <summary>
+            检查是否为支持的输入图片格式
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ImageHelper.ConvertHeicToJpgAsync(System.Byte[],System.Int32)">
+            <summary>
+            将 HEIC/HEIF 解码并转为 JPG 字节（使用 Openize.HEIC）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ImageHelper.ConvertHeicToJpgWithFallbackAsync(System.Byte[],System.Int32)">
+            <summary>
+            多重备用 HEIC 转 JPG 方案
+            </summary>
+            <param name="inputBytes">输入字节</param>
+            <param name="quality">质量</param>
+            <returns>JPG 字节</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ImageHelper.CompressImageAsync(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            图片压缩（保持宽高比；输出 JPG）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ImageHelper.DownloadAndSaveImageAsync(System.String,System.String,System.String,System.Boolean,System.Boolean,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            下载图片并保存（移除HEIF编码，只保留常规格式）
+            </summary>
+            <param name="imageUrl">图片URL地址</param>
+            <param name="saveDirectory">保存目录（相对于wwwroot）</param>
+            <param name="fileName">文件名（不含扩展名），为空则自动生成</param>
+            <param name="convertHeic">是否对 HEIC/HEIF 输入做转 JPG</param>
+            <param name="compressImage">是否压缩图片</param>
+            <param name="maxWidth">最大宽度</param>
+            <param name="maxHeight">最大高度</param>
+            <param name="quality">JPG质量</param>
+            <returns>返回相对路径</returns>
+        </member>
         <member name="T:Highever.SocialMedia.Common.JwtHelper">
             <summary>
             JWT帮助类
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateToken(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateToken(System.Int32,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
             <summary>
             生成JWT令牌
             </summary>
@@ -703,12 +763,12 @@
             生成刷新令牌
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateTokenPair(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateTokenPair(System.Int32,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
             <summary>
             生成Token对（访问令牌 + 刷新令牌）
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Common.JwtHelper.RefreshToken(System.Int64,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.RefreshToken(System.Int32,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
             <summary>
             验证刷新令牌并生成新的Token对
             </summary>
@@ -755,19 +815,36 @@
         </member>
         <member name="T:Highever.SocialMedia.Common.HostingEnvironmentHelper">
             <summary>
-            
+            主机环境帮助类
             </summary>
         </member>
         <member name="F:Highever.SocialMedia.Common.HostingEnvironmentHelper._hostEnviroment">
             <summary>
-            
+            主机环境实例
             </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.HostingEnvironmentHelper.WebPath">
+            <summary>
+            获取Web根路径
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HostingEnvironmentHelper.MapPath(System.String)">
+            <summary>
+            映射路径
+            </summary>
+            <param name="path">相对路径</param>
+            <returns>绝对路径</returns>
         </member>
         <member name="M:Highever.SocialMedia.Common.HostingEnvironmentHelper.Configure(Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
             <summary>
-            
+            配置主机环境
             </summary>
-            <param name="hostEnviroment"></param>
+            <param name="hostEnviroment">主机环境实例</param>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.HostingEnvironmentHelper.IsConfigured">
+            <summary>
+            检查是否已初始化
+            </summary>
         </member>
         <member name="M:Highever.SocialMedia.Common.HttpClientHelper.#ctor(System.Net.Http.IHttpClientFactory,Highever.SocialMedia.Common.INLogger)">
             <summary>
@@ -881,6 +958,56 @@
             <param name="headers">请求头</param>
             <param name="timeout">超时时间</param>
             <returns>响应字符串</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.DownloadAndSaveImageAsync(System.String,System.String,System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            下载图片并保存到本地（支持HEIC转换）
+            </summary>
+            <param name="imageUrl">图片URL地址</param>
+            <param name="saveDirectory">保存目录（相对于wwwroot）</param>
+            <param name="fileName">文件名（不含扩展名）</param>
+            <param name="convertHeic">是否转换HEIC格式</param>
+            <param name="compressImage">是否压缩图片</param>
+            <param name="overwriteExisting">是否覆盖已存在的文件，默认true</param>
+            <returns>返回相对路径</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.CheckLocalFileExists(System.String,System.String,System.String[])">
+            <summary>
+            检查本地文件是否存在
+            </summary>
+            <param name="saveDirectory">保存目录</param>
+            <param name="fileName">文件名（不含扩展名）</param>
+            <param name="possibleExtensions">可能的扩展名列表</param>
+            <returns>存在的文件相对路径，不存在返回null</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.SmartDownloadImageAsync(System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            智能下载图片（先检查本地是否存在）- 通用版本
+            </summary>
+            <param name="imageUrl">图片URL</param>
+            <param name="fileName">文件名（不含扩展名）</param>
+            <param name="saveDirectory">保存目录</param>
+            <param name="convertHeic">是否转换HEIC格式</param>
+            <param name="compressImage">是否压缩图片</param>
+            <returns>本地文件相对路径</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.SmartDownloadAvatarAsync(System.String,System.String,System.String)">
+            <summary>
+            智能下载头像（专用于用户头像）
+            </summary>
+            <param name="imageUrl">图片URL</param>
+            <param name="uniqueId">用户唯一ID</param>
+            <param name="saveDirectory">保存目录</param>
+            <returns>本地文件相对路径</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.HttpClientHelper.SmartDownloadVideoCoverAsync(System.String,System.String,System.String)">
+            <summary>
+            智能下载视频封面（专用于视频封面）
+            </summary>
+            <param name="imageUrl">图片URL</param>
+            <param name="videoId">视频ID</param>
+            <param name="saveDirectory">保存目录</param>
+            <returns>本地文件相对路径</returns>
         </member>
         <member name="T:Highever.SocialMedia.Common.IScopedDependency">
             <summary>
@@ -1155,6 +1282,61 @@
         <member name="P:Highever.SocialMedia.Common.Models.TokenResult.UserName">
             <summary>
             用户名
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Models.UserTokenSessionInfo">
+            <summary>
+            用户Token会话信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.Id">
+            <summary>
+            会话ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.DeviceId">
+            <summary>
+            设备ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.DeviceInfo">
+            <summary>
+            设备信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.IpAddress">
+            <summary>
+            IP地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.LastActivityTime">
+            <summary>
+            最后活动时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.IsCurrentSession">
+            <summary>
+            是否当前会话
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.DeviceType">
+            <summary>
+            设备类型（可选）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.Location">
+            <summary>
+            地理位置（可选）
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.AjaxResult`1">

@@ -215,13 +215,15 @@ builder.Services.AddHangfire(config => config
         builder.Configuration.GetConnectionString("Mysql"),
         new MySqlStorageOptions
         {
-            // 配置存储选项
             TablesPrefix = "task_",
             QueuePollInterval = TimeSpan.FromSeconds(3),
             TransactionIsolationLevel = System.Transactions.IsolationLevel.ReadCommitted,
             PrepareSchemaIfNecessary = true
         }
     ))
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
 );
 builder.Services.AddHangfireServer(); // 启动 Hangfire 服务器
 #endregion
@@ -249,6 +251,8 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 
 // 加载静态资源
 app.UseStaticFiles();
+//HOST事件
+app.UseStaticHostEnviroment();
 
 // 配置路由 
 app.UseRouting();

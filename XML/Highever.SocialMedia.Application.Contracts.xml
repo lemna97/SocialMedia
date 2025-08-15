@@ -29,22 +29,7 @@
             角色ID
             </summary>
         </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuPermRequest.MenuId">
-            <summary>
-            菜单ID
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.AddMenuPermRequest">
-            <summary>
-            添加角色菜单关联请求
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.AddMenuPermRequest.RoleId">
-            <summary>
-            角色ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.AddMenuPermRequest.MenuId">
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuPermRequest.MenuIds">
             <summary>
             菜单ID
             </summary>
@@ -57,6 +42,516 @@
         <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetMenusByRoleRequest.RoleId">
             <summary>
             角色ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.GetMenusRequest">
+            <summary>
+            获取菜单列表请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetMenusRequest.RoleId">
+            <summary>
+            角色ID（可选，不传则查询所有菜单）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse">
+            <summary>
+            菜单响应DTO
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.Id">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.ParentId">
+            <summary>
+            父级菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.Code">
+            <summary>
+            菜单代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.Url">
+            <summary>
+            菜单URL
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.Icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.RoleId">
+            <summary>
+            关联的角色ID（如果查询时指定了角色ID）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.IsAssigned">
+            <summary>
+            是否已分配给该角色
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.MenuResponse.UpdatedAt">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest">
+            <summary>
+            新增菜单请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.ParentId">
+            <summary>
+            父级菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.Code">
+            <summary>
+            菜单代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.Url">
+            <summary>
+            菜单URL
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.Icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest">
+            <summary>
+            修改菜单请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.Id">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.ParentId">
+            <summary>
+            父级菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.Code">
+            <summary>
+            菜单代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.Url">
+            <summary>
+            菜单URL
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.Icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuRequest">
+            <summary>
+            删除菜单请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuRequest.Id">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuRequest.ForceDelete">
+            <summary>
+            是否强制删除（删除子菜单）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteMenuRequest">
+            <summary>
+            批量删除菜单请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteMenuRequest.Ids">
+            <summary>
+            菜单ID列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteMenuRequest.ForceDelete">
+            <summary>
+            是否强制删除（删除子菜单）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.GetRolesRequest">
+            <summary>
+            获取角色列表请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetRolesRequest.Name">
+            <summary>
+            角色名称（模糊查询）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.RoleResponse">
+            <summary>
+            角色响应DTO
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.RoleResponse.Id">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.RoleResponse.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.RoleResponse.Code">
+            <summary>
+            角色代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.RoleResponse.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.RoleResponse.UpdatedAt">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateRoleRequest">
+            <summary>
+            创建角色请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateRoleRequest.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateRoleRequest.Code">
+            <summary>
+            角色代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateRoleRequest.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateRoleRequest.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest">
+            <summary>
+            更新角色请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest.Id">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest.Code">
+            <summary>
+            角色代码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteRoleRequest">
+            <summary>
+            删除角色请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteRoleRequest.Id">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteRoleRequest.ForceDelete">
+            <summary>
+            是否强制删除（删除关联的用户角色关系）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteRoleRequest">
+            <summary>
+            批量删除角色请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteRoleRequest.Ids">
+            <summary>
+            角色ID列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteRoleRequest.ForceDelete">
+            <summary>
+            是否强制删除
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest">
+            <summary>
+            获取用户列表请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest.Keyword">
+            <summary>
+            关键词（用户名或昵称，可为null或空字符串）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest.PageIndex">
+            <summary>
+            页码（从1开始）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest.PageSize">
+            <summary>
+            每页大小
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest.Username">
+            <summary>
+            用户名（模糊查询）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse">
+            <summary>
+            用户响应DTO
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.Id">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.Account">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.DisplayName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.LastLoginAt">
+            <summary>
+            最后登录时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.UpdatedAt">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UserResponse.Roles">
+            <summary>
+            用户角色列表
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest">
+            <summary>
+            创建用户请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest.Account">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest.DisplayName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest.RoleIds">
+            <summary>
+            角色ID列表
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest">
+            <summary>
+            更新用户请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest.Id">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest.Account">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest.DisplayName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest.IsActive">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest.RoleIds">
+            <summary>
+            角色ID列表
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteUserRequest">
+            <summary>
+            删除用户请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteUserRequest.Id">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteUserRequest">
+            <summary>
+            批量删除用户请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteUserRequest.Ids">
+            <summary>
+            用户ID列表
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.ChangePasswordRequest">
+            <summary>
+            修改密码请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.ChangePasswordRequest.Id">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.DTOs.System.ChangePasswordRequest.NewPassword">
+            <summary>
+            新密码
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.ICSVTestService">
@@ -131,14 +626,14 @@
             <param name="predicate">查询条件</param>
             <returns>关联列表</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.GetMenusByRoleIdAsync(System.Int64)">
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.GetMenusByRoleIdAsync(System.Nullable{System.Int32})">
             <summary>
             根据角色ID获取菜单列表
             </summary>
             <param name="roleId">角色ID</param>
             <returns>菜单列表</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.AssignMenusToRoleAsync(System.Int64,System.Collections.Generic.List{System.Int64})">
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenuPermsService.AssignMenusToRoleAsync(System.Int32,System.Collections.Generic.List{System.Int32})">
             <summary>
             为角色分配菜单
             </summary>
@@ -165,14 +660,14 @@
             <param name="entity">菜单实体</param>
             <returns>更新结果</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.DeleteAsync(System.Int64)">
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.DeleteAsync(System.Int32)">
             <summary>
             删除菜单
             </summary>
             <param name="id">菜单ID</param>
             <returns>删除结果</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetByIdAsync(System.Int64)">
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetByIdAsync(System.Int32)">
             <summary>
             根据ID获取菜单
             </summary>
@@ -199,11 +694,186 @@
             <param name="predicate">查询条件</param>
             <returns>菜单列表</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetMenuTreeAsync">
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetMenusWithRoleAsync(System.Nullable{System.Int32})">
             <summary>
-            获取菜单树结构
+            根据角色ID获取菜单列表（包含分配状态）
             </summary>
-            <returns>菜单树</returns>
+            <param name="roleId">角色ID，为空则查询所有菜单</param>
+            <returns>菜单列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.CreateMenuAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.CreateMenuRequest)">
+            <summary>
+            创建菜单
+            </summary>
+            <param name="request">创建请求</param>
+            <returns>创建结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.UpdateMenuAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateMenuRequest)">
+            <summary>
+            更新菜单
+            </summary>
+            <param name="request">更新请求</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.DeleteMenuAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteMenuRequest)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="request">删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.BatchDeleteMenuAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteMenuRequest)">
+            <summary>
+            批量删除菜单
+            </summary>
+            <param name="request">批量删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.IsMenuCodeExistAsync(System.String,System.Nullable{System.Int32})">
+            <summary>
+            检查菜单代码是否存在
+            </summary>
+            <param name="code">菜单代码</param>
+            <param name="excludeId">排除的菜单ID</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IMenusService.GetMenuByIdAsync(System.Int32)">
+            <summary>
+            获取菜单详情
+            </summary>
+            <param name="id">菜单ID</param>
+            <returns>菜单详情</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Services.IUsersService">
+            <summary>
+            用户管理服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.CreateAsync(Highever.SocialMedia.Domain.Entity.Users)">
+            <summary>
+            创建用户
+            </summary>
+            <param name="input">用户信息</param>
+            <returns>用户ID</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Users})">
+            <summary>
+            批量创建用户
+            </summary>
+            <param name="input">用户列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.UpdateAsync(Highever.SocialMedia.Domain.Entity.Users)">
+            <summary>
+            更新用户信息
+            </summary>
+            <param name="input">用户信息</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.UpdateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Users})">
+            <summary>
+            批量更新用户
+            </summary>
+            <param name="input">用户列表</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            删除用户
+            </summary>
+            <param name="predicate">删除条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.GetByIdAsync(System.Int32)">
+            <summary>
+            根据ID获取用户
+            </summary>
+            <param name="id">用户ID</param>
+            <returns>用户信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            根据条件查询单个用户
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>用户信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.GetAllAsync">
+            <summary>
+            获取所有用户
+            </summary>
+            <returns>用户列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.GetListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
+            <summary>
+            根据条件查询用户列表
+            </summary>
+            <param name="predicate">查询条件</param>
+            <returns>用户列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.GetUsersAsyncAll(Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest)">
+            <summary>
+            获取用户列表（带查询条件和角色信息）
+            </summary>
+            <param name="request">查询请求</param>
+            <returns>分页用户列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.GetUsersAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.GetUsersRequest)">
+            <summary>
+            获取用户列表（带查询条件和角色信息）
+            </summary>
+            <param name="request">查询请求</param>
+            <returns>分页用户列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.CreateUserAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.CreateUserRequest)">
+            <summary>
+            创建用户（包含角色分配）
+            </summary>
+            <param name="request">创建请求</param>
+            <returns>创建结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.UpdateUserAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateUserRequest)">
+            <summary>
+            更新用户（包含角色分配）
+            </summary>
+            <param name="request">更新请求</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.DeleteUserAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteUserRequest)">
+            <summary>
+            删除用户
+            </summary>
+            <param name="request">删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.BatchDeleteUserAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteUserRequest)">
+            <summary>
+            批量删除用户
+            </summary>
+            <param name="request">批量删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.GetUserByIdAsync(System.Int32)">
+            <summary>
+            获取用户详情（包含角色信息）
+            </summary>
+            <param name="id">用户ID</param>
+            <returns>用户详情</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.IsUsernameExistAsync(System.String,System.Nullable{System.Int32})">
+            <summary>
+            检查用户名是否存在
+            </summary>
+            <param name="username">用户名</param>
+            <param name="excludeId">排除的用户ID</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Services.IUsersService.ChangePasswordAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.ChangePasswordRequest)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="request">修改密码请求</param>
+            <returns>修改结果</returns>
         </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.IPermissionsService">
             <summary>
@@ -493,37 +1163,68 @@
             <param name="predicate">查询条件</param>
             <returns>角色信息</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetAllAsync">
             <summary>
-            查询角色列表
+            获取所有角色
+            </summary>
+            <returns>角色列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+            <summary>
+            根据条件查询角色列表
             </summary>
             <param name="predicate">查询条件</param>
             <returns>角色列表</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetPagedListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Object}},System.Boolean)">
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetRolesAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.GetRolesRequest)">
             <summary>
-            分页查询角色
+            获取角色列表（带查询条件）
             </summary>
-            <param name="predicate">查询条件</param>
-            <param name="pageIndex">页码</param>
-            <param name="pageSize">页大小</param>
-            <param name="orderBy">排序字段</param>
-            <param name="ascending">是否升序</param>
-            <returns>分页结果</returns>
+            <param name="request">查询请求</param>
+            <returns>角色列表</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.CountAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.CreateRoleAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.CreateRoleRequest)">
             <summary>
-            统计角色数量
+            创建角色
             </summary>
-            <param name="predicate">查询条件</param>
-            <returns>角色数量</returns>
+            <param name="request">创建请求</param>
+            <returns>创建结果</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.ExistsAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Roles,System.Boolean}})">
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.UpdateRoleAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.UpdateRoleRequest)">
             <summary>
-            检查角色是否存在
+            更新角色
             </summary>
-            <param name="predicate">查询条件</param>
+            <param name="request">更新请求</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.DeleteRoleAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.DeleteRoleRequest)">
+            <summary>
+            删除角色
+            </summary>
+            <param name="request">删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.BatchDeleteRoleAsync(Highever.SocialMedia.Application.Contracts.DTOs.System.BatchDeleteRoleRequest)">
+            <summary>
+            批量删除角色
+            </summary>
+            <param name="request">批量删除请求</param>
+            <returns>删除结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.IsRoleCodeExistAsync(System.String,System.Nullable{System.Int32})">
+            <summary>
+            检查角色代码是否存在
+            </summary>
+            <param name="code">角色代码</param>
+            <param name="excludeId">排除的角色ID</param>
             <returns>是否存在</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.IRolesService.GetRoleByIdAsync(System.Int32)">
+            <summary>
+            获取角色详情
+            </summary>
+            <param name="id">角色ID</param>
+            <returns>角色详情</returns>
         </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.ITokenService">
             <summary>
@@ -539,14 +1240,14 @@
             <returns>新的Token对</returns>
             <exception cref="T:System.UnauthorizedAccessException">当刷新令牌无效或已过期时抛出</exception>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeRefreshTokenAsync(System.Int64)">
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeRefreshTokenAsync(System.Int32)">
             <summary>
             撤销用户的刷新令牌
             </summary>
             <param name="userId">用户ID</param>
             <returns>是否撤销成功</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.UpdateRefreshTokenAsync(System.Int64,System.String,System.DateTime)">
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.UpdateRefreshTokenAsync(System.Int32,System.String,System.DateTime)">
             <summary>
             更新用户的刷新令牌
             </summary>
@@ -562,7 +1263,7 @@
             <param name="refreshToken">刷新令牌</param>
             <returns>是否有效</returns>
         </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetRefreshTokenInfoAsync(System.Int64)">
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetRefreshTokenInfoAsync(System.Int32)">
             <summary>
             获取用户的刷新令牌信息
             </summary>
@@ -574,6 +1275,68 @@
             清理过期的刷新令牌
             </summary>
             <returns>清理的令牌数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetRefreshTokenFromRequest(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            从HTTP请求中获取RefreshToken
+            </summary>
+            <param name="context">HTTP上下文</param>
+            <returns>RefreshToken，如果没有找到则返回null</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.CreateTokenSessionAsync(System.Int32,System.String,System.String,System.String,System.String)">
+            <summary>
+            创建新的Token会话
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="refreshToken">刷新令牌</param>
+            <param name="deviceId">设备ID</param>
+            <param name="deviceInfo">设备信息</param>
+            <param name="ipAddress">IP地址</param>
+            <returns>是否创建成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeAllUserTokenSessionsAsync(System.Int32)">
+            <summary>
+            撤销用户的所有Token会话
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>是否撤销成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeTokenSessionAsync(System.String)">
+            <summary>
+            撤销指定的Token会话
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>是否撤销成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.UpdateTokenSessionActivityAsync(System.String)">
+            <summary>
+            更新Token会话活动时间
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>是否更新成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.CleanupExpiredTokenSessionsAsync">
+            <summary>
+            清理过期的Token会话
+            </summary>
+            <returns>清理的会话数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetUserActiveSessionsAsync(System.Int32)">
+            <summary>
+            获取用户的所有活跃会话
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>用户的活跃会话列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GenerateAccessToken(System.Int32,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            生成访问令牌（用于延期）
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.ExtendTokenExpiryAsync(Microsoft.AspNetCore.Http.HttpContext,System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
+            <summary>
+            延长Token过期时间（滑动过期）
+            </summary>
         </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo">
             <summary>
@@ -666,92 +1429,6 @@
             <param name="userId">用户ID</param>
             <param name="roleId">角色ID</param>
             <returns>是否拥有角色</returns>
-        </member>
-        <member name="T:Highever.SocialMedia.Application.Contracts.IUsersService">
-            <summary>
-            用户管理服务接口
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.CreateAsync(Highever.SocialMedia.Domain.Entity.Users)">
-            <summary>
-            创建用户
-            </summary>
-            <param name="input">用户信息</param>
-            <returns>用户ID</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.CreateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Users})">
-            <summary>
-            批量创建用户
-            </summary>
-            <param name="input">用户列表</param>
-            <returns>影响行数</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.UpdateAsync(Highever.SocialMedia.Domain.Entity.Users)">
-            <summary>
-            更新用户信息
-            </summary>
-            <param name="input">用户信息</param>
-            <returns>影响行数</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.UpdateAsync(System.Collections.Generic.List{Highever.SocialMedia.Domain.Entity.Users})">
-            <summary>
-            批量更新用户
-            </summary>
-            <param name="input">用户列表</param>
-            <returns>影响行数</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.DeleteAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
-            <summary>
-            删除用户
-            </summary>
-            <param name="predicate">删除条件</param>
-            <returns>影响行数</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.GetByIdAsync(System.Int32)">
-            <summary>
-            根据ID获取用户
-            </summary>
-            <param name="id">用户ID</param>
-            <returns>用户信息</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
-            <summary>
-            根据条件查询单个用户
-            </summary>
-            <param name="predicate">查询条件</param>
-            <returns>用户信息</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.GetQueryListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
-            <summary>
-            查询用户列表
-            </summary>
-            <param name="predicate">查询条件</param>
-            <returns>用户列表</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.GetPagedListAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Object}},System.Boolean)">
-            <summary>
-            分页查询用户
-            </summary>
-            <param name="predicate">查询条件</param>
-            <param name="pageIndex">页码</param>
-            <param name="pageSize">页大小</param>
-            <param name="orderBy">排序字段</param>
-            <param name="ascending">是否升序</param>
-            <returns>分页结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.CountAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
-            <summary>
-            统计用户数量
-            </summary>
-            <param name="predicate">查询条件</param>
-            <returns>用户数量</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.IUsersService.ExistsAsync(System.Linq.Expressions.Expression{System.Func{Highever.SocialMedia.Domain.Entity.Users,System.Boolean}})">
-            <summary>
-            检查用户是否存在
-            </summary>
-            <param name="predicate">查询条件</param>
-            <returns>是否存在</returns>
         </member>
     </members>
 </doc>

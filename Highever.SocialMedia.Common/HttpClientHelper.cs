@@ -416,5 +416,228 @@ namespace Highever.SocialMedia.Common
 
             return await GetAsync(fullUrl, headers, timeout);
         }
+
+        /// <summary>
+        /// 下载图片并保存到本地（支持HEIC转换）
+        /// </summary>
+        /// <param name="imageUrl">图片URL地址</param>
+        /// <param name="saveDirectory">保存目录（相对于wwwroot）</param>
+        /// <param name="fileName">文件名（不含扩展名）</param>
+        /// <param name="convertHeic">是否转换HEIC格式</param>
+        /// <param name="compressImage">是否压缩图片</param>
+        /// <param name="overwriteExisting">是否覆盖已存在的文件，默认true</param>
+        /// <returns>返回相对路径</returns>
+        public async Task<string> DownloadAndSaveImageAsync(string imageUrl, string saveDirectory = "uploads/avatars", 
+            string fileName = null, bool convertHeic = true, bool compressImage = true, bool overwriteExisting = true)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(imageUrl))
+                    throw new ArgumentException("图片URL不能为空", nameof(imageUrl));
+
+                if (!HostingEnvironmentHelper.IsConfigured)
+                {
+                    throw new InvalidOperationException("HostingEnvironmentHelper未初始化，无法获取Web根路径。请确保在Startup.cs的Configure方法中调用了app.UseStaticHostEnviroment()");
+                }
+
+                // 获取原始文件扩展名
+                var originalExtension = Path.GetExtension(imageUrl.Split('?')[0])?.ToLower() ?? ".jpg";
+                if (string.IsNullOrEmpty(originalExtension) || originalExtension == ".")
+                    originalExtension = ".jpg";
+
+                // 生成文件名
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    fileName = $"avatar_{DateTime.Now:yyyyMMddHHmmss}_{Guid.NewGuid():N}";
+                }
+
+                // 构建保存路径
+                var webRootPath = HostingEnvironmentHelper.WebPath;
+                var fullSaveDirectory = Path.Combine(webRootPath, saveDirectory);
+                
+                // 确保目录存在
+                if (!Directory.Exists(fullSaveDirectory))
+                {
+                    Directory.CreateDirectory(fullSaveDirectory);
+                }
+
+                // 预估最终扩展名（可能会因为转换而改变）
+                var estimatedExtension = (convertHeic && ImageHelper.NeedsConversion(originalExtension)) ? ".jpg" : originalExtension;
+                var fullFileName = fileName + estimatedExtension;
+                var fullFilePath = Path.Combine(fullSaveDirectory, fullFileName);
+
+                // 检查文件是否已存在
+                if (!overwriteExisting && File.Exists(fullFilePath))
+                {
+                    var relativePath = $"/{saveDirectory}/{fullFileName}".Replace("\\", "/");
+                    _Logger?.ApiInfo($"文件已存在，跳过下载: {relativePath}");
+                    return relativePath;
+                }
+
+                var httpClient = _httpClientFactory.CreateClient();
+                httpClient.Timeout = TimeSpan.FromMinutes(2);
+
+                // 下载图片
+                var response = await httpClient.GetAsync(imageUrl);
+                response.EnsureSuccessStatusCode();
+                
+                var imageBytes = await response.Content.ReadAsByteArrayAsync();
+                var finalBytes = imageBytes;
+                var finalExtension = originalExtension;
+
+                // 处理HEIC格式转换
+                if (convertHeic && ImageHelper.NeedsConversion(originalExtension))
+                {
+                    _Logger?.ApiInfo($"检测到HEIC格式图片，开始转换: {imageUrl}");
+                    finalBytes = await ImageHelper.ConvertHeicToJpgAsync(imageBytes, 85);
+                    finalExtension = ".jpg";
+                    _Logger?.ApiInfo($"HEIC转换完成，原大小: {imageBytes.Length} bytes，新大小: {finalBytes.Length} bytes");
+                }
+                // 压缩图片（可选）
+                else if (compressImage && ImageHelper.IsSupportedFormat(originalExtension))
+                {
+                    try
+                    {
+                        var compressedBytes = await ImageHelper.CompressImageAsync(finalBytes, 1920, 1080, 85);
+                        if (compressedBytes.Length < finalBytes.Length)
+                        {
+                            finalBytes = compressedBytes;
+                            finalExtension = ".jpg"; // 压缩后统一为JPG格式
+                            _Logger?.ApiInfo($"图片压缩完成，原大小: {imageBytes.Length} bytes，新大小: {finalBytes.Length} bytes");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _Logger?.ApiInfo($"图片压缩失败，使用原图: {ex.Message}");
+                    }
+                }
+
+                // 重新计算最终文件名（如果扩展名发生了变化）
+                var actualFullFileName = fileName + finalExtension;
+                var actualFullFilePath = Path.Combine(fullSaveDirectory, actualFullFileName);
+
+                // 如果最终文件名与预估不同，再次检查是否存在
+                if (!overwriteExisting && actualFullFilePath != fullFilePath && File.Exists(actualFullFilePath))
+                {
+                    var relativePath = $"/{saveDirectory}/{actualFullFileName}".Replace("\\", "/");
+                    _Logger?.ApiInfo($"转换后文件已存在，跳过保存: {relativePath}");
+                    return relativePath;
+                }
+
+                // 保存文件
+                await File.WriteAllBytesAsync(actualFullFilePath, finalBytes);
+                
+                // 返回相对路径
+                var finalRelativePath = $"/{saveDirectory}/{actualFullFileName}".Replace("\\", "/");
+                
+                _Logger?.ApiInfo($"图片保存成功: {finalRelativePath}，文件大小: {finalBytes.Length} bytes");
+                
+                return finalRelativePath;
+            }
+            catch (Exception ex)
+            {
+                _Logger?.ApiError($"下载并保存图片失败: {imageUrl}, 错误: {ex.Message}");
+                throw new Exception($"下载并保存图片失败: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// 检查本地文件是否存在
+        /// </summary>
+        /// <param name="saveDirectory">保存目录</param>
+        /// <param name="fileName">文件名（不含扩展名）</param>
+        /// <param name="possibleExtensions">可能的扩展名列表</param>
+        /// <returns>存在的文件相对路径，不存在返回null</returns>
+        public string? CheckLocalFileExists(string saveDirectory, string fileName, params string[] possibleExtensions)
+        {
+            try
+            {
+                if (!HostingEnvironmentHelper.IsConfigured)
+                    return null;
+
+                var webRootPath = HostingEnvironmentHelper.WebPath;
+                var fullSaveDirectory = Path.Combine(webRootPath, saveDirectory);
+
+                if (!Directory.Exists(fullSaveDirectory))
+                    return null;
+
+                // 如果没有指定扩展名，使用常见的图片扩展名
+                if (possibleExtensions == null || possibleExtensions.Length == 0)
+                {
+                    possibleExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                }
+
+                foreach (var ext in possibleExtensions)
+                {
+                    var fullFileName = fileName + ext;
+                    var fullFilePath = Path.Combine(fullSaveDirectory, fullFileName);
+                    
+                    if (File.Exists(fullFilePath))
+                    {
+                        return $"/{saveDirectory}/{fullFileName}".Replace("\\", "/");
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _Logger?.ApiError($"检查本地文件失败: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 智能下载图片（先检查本地是否存在）- 通用版本
+        /// </summary>
+        /// <param name="imageUrl">图片URL</param>
+        /// <param name="fileName">文件名（不含扩展名）</param>
+        /// <param name="saveDirectory">保存目录</param>
+        /// <param name="convertHeic">是否转换HEIC格式</param>
+        /// <param name="compressImage">是否压缩图片</param>
+        /// <returns>本地文件相对路径</returns>
+        public async Task<string> SmartDownloadImageAsync(string imageUrl, string fileName, 
+            string saveDirectory = "uploads/images", bool convertHeic = true, bool compressImage = true)
+        {
+            // 先检查本地是否已存在
+            var existingFile = CheckLocalFileExists(saveDirectory, fileName);
+            if (!string.IsNullOrEmpty(existingFile))
+            {
+                _Logger?.ApiInfo($"图片文件已存在: {existingFile}");
+                return existingFile;
+            }
+
+            // 本地不存在，下载新的
+            return await DownloadAndSaveImageAsync(imageUrl, saveDirectory, fileName, 
+                convertHeic: convertHeic, compressImage: compressImage, overwriteExisting: true);
+        }
+
+        /// <summary>
+        /// 智能下载头像（专用于用户头像）
+        /// </summary>
+        /// <param name="imageUrl">图片URL</param>
+        /// <param name="uniqueId">用户唯一ID</param>
+        /// <param name="saveDirectory">保存目录</param>
+        /// <returns>本地文件相对路径</returns>
+        public async Task<string> SmartDownloadAvatarAsync(string imageUrl, string uniqueId, 
+            string saveDirectory = "uploads/avatars")
+        {
+            var fileName = $"user_{uniqueId}";
+            return await SmartDownloadImageAsync(imageUrl, fileName, saveDirectory);
+        }
+
+        /// <summary>
+        /// 智能下载视频封面（专用于视频封面）
+        /// </summary>
+        /// <param name="imageUrl">图片URL</param>
+        /// <param name="videoId">视频ID</param>
+        /// <param name="saveDirectory">保存目录</param>
+        /// <returns>本地文件相对路径</returns>
+        public async Task<string> SmartDownloadVideoCoverAsync(string imageUrl, string videoId, 
+            string saveDirectory = "uploads/video_coverurl")
+        {
+            var fileName = $"video_{videoId}";
+            return await SmartDownloadImageAsync(imageUrl, fileName, saveDirectory);
+        }
     }
 }

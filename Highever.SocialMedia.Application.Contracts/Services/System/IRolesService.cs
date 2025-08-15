@@ -1,6 +1,6 @@
+using Highever.SocialMedia.Application.Contracts.DTOs.System;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
-using Highever.SocialMedia.Domain.Repository;
 using System.Linq.Expressions;
 
 namespace Highever.SocialMedia.Application.Contracts
@@ -60,41 +60,68 @@ namespace Highever.SocialMedia.Application.Contracts
         Task<Roles?> FirstOrDefaultAsync(Expression<Func<Roles, bool>> predicate);
 
         /// <summary>
-        /// 查询角色列表
+        /// 获取所有角色
+        /// </summary>
+        /// <returns>角色列表</returns>
+        Task<List<Roles>> GetAllAsync();
+
+        /// <summary>
+        /// 根据条件查询角色列表
         /// </summary>
         /// <param name="predicate">查询条件</param>
         /// <returns>角色列表</returns>
-        Task<List<Roles>> GetQueryListAsync(Expression<Func<Roles, bool>> predicate);
+        Task<List<Roles>> GetListAsync(Expression<Func<Roles, bool>> predicate);
 
         /// <summary>
-        /// 分页查询角色
+        /// 获取角色列表（带查询条件）
         /// </summary>
-        /// <param name="predicate">查询条件</param>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageSize">页大小</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="ascending">是否升序</param>
-        /// <returns>分页结果</returns>
-        Task<PagedResult<Roles>> GetPagedListAsync(
-            Expression<Func<Roles, bool>> predicate,
-            int pageIndex = 1,
-            int pageSize = 20,
-            Expression<Func<Roles, object>> orderBy = null,
-            bool ascending = true);
+        /// <param name="request">查询请求</param>
+        /// <returns>角色列表</returns>
+        Task<List<RoleResponse>> GetRolesAsync(GetRolesRequest? request = null);
 
         /// <summary>
-        /// 统计角色数量
+        /// 创建角色
         /// </summary>
-        /// <param name="predicate">查询条件</param>
-        /// <returns>角色数量</returns>
-        Task<int> CountAsync(Expression<Func<Roles, bool>> predicate);
+        /// <param name="request">创建请求</param>
+        /// <returns>创建结果</returns>
+        Task<int> CreateRoleAsync(CreateRoleRequest request);
 
         /// <summary>
-        /// 检查角色是否存在
+        /// 更新角色
         /// </summary>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="request">更新请求</param>
+        /// <returns>更新结果</returns>
+        Task<bool> UpdateRoleAsync(UpdateRoleRequest request);
+
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="request">删除请求</param>
+        /// <returns>删除结果</returns>
+        Task<bool> DeleteRoleAsync(DeleteRoleRequest request);
+
+        /// <summary>
+        /// 批量删除角色
+        /// </summary>
+        /// <param name="request">批量删除请求</param>
+        /// <returns>删除结果</returns>
+        Task<bool> BatchDeleteRoleAsync(BatchDeleteRoleRequest request);
+
+        /// <summary>
+        /// 检查角色代码是否存在
+        /// </summary>
+        /// <param name="code">角色代码</param>
+        /// <param name="excludeId">排除的角色ID</param>
         /// <returns>是否存在</returns>
-        Task<bool> ExistsAsync(Expression<Func<Roles, bool>> predicate);
+        Task<bool> IsRoleCodeExistAsync(string code, int? excludeId = null);
+
+        /// <summary>
+        /// 获取角色详情
+        /// </summary>
+        /// <param name="id">角色ID</param>
+        /// <returns>角色详情</returns>
+        Task<RoleResponse?> GetRoleByIdAsync(int id);
     }
 }
+
 

@@ -108,7 +108,7 @@ namespace Highever.SocialMedia.Domain.Entity
         /// 获赞总数(用户所有视频获得的点赞总数)
         /// </summary>
         [SugarColumn(ColumnName = "heart_count", IsNullable = false)]
-        public int HeartCount { get; set; } = 0;
+        public int HeartCount { get; set; } = 0; 
 
         /// <summary>
         /// 点赞数(用户点赞他人的次数)
@@ -120,13 +120,7 @@ namespace Highever.SocialMedia.Domain.Entity
         /// 朋友数量(互相关注的好友数)
         /// </summary>
         [SugarColumn(ColumnName = "friend_count", IsNullable = false)]
-        public int FriendCount { get; set; } = 0;
-
-        /// <summary>
-        /// 记录日期(数据采集日期)
-        /// </summary>
-        [SugarColumn(ColumnName = "record_date", IsPrimaryKey = true, IsNullable = false)]
-        public DateTime RecordDate { get; set; } = DateTime.Today;
+        public int FriendCount { get; set; } = 0; 
 
         /// <summary>
         /// 创建时间(记录首次插入时间)

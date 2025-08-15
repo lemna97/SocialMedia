@@ -34,7 +34,7 @@ namespace Highever.SocialMedia.Admin.Controllers
         { 
             string html = await AgencyHttpHelper.FetchAsync("https://www.tiktok.com/@get.whit.it");
             Console.WriteLine(html);
-            return this.Ok("获取成功");
+            return this.JsonOk("获取成功");
         }
 
 

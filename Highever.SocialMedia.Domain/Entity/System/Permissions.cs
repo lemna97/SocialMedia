@@ -12,7 +12,7 @@ namespace Highever.SocialMedia.Domain.Entity
         /// 资源ID
         /// </summary>
         [SugarColumn(ColumnName = "resource_id", IsNullable = false)]
-        public long ResourceId { get; set; }
+        public int ResourceId { get; set; }
 
         /// <summary>
         /// 操作类型

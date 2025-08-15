@@ -74,7 +74,7 @@
                 success = true,
                 code = HttpCode.成功,
                 msg = message,
-                data = new PageResult<TItem> { Items = items, Total = total }
+                data = new PageResult<TItem> { Items = items, totalCount = total }
             };
         }
     }

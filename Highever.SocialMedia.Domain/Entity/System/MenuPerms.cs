@@ -12,13 +12,13 @@ namespace Highever.SocialMedia.Domain.Entity
         /// 角色ID
         /// </summary>
         [SugarColumn(ColumnName = "role_id", IsPrimaryKey = true, IsNullable = false)]
-        public long RoleId { get; set; }
+        public int RoleId { get; set; }
 
         /// <summary>
         /// 菜单ID
         /// </summary>
         [SugarColumn(ColumnName = "menu_id", IsPrimaryKey = true, IsNullable = false)]
-        public long MenuId { get; set; }
+        public int MenuId { get; set; }
     }
 }
 

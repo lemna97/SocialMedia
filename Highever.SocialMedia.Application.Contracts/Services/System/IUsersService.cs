@@ -1,9 +1,10 @@
+using Highever.SocialMedia.Application.Contracts.DTOs.System;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
 using System.Linq.Expressions;
 
-namespace Highever.SocialMedia.Application.Contracts
+namespace Highever.SocialMedia.Application.Contracts.Services
 {
     /// <summary>
     /// 用户管理服务接口
@@ -60,42 +61,84 @@ namespace Highever.SocialMedia.Application.Contracts
         Task<Users?> FirstOrDefaultAsync(Expression<Func<Users, bool>> predicate);
 
         /// <summary>
-        /// 查询用户列表
+        /// 获取所有用户
+        /// </summary>
+        /// <returns>用户列表</returns>
+        Task<List<Users>> GetAllAsync();
+
+        /// <summary>
+        /// 根据条件查询用户列表
         /// </summary>
         /// <param name="predicate">查询条件</param>
         /// <returns>用户列表</returns>
-        Task<List<Users>> GetQueryListAsync(Expression<Func<Users, bool>> predicate);
+        Task<List<Users>> GetListAsync(Expression<Func<Users, bool>> predicate);
 
         /// <summary>
-        /// 分页查询用户
+        /// 获取用户列表（带查询条件和角色信息）
         /// </summary>
-        /// <param name="predicate">查询条件</param>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageSize">页大小</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="ascending">是否升序</param>
-        /// <returns>分页结果</returns>
-        Task<PagedResult<Users>> GetPagedListAsync(
-            Expression<Func<Users, bool>> predicate,
-            int pageIndex = 1,
-            int pageSize = 20,
-            Expression<Func<Users, object>> orderBy =null,
-            bool ascending = true);
+        /// <param name="request">查询请求</param>
+        /// <returns>分页用户列表</returns>
+        Task<List<UserResponse>> GetUsersAsyncAll(GetUsersRequest? request = null);
 
         /// <summary>
-        /// 统计用户数量
+        /// 获取用户列表（带查询条件和角色信息）
         /// </summary>
-        /// <param name="predicate">查询条件</param>
-        /// <returns>用户数量</returns>
-        Task<int> CountAsync(Expression<Func<Users, bool>> predicate);
+        /// <param name="request">查询请求</param>
+        /// <returns>分页用户列表</returns>
+        Task<PagedResult<UserResponse>> GetUsersAsync(GetUsersRequest? request = null);
 
         /// <summary>
-        /// 检查用户是否存在
+        /// 创建用户（包含角色分配）
         /// </summary>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="request">创建请求</param>
+        /// <returns>创建结果</returns>
+        Task<int> CreateUserAsync(CreateUserRequest request);
+
+        /// <summary>
+        /// 更新用户（包含角色分配）
+        /// </summary>
+        /// <param name="request">更新请求</param>
+        /// <returns>更新结果</returns>
+        Task<bool> UpdateUserAsync(UpdateUserRequest request);
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="request">删除请求</param>
+        /// <returns>删除结果</returns>
+        Task<bool> DeleteUserAsync(DeleteUserRequest request);
+
+        /// <summary>
+        /// 批量删除用户
+        /// </summary>
+        /// <param name="request">批量删除请求</param>
+        /// <returns>删除结果</returns>
+        Task<bool> BatchDeleteUserAsync(BatchDeleteUserRequest request);
+
+        /// <summary>
+        /// 获取用户详情（包含角色信息）
+        /// </summary>
+        /// <param name="id">用户ID</param>
+        /// <returns>用户详情</returns>
+        Task<UserResponse?> GetUserByIdAsync(int id);
+
+        /// <summary>
+        /// 检查用户名是否存在
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="excludeId">排除的用户ID</param>
         /// <returns>是否存在</returns>
-        Task<bool> ExistsAsync(Expression<Func<Users, bool>> predicate);
+        Task<bool> IsUsernameExistAsync(string username, int? excludeId = null);
+         
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="request">修改密码请求</param>
+        /// <returns>修改结果</returns>
+        Task<bool> ChangePasswordAsync(ChangePasswordRequest request);
     }
 }
+
+
 
 

@@ -90,12 +90,24 @@ namespace Highever.SocialMedia.API.Controllers
                     permissions: new List<string>()
                 );
 
-                // 保存RefreshToken到数据库
-                await _tokenService.UpdateRefreshTokenAsync(
+                // 获取设备信息
+                var deviceInfo = Request.Headers["User-Agent"].ToString();
+                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+                var deviceId = Request.Headers["X-Device-Id"].FirstOrDefault() ?? 
+                              $"{ipAddress}_{deviceInfo?.GetHashCode()}";
+
+                // 创建新的Token会话（支持多设备登录）
+                await _tokenService.CreateTokenSessionAsync(
                     user.Id, 
-                    tokenResult.RefreshToken, 
-                    DateTime.UtcNow.AddDays(7)
+                    tokenResult.RefreshToken,
+                    deviceId,
+                    deviceInfo,
+                    ipAddress
                 );
+
+                // 更新用户最后登录时间
+                user.LastActivityTime = DateTime.Now; 
+                await _repositoryUsers.UpdateAsync(user);
 
                 // 设置Cookie
                 var cookieOptions = new CookieOptions
@@ -106,6 +118,8 @@ namespace Highever.SocialMedia.API.Controllers
                     Expires = DateTime.UtcNow.AddMinutes(60)
                 };
                 Response.Cookies.Append("auth_token", tokenResult.AccessToken, cookieOptions);
+
+                _logger.Info($"用户 {user.Account} 登录成功，设备ID: {deviceId}");
 
                 return this.Success(new
                 {
@@ -150,15 +164,20 @@ namespace Highever.SocialMedia.API.Controllers
         {
             try
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                if (userIdClaim != null && long.TryParse(userIdClaim.Value, out var userId))
+                // 获取RefreshToken
+                var refreshToken = Request.Headers["X-Refresh-Token"].FirstOrDefault() ?? 
+                                 Request.Cookies["refresh_token"];
+
+                if (!string.IsNullOrEmpty(refreshToken))
                 {
-                    // 撤销RefreshToken
-                    await _tokenService.RevokeRefreshTokenAsync(userId);
+                    // 撤销当前Token会话
+                    await _tokenService.RevokeTokenSessionAsync(refreshToken);
                 }
 
                 Response.Cookies.Delete("auth_token");
+                Response.Cookies.Delete("refresh_token");
                 
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
                 _logger.Info($"用户 {userIdClaim?.Value} 已登出");
                 return this.Success("登出成功！");
             }
@@ -166,6 +185,36 @@ namespace Highever.SocialMedia.API.Controllers
             {
                 _logger.Error(ex, "用户登出过程中发生错误");
                 return this.JsonError("登出过程中发生错误");
+            }
+        }
+
+        /// <summary>
+        /// 登出所有设备
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("logoutAll")]
+        [ProducesResponseType(typeof(AjaxResult<object>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> LogoutAll()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out var userId))
+                {
+                    // 撤销用户所有Token会话
+                    await _tokenService.RevokeAllUserTokenSessionsAsync(userId);
+                }
+
+                Response.Cookies.Delete("auth_token");
+                Response.Cookies.Delete("refresh_token");
+                
+                _logger.Info($"用户 {userIdClaim?.Value} 已从所有设备登出");
+                return this.Success("已从所有设备登出！");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "登出所有设备过程中发生错误");
+                return this.JsonError("登出所有设备过程中发生错误");
             }
         }
 

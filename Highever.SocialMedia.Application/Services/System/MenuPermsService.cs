@@ -1,6 +1,8 @@
 using Highever.SocialMedia.Application.Contracts.Services;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
+using LinqKit;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Linq.Expressions;
 
 namespace Highever.SocialMedia.Application.Services
@@ -49,14 +51,23 @@ namespace Highever.SocialMedia.Application.Services
             return await _repository.GetListAsync(predicate);
         }
 
-        public async Task<List<Menus>> GetMenusByRoleIdAsync(long roleId)
+        public async Task<List<Menus>> GetMenusByRoleIdAsync(int? roleId)
         {
-            var menuPerms = await _repository.GetListAsync(mp => mp.RoleId == roleId);
-            var menuIds = menuPerms.Select(mp => mp.MenuId).ToList();
-            return await _menusRepository.GetListAsync(m => menuIds.Contains(m.Id));
+            Expression<Func<Menus, bool>> predicate = null; ;
+            List<int> menuIds = new List<int>();
+            if (roleId != null && roleId > 0)
+            {
+                var menuPerms = await _repository.GetListAsync(mp => mp.RoleId == roleId);
+                menuIds = menuPerms.Select(mp => mp.MenuId).ToList();
+            }
+            if (menuIds.Any())
+            {
+                predicate = m => menuIds.Contains(m.Id);
+            }
+            return await _menusRepository.GetListAsync(predicate);
         }
 
-        public async Task<bool> AssignMenusToRoleAsync(long roleId, List<long> menuIds)
+        public async Task<bool> AssignMenusToRoleAsync(int roleId, List<int> menuIds)
         {
             // 先删除该角色的所有菜单关联
             await _repository.DeleteAsync(mp => mp.RoleId == roleId);

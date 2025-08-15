@@ -27,7 +27,7 @@ namespace Highever.SocialMedia.Common
         /// <param name="roles">角色列表</param>
         /// <param name="permissions">权限列表</param>
         /// <returns>JWT令牌</returns>
-        public string GenerateToken(long userId, string userName, List<string> roles = null, List<string> permissions = null)
+        public string GenerateToken(int userId, string userName, List<string> roles = null, List<string> permissions = null)
         {
             var claims = new List<Claim>
             {
@@ -83,7 +83,7 @@ namespace Highever.SocialMedia.Common
         /// <summary>
         /// 生成Token对（访问令牌 + 刷新令牌）
         /// </summary>
-        public TokenResult GenerateTokenPair(long userId, string userName, List<string> roles = null, List<string> permissions = null)
+        public TokenResult GenerateTokenPair(int userId, string userName, List<string> roles = null, List<string> permissions = null)
         {
             var accessToken = GenerateToken(userId, userName, roles, permissions);
             var refreshToken = GenerateRefreshToken();
@@ -106,7 +106,7 @@ namespace Highever.SocialMedia.Common
         /// <param name="roles">用户角色列表</param>
         /// <param name="permissions">用户权限列表</param>
         /// <returns>新的Token对</returns>
-        public TokenResult RefreshToken(long userId, string userName, List<string> roles = null, List<string> permissions = null)
+        public TokenResult RefreshToken(int userId, string userName, List<string> roles = null, List<string> permissions = null)
         {
             return GenerateTokenPair(userId, userName, roles, permissions);
         }
@@ -171,11 +171,11 @@ namespace Highever.SocialMedia.Common
         /// </summary>
         /// <param name="token">JWT令牌</param>
         /// <returns>用户ID</returns>
-        public long? GetUserIdFromToken(string token)
+        public int? GetUserIdFromToken(string token)
         {
             var principal = ValidateToken(token);
             var userIdClaim = principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return long.TryParse(userIdClaim, out var userId) ? userId : null;
+            return int.TryParse(userIdClaim, out var userId) ? userId : null;
         }
 
         /// <summary>
@@ -209,6 +209,8 @@ namespace Highever.SocialMedia.Common
         }
     }
 }
+
+
 
 
 

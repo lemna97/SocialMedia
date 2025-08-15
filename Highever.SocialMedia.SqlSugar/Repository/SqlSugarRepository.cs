@@ -1,6 +1,9 @@
 ﻿using Highever.SocialMedia.Domain.Repository;
 using SqlSugar;
 using System.Linq.Expressions;
+using System.Net.Http;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Highever.SocialMedia.SqlSugar
 {
@@ -9,26 +12,34 @@ namespace Highever.SocialMedia.SqlSugar
     /// </summary>
     public class SqlSugarRepository<T> : IRepository<T> where T : class, new()
     {
-        private readonly ISqlSugarClient _db;
+        private readonly ISqlSugarDBContext _dbContext; 
 
         public SqlSugarRepository(ISqlSugarDBContext dbContext)
         {
-            _db = dbContext?.Db ?? throw new ArgumentNullException(nameof(dbContext));
-        }
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext)); 
+        } 
 
         public async Task<T?> GetByIdAsync(object id)
         {
-            return await _db.Queryable<T>().InSingleAsync(id);
+            return await _dbContext.Db.Queryable<T>().InSingleAsync(id);
         }
 
         public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _db.Queryable<T>().Where(predicate).FirstAsync();
+            return await _dbContext.Db.Queryable<T>().Where(predicate).FirstAsync();
         }
 
         public async Task<List<T>> GetListAsync(Expression<Func<T, bool>>? predicate = null)
         {
-            var query = _db.Queryable<T>();
+            var query = _dbContext.Db.Queryable<T>();
+            if (predicate != null)
+                query = query.Where(predicate);
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<T>> QueryListAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            var query = _dbContext.Db.Queryable<T>();
             if (predicate != null)
                 query = query.Where(predicate);
             return await query.ToListAsync();
@@ -50,7 +61,7 @@ namespace Highever.SocialMedia.SqlSugar
             bool ascending = true)
         {
             RefAsync<int> totalCount = 0;
-            var query = _db.Queryable<T>();
+            var query = _dbContext.Db.Queryable<T>();
 
             if (predicate != null)
                 query = query.Where(predicate);
@@ -67,66 +78,79 @@ namespace Highever.SocialMedia.SqlSugar
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-        }
-
+        } 
         public async Task<int> InsertAsync(T entity)
         {
-            return await _db.Insertable(entity).ExecuteCommandAsync();
+            return await _dbContext.Db.Insertable(entity).ExecuteCommandAsync();
         }
         public long InsertBySnowflakeId(T entity)
         {
-            return _db.Insertable(entity).ExecuteReturnSnowflakeId();
+            return _dbContext.Db.Insertable(entity).ExecuteReturnSnowflakeId();
         }
         public int InsertByIdentity(T entity)
         {
-            return _db.Insertable(entity).ExecuteReturnIdentity();
-        }   
+            return _dbContext.Db.Insertable(entity).ExecuteReturnIdentity();
+        }
         public Task<int> InsertByIdentityAsync(T entity)
         {
-            return _db.Insertable(entity).ExecuteReturnIdentityAsync();
+            return _dbContext.Db.Insertable(entity).ExecuteReturnIdentityAsync();
         }
         public void Insert(T entity)
         {
-            _db.Insertable(entity).ExecuteCommand();
+            _dbContext.Db.Insertable(entity).ExecuteCommand();
+        }
+        public async Task<int> InsertAsync(IEnumerable<T> entities)
+        {
+            if (entities == null || !entities.Any())
+                return 0;
+
+            return await _dbContext.Db.Insertable(entities.ToList()).ExecuteCommandAsync();
         }
 
         public async Task<int> InsertRangeAsync(IEnumerable<T> entities)
         {
-            return await _db.Insertable(entities.ToList()).ExecuteCommandAsync();
+            return await _dbContext.Db.Insertable(entities.ToList()).ExecuteCommandAsync();
         }
 
         public async Task<int> UpdateAsync(T entity)
         {
-            return await _db.Updateable(entity).ExecuteCommandAsync();
+            return await _dbContext.Db.Updateable(entity).ExecuteCommandAsync();
         }
         public int Update(T entity)
         {
-            return _db.Updateable(entity).ExecuteCommand();
+            return _dbContext.Db.Updateable(entity).ExecuteCommand();
         }
 
+        public async Task<int> UpdateAsync(IEnumerable<T> entities)
+        {
+            if (entities == null || !entities.Any())
+                return 0;
+
+            return await _dbContext.Db.Updateable(entities.ToList()).ExecuteCommandAsync();
+        }
         public async Task<int> UpdateRangeAsync(IEnumerable<T> entities)
         {
-            return await _db.Updateable(entities.ToList()).ExecuteCommandAsync();
+            return await _dbContext.Db.Updateable(entities.ToList()).ExecuteCommandAsync();
         }
 
         public async Task<int> DeleteAsync(T entity)
         {
-            return await _db.Deleteable(entity).ExecuteCommandAsync();
+            return await _dbContext.Db.Deleteable(entity).ExecuteCommandAsync();
         }
 
         public async Task<int> DeleteRangeAsync(IEnumerable<T> entities)
         {
-            return await _db.Deleteable(entities.ToList()).ExecuteCommandAsync();
+            return await _dbContext.Db.Deleteable(entities.ToList()).ExecuteCommandAsync();
         }
 
         public async Task<int> DeleteAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _db.Deleteable(predicate).ExecuteCommandAsync();
+            return await _dbContext.Db.Deleteable(predicate).ExecuteCommandAsync();
         }
 
         public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
         {
-            var query = _db.Queryable<T>();
+            var query = _dbContext.Db.Queryable<T>();
             if (predicate != null)
                 query = query.Where(predicate);
             return await query.CountAsync();
@@ -134,143 +158,62 @@ namespace Highever.SocialMedia.SqlSugar
 
         public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _db.Queryable<T>().Where(predicate).AnyAsync();
+            return await _dbContext.Db.Queryable<T>().Where(predicate).AnyAsync();
         }
 
 
-        #region 新增的批量操作方法实现
+        #region 事务操作 - 按照SqlSugar官方用法
 
-        /// <summary>
-        /// 批量插入
-        /// </summary>
-        public async Task<int> BulkInsertAsync(IEnumerable<T> entities)
-        {
-            if (entities == null || !entities.Any())
-                return 0;
-
-            return await _db.Insertable(entities.ToList()).ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 批量更新
-        /// </summary>
-        public async Task<int> BulkUpdateAsync(IEnumerable<T> entities)
-        {
-            if (entities == null || !entities.Any())
-                return 0;
-
-            return await _db.Updateable(entities.ToList()).ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 批量删除（根据条件）
-        /// </summary>
-        public async Task<int> BulkDeleteAsync(Expression<Func<T, bool>> predicate)
-        {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            return await _db.Deleteable<T>().Where(predicate).ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 查询列表（别名方法，与 GetListAsync 功能相同）
-        /// </summary>
-        public async Task<List<T>> QueryListAsync(Expression<Func<T, bool>>? predicate = null)
-        {
-            var query = _db.Queryable<T>();
-            if (predicate != null)
-                query = query.Where(predicate);
-            return await query.ToListAsync();
-        }
-
-        #endregion
-
-        #region 事务操作
-
-        /// <summary>
-        /// 执行事务操作（异步）
-        /// </summary>
         public async Task ExecuteTransactionAsync(Func<Task> operations)
         {
-            await _db.Ado.BeginTranAsync();
-            try
-            {
-                await operations();
-                await _db.Ado.CommitTranAsync();
-            }
-            catch
-            {
-                await _db.Ado.RollbackTranAsync();
-                throw;
-            }
+            await _dbContext.ExecuteTransactionAsync(operations);
         }
 
-        /// <summary>
-        /// 执行事务操作并返回结果（异步）
-        /// </summary>
         public async Task<TResult> ExecuteTransactionAsync<TResult>(Func<Task<TResult>> operations)
         {
-            await _db.Ado.BeginTranAsync();
-            try
+            return await _dbContext.ExecuteTransactionAsync(operations);
+        }
+        #endregion
+
+        #region 大批量数据 Bulk Operations
+
+        /// <summary>
+        /// 批量插入 - 使用独立连接和事务
+        /// </summary>
+        public async Task<int> BulkInsertAsync<T>(IEnumerable<T> entities) where T : class, new()
+        {
+            if (entities == null || !entities.Any())
             {
-                var result = await operations();
-                await _db.Ado.CommitTranAsync();
-                return result;
+                return 0;
             }
-            catch
+            await _dbContext.BulkInsertAsync(entities);
+            return 1;
+        }
+
+        /// <summary>
+        /// 批量更新 - 使用独立连接和事务
+        /// </summary>
+        public async Task<int> BulkUpdateAsync<T>(IEnumerable<T> entities) where T : class, new()
+        {
+            if (entities == null || !entities.Any())
             {
-                await _db.Ado.RollbackTranAsync();
-                throw;
+                return 0;
             }
+            await _dbContext.BulkUpdateAsync(entities);
+            return 1;
         }
 
         /// <summary>
-        /// 开始事务（同步）
+        /// 批量删除 - 使用独立连接和事务
         /// </summary>
-        public void BeginTransaction()
+        public async Task<int> BulkDeleteAsync<T>(IEnumerable<T> entities) where T : class, new()
         {
-            _db.Ado.BeginTran();
-        }
-
-        /// <summary>
-        /// 开始事务（异步）
-        /// </summary>
-        public async Task BeginTransactionAsync()
-        {
-            await _db.Ado.BeginTranAsync();
-        }
-
-        /// <summary>
-        /// 提交事务（同步）
-        /// </summary>
-        public void CommitTransaction()
-        {
-            _db.Ado.CommitTran();
-        }
-
-        /// <summary>
-        /// 提交事务（异步）
-        /// </summary>
-        public async Task CommitTransactionAsync()
-        {
-            await _db.Ado.CommitTranAsync();
-        }
-
-        /// <summary>
-        /// 回滚事务（同步）
-        /// </summary>
-        public void RollbackTransaction()
-        {
-            _db.Ado.RollbackTran();
-        }
-
-        /// <summary>
-        /// 回滚事务（异步）
-        /// </summary>
-        public async Task RollbackTransactionAsync()
-        {
-            await _db.Ado.RollbackTranAsync();
+            if (entities == null || !entities.Any())
+            {
+                return 0;
+            }
+            await _dbContext.BulkDeleteAsync(entities);
+            return 1;
         }
 
         #endregion

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Highever.SocialMedia.Admin.TaskService
 {
@@ -13,22 +15,24 @@ namespace Highever.SocialMedia.Admin.TaskService
     {
         // 注入
         private readonly IServiceProvider _serviceProvider;
-
         private readonly TikhubSettings _tikTokSettings;
-
         private readonly RateLimitController _rateLimitController;
+        private readonly INLogger _logger;
+
+
+        // 使用信号量控制并发数，设置为1确保串行处理
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
         private HttpClientHelper _httpclient => _serviceProvider.GetRequiredService<HttpClientHelper>();
         private IRepository<AccountConfig> repositoryAccountConfig => _serviceProvider.GetRequiredService<IRepository<AccountConfig>>();
         private IRepository<TiktokUsers> _repositoryTiktokUsers => _serviceProvider.GetRequiredService<IRepository<TiktokUsers>>();
         private IRepository<TiktokUsersDaily> _repositoryTiktokUsersDaily => _serviceProvider.GetRequiredService<IRepository<TiktokUsersDaily>>();
 
-        private readonly INLogger _logger; // 添加日志记录器
-
         public UserJob(IServiceProvider serviceProvider, IOptions<TikhubSettings> tikTokSettings, INLogger logger)
         {
             _serviceProvider = serviceProvider;
             _tikTokSettings = tikTokSettings.Value; // 通过 .Value 获取配置值
-            _rateLimitController = new RateLimitController(_tikTokSettings); 
+            _rateLimitController = new RateLimitController(_tikTokSettings);
             _logger = logger; // 注入日志记录器 
         }
         /// <summary>
@@ -41,13 +45,12 @@ namespace Highever.SocialMedia.Admin.TaskService
             var stopwatch = Stopwatch.StartNew();
             int totalUsers = 0, successCount = 0, failedCount = 0, apiCalls = 0;
             long? taskRunId = null;
-            
+
             try
-            { 
+            {
                 var activeConfigs = await repositoryAccountConfig.GetListAsync(x => x.IsActive);
-                
                 totalUsers = activeConfigs.Count;
-                
+
                 // 关键日志：处理开始里程碑 - 入库
                 _logger.TaskMilestone(taskName, "数据获取完成", null, taskRunId, new Dictionary<string, object>
                 {
@@ -57,42 +60,49 @@ namespace Highever.SocialMedia.Admin.TaskService
                 // 详细日志：处理信息 - 仅文件
                 _logger.TaskInfo(taskName, $"开始处理 {totalUsers} 个用户", null, taskRunId);
 
-                // 分批处理用户
-                for (int batchStart = 0; batchStart < activeConfigs.Count; batchStart += _tikTokSettings.BatchSize)
+                // 直接循环处理每个用户，使用信号量确保一次只处理一个
+                for (int i = 0; i < activeConfigs.Count; i++)
                 {
-                    var batch = activeConfigs.Skip(batchStart).Take(_tikTokSettings.BatchSize).ToList();
-                    var batchNumber = batchStart / _tikTokSettings.BatchSize + 1;
-                    
-                    var batchResults = await ProcessBatchAsync(batch, batchNumber);
-                    
-                    successCount += batchResults.SuccessCount;
-                    failedCount += batchResults.FailedCount;
-                    apiCalls += batchResults.ApiCalls;
-                    
-                    // 详细日志：批次信息 - 仅文件
-                    _logger.TaskBatchInfo(taskName, batchNumber, batch.Count, batchResults.SuccessCount, batchResults.FailedCount, taskRunId);
-                    
+                    var config = activeConfigs[i];
+                    var userIndex = i + 1;
+
+                    Console.WriteLine($"准备处理第 {userIndex}/{totalUsers} 个用户: {config.UniqueId}");
+
+                    var success = await ProcessSingleUserAsync(config);
+
+                    apiCalls++;
+                    if (success)
+                    {
+                        successCount++;
+                        Console.WriteLine($"✓ 用户 {config.UniqueId} 数据同步成功 ({userIndex}/{totalUsers})");
+                    }
+                    else
+                    {
+                        failedCount++;
+                        Console.WriteLine($"✗ 用户 {config.UniqueId} 数据同步失败 ({userIndex}/{totalUsers})");
+                    }
+
                     // 每处理50%时记录里程碑 - 入库
-                    var progressPercent = (batchStart + batch.Count) * 100 / totalUsers;
-                    if (progressPercent >= 50 && batchStart * 100 / totalUsers < 50)
+                    var progressPercent = userIndex * 100 / totalUsers;
+                    if (progressPercent >= 50 && (userIndex - 1) * 100 / totalUsers < 50)
                     {
                         _logger.TaskMilestone(taskName, "处理进度50%", null, taskRunId, new Dictionary<string, object>
                         {
-                            ["ProcessedCount"] = batchStart + batch.Count,
+                            ["ProcessedCount"] = userIndex,
                             ["SuccessCount"] = successCount,
                             ["FailedCount"] = failedCount
                         });
                     }
-                    
-                    // 批次间延迟
-                    if (batchStart + _tikTokSettings.BatchSize < activeConfigs.Count)
+
+                    // 用户间延迟
+                    if (i < activeConfigs.Count - 1)
                     {
-                        await Task.Delay(_tikTokSettings.BatchDelayMs);
+                        await Task.Delay(_tikTokSettings.RequestIntervalMs);
                     }
                 }
-                
+
                 stopwatch.Stop();
-                
+
                 // 控制台总结
                 Console.WriteLine($"\n========== 任务执行完成 ==========");
                 Console.WriteLine($"任务名称: {taskName}");
@@ -101,7 +111,7 @@ namespace Highever.SocialMedia.Admin.TaskService
                 Console.WriteLine($"成功数量: {successCount}");
                 Console.WriteLine($"失败数量: {failedCount}");
                 Console.WriteLine($"API调用: {apiCalls}");
-                Console.WriteLine($"成功率: {(totalUsers > 0 ? (successCount * 100.0 / totalUsers):0):F1}%");
+                Console.WriteLine($"成功率: {(totalUsers > 0 ? (successCount * 100.0 / totalUsers) : 0):F1}%");
                 Console.WriteLine($"=====================================\n");
 
                 // 关键日志：任务完成 - 入库
@@ -110,7 +120,7 @@ namespace Highever.SocialMedia.Admin.TaskService
             catch (Exception ex)
             {
                 stopwatch.Stop();
-                
+
                 // 关键日志：任务错误 - 入库
                 _logger.TaskError(taskName, ex, null, taskRunId);
                 throw;
@@ -140,14 +150,14 @@ namespace Highever.SocialMedia.Admin.TaskService
         {
             int retryCount = 0;
             string? lastErrorMessage = null;
-            
+
             while (retryCount < _tikTokSettings.MaxRetryCount)
             {
                 // 等待限流控制器许可
                 await _rateLimitController.WaitForPermissionAsync();
-                
+
                 try
-                { 
+                {
                     var url = $"https://api.tikhub.io/api/v1/tiktok/web/fetch_user_profile?uniqueId={uniqueId}";
                     if (!string.IsNullOrEmpty(secUid))
                     {
@@ -161,7 +171,7 @@ namespace Highever.SocialMedia.Admin.TaskService
                     };
 
                     var responseJson = await _httpclient.GetAsync(url, headers, TimeSpan.FromMinutes(_tikTokSettings.TimeoutMinutes));
-                    
+
                     if (string.IsNullOrWhiteSpace(responseJson))
                     {
                         lastErrorMessage = "API返回空响应";
@@ -222,7 +232,7 @@ namespace Highever.SocialMedia.Admin.TaskService
                 }
 
                 retryCount++;
-                
+
                 if (retryCount < _tikTokSettings.MaxRetryCount)
                 {
                     var delaySeconds = Math.Min(Math.Pow(2, retryCount), _tikTokSettings.MaxDelaySeconds);
@@ -234,7 +244,7 @@ namespace Highever.SocialMedia.Admin.TaskService
         }
 
         /// <summary>
-        /// 更新TiktokUsers表（插入或更新）
+        /// 更新TiktokUsers表（插入或更新）- 在外层事务中执行
         /// </summary>
         private async Task UpdateTiktokUsersAsync(TikTokApiResponse apiResponse)
         {
@@ -242,9 +252,6 @@ namespace Highever.SocialMedia.Admin.TaskService
             {
                 var user = apiResponse.Data.UserInfo.User;
                 var stats = apiResponse.Data.UserInfo.Stats;
-                 
-                var existingUser = await _repositoryTiktokUsers.FirstOrDefaultAsync(x => x.UniqueId == user.UniqueId);
-
                 var tiktokUser = new TiktokUsers
                 {
                     Id = long.Parse(user.Id),
@@ -265,29 +272,56 @@ namespace Highever.SocialMedia.Admin.TaskService
                     HeartCount = stats.HeartCount,
                     DiggCount = stats.DiggCount,
                     FriendCount = stats.FriendCount,
-                    RecordDate = DateTime.Today,
                     UpdatedAt = DateTime.Now
                 };
+                var existingUser = await _repositoryTiktokUsers.FirstOrDefaultAsync(x => x.UniqueId == user.UniqueId);
+                #region 更新头像 - 使用智能下载
+                try
+                {
+                    if (!string.IsNullOrEmpty(user.AvatarMedium))
+                    {
+                        // 使用智能下载，自动检查本地是否已存在
+                        var localAvatarPath = await _httpclient.SmartDownloadAvatarAsync(
+                            user.AvatarMedium,
+                            user.UniqueId,
+                            "uploads/avatars");
 
+                        tiktokUser.AvatarLarge = AppSettingConifgHelper.ReadAppSettings("HOST_IP") + localAvatarPath;
+                        tiktokUser.AvatarMedium = AppSettingConifgHelper.ReadAppSettings("HOST_IP") + localAvatarPath;
+                        tiktokUser.AvatarThumb = AppSettingConifgHelper.ReadAppSettings("HOST_IP") + localAvatarPath;
+
+                        Console.WriteLine($"用户 {user.UniqueId} 头像路径: {localAvatarPath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"下载用户 {user.UniqueId} 头像失败: {ex.Message}");
+                }
+                #endregion
+
+                // 在当前事务中执行数据库操作
                 if (existingUser != null)
                 {
                     tiktokUser.Id = existingUser.Id;
+                    tiktokUser.CreatedAt = existingUser.CreatedAt;
                     await _repositoryTiktokUsers.UpdateAsync(tiktokUser);
+                    Console.WriteLine($"更新用户 {user.UniqueId} 的TiktokUsers记录");
                 }
                 else
                 {
                     await _repositoryTiktokUsers.InsertAsync(tiktokUser);
+                    Console.WriteLine($"插入用户 {user.UniqueId} 的TiktokUsers记录");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"更新TiktokUsers失败: {ex.Message}");
-                throw;
+                throw; // 重新抛出异常，让外层事务处理
             }
         }
 
         /// <summary>
-        /// 更新TiktokUsersDaily表（插入或更新当天记录）
+        /// 更新TiktokUsersDaily表（插入或更新当天记录）- 在外层事务中执行
         /// </summary>
         private async Task UpdateTiktokUsersDailyAsync(TikTokApiResponse apiResponse)
         {
@@ -295,7 +329,7 @@ namespace Highever.SocialMedia.Admin.TaskService
             {
                 var user = apiResponse.Data.UserInfo.User;
                 var stats = apiResponse.Data.UserInfo.Stats;
-                var today = DateTime.Today; 
+                var today = DateTime.Today;
 
                 // 检查今天是否已有记录
                 var existingDaily = await _repositoryTiktokUsersDaily.FirstOrDefaultAsync(
@@ -326,16 +360,15 @@ namespace Highever.SocialMedia.Admin.TaskService
                     UpdatedAt = DateTime.Now
                 };
 
+                // 在当前事务中执行数据库操作
                 if (existingDaily != null)
                 {
-                    // 更新今天的记录
                     tiktokUserDaily.CreatedAt = existingDaily.CreatedAt; // 保持原创建时间
                     await _repositoryTiktokUsersDaily.UpdateAsync(tiktokUserDaily);
                     Console.WriteLine($"更新用户 {user.UniqueId} 今日的TiktokUsersDaily记录");
                 }
                 else
                 {
-                    // 插入今天的新记录
                     tiktokUserDaily.CreatedAt = DateTime.Now;
                     await _repositoryTiktokUsersDaily.InsertAsync(tiktokUserDaily);
                     Console.WriteLine($"插入用户 {user.UniqueId} 今日的TiktokUsersDaily记录");
@@ -344,7 +377,7 @@ namespace Highever.SocialMedia.Admin.TaskService
             catch (Exception ex)
             {
                 Console.WriteLine($"更新TiktokUsersDaily表时发生错误: {ex.Message}");
-                throw;
+                throw; // 重新抛出异常，让外层事务处理
             }
         }
 
@@ -365,7 +398,7 @@ namespace Highever.SocialMedia.Admin.TaskService
                 Console.WriteLine($"准备处理第 {userIndex} 个用户: {config.UniqueId}");
 
                 var success = await ProcessSingleUserAsync(config);
-                
+
                 lock (lockObject)
                 {
                     apiCalls++;
@@ -387,57 +420,69 @@ namespace Highever.SocialMedia.Admin.TaskService
         }
 
         /// <summary>
-        /// 处理单个用户数据
+        /// 处理单个用户数据 - 使用事务确保数据一致性
         /// </summary>
         private async Task<bool> ProcessSingleUserAsync(AccountConfig config)
         {
+            // 使用信号量确保同时只有一个用户在处理
+            await _semaphore.WaitAsync();
             try
             {
                 var (apiResponse, errorMessage) = await FetchUserProfileWithRetryAsync(config.UniqueId, config.SecUid);
-                
+
                 if (apiResponse != null)
                 {
-                    try
+                    // 使用事务处理用户数据更新，确保数据一致性
+                    var success = await repositoryAccountConfig.ExecuteTransactionAsync(async () =>
                     {
-                        await UpdateTiktokUsersAsync(apiResponse);
-                        await UpdateTiktokUsersDailyAsync(apiResponse);
-                        
+                        try
+                        {
+                            // 在同一个事务中更新用户信息和统计信息
+                            await UpdateTiktokUsersAsync(apiResponse);
+                            await UpdateTiktokUsersDailyAsync(apiResponse);
+
+                            _logger.TaskInfo("UserDataSync", $"用户 {config.UniqueId} 事务提交成功", null, null);
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.TaskError($"UserDataSync-{config.UniqueId}", ex, null, null);
+                            Console.WriteLine($"用户 {config.UniqueId} 事务内操作失败: {ex.Message}");
+                            throw; // 重新抛出异常，触发事务回滚
+                        }
+                    });
+
+                    if (success)
+                    {
                         // 记录成功的API调用 - 仅文件
                         _logger.TaskApiCall("UserDataSync", config.UniqueId, true, null, null);
                         return true;
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"数据库操作失败，用户: {config.UniqueId}, 错误: {ex.Message}");
-                        
-                        // 记录数据库操作失败 - 仅文件
-                        _logger.TaskApiCall("UserDataSync", config.UniqueId, false, $"EXCEPTION:数据库操作失败: {ex.Message}", null);
-                        
-                        // 如果需要入库，添加关键日志
-                        _logger.TaskError($"UserDataSync-{config.UniqueId}", ex, null, null);
-                        return false;
-                    }
                 }
-                
+
                 // 记录API调用失败 - 仅文件
                 _logger.TaskApiCall("UserDataSync", config.UniqueId, false, $"API_FAIL:{errorMessage}", null);
-                
-                // 如果需要入库，可以添加里程碑日志记录失败用户
+
+                // 记录失败用户的里程碑日志
                 _logger.TaskMilestone("UserDataSync", $"用户失败: {config.UniqueId}", null, null, new Dictionary<string, object>
                 {
                     ["FailedUser"] = config.UniqueId,
                     ["ErrorMessage"] = errorMessage ?? "未知错误"
                 });
-                
+
                 return false;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"处理用户 {config.UniqueId} 时发生错误: {ex.Message}");
-                
+
                 // 记录处理异常 - 入库
                 _logger.TaskError($"UserDataSync-{config.UniqueId}", ex, null, null);
                 return false;
+            }
+            finally
+            {
+                _semaphore.Release();
             }
         }
     }

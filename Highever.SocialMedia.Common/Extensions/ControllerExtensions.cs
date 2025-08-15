@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NPOI.SS.Formula.Functions;
 
 namespace Highever.SocialMedia.Common
 {
@@ -10,23 +11,23 @@ namespace Highever.SocialMedia.Common
         /// <summary>
         /// 返回成功响应（无数据）
         /// </summary>
-        public static IActionResult Ok(this ControllerBase controller, string message = "操作成功")
+        public static IActionResult JsonOk(this ControllerBase controller)
+        {
+            return controller.Ok(AjaxResult<object>.Success(null, "操作成功"));
+        } 
+        
+        /// <summary>
+        /// 返回成功响应（无数据）
+        /// </summary>
+        public static IActionResult JsonOk(this ControllerBase controller, string message = "操作成功")
         {
             return controller.Ok(AjaxResult<object>.Success(null, message));
-        }
-
-        /// <summary>
-        /// 返回成功响应（带数据）
-        /// </summary>
-        public static IActionResult Ok<T>(this ControllerBase controller, T data, string message = "操作成功") where T : class
-        {
-            return controller.Ok(AjaxResult<T>.Success(data, message));
-        }
+        } 
 
         /// <summary>
         /// 返回失败响应
         /// </summary>
-        public static IActionResult Ok(this ControllerBase controller, string message = "操作失败", HttpCode code = HttpCode.失败)
+        public static IActionResult JsonOk(this ControllerBase controller, string message = "操作失败", HttpCode code = HttpCode.成功)
         {
             return controller.Ok(AjaxResult<object>.Fail(message, code));
         }
@@ -36,7 +37,7 @@ namespace Highever.SocialMedia.Common
         /// </summary>
         public static IActionResult Fail(this ControllerBase controller, string message = "操作失败")
         {
-            return controller.Fail(message);
+            return controller.Ok(AjaxResult<T>.Fail(message));
         }
         /// <summary>
         /// 返回失败响应（指定类型）
@@ -90,7 +91,7 @@ namespace Highever.SocialMedia.Common
                 data = new
                 {
                     items = pageResult.Items,
-                    totalCount = pageResult.Total,
+                    totalCount = pageResult.totalCount,
                     pageIndex = pageResult.PageIndex,
                     pageSize = pageResult.PageSize,
                     totalPages = pageResult.TotalPages
