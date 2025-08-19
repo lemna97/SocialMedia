@@ -83,20 +83,20 @@ namespace Highever.SocialMedia.Admin
         /// <param name="cronExpression"></param>
         /// <returns></returns>
         [HttpPost("updateTask")]
-        public async Task<IActionResult> UpdateTask(int taskId, string cronExpression)
+        public async Task<IActionResult> UpdateTask([FromBody] TaskEntity task)
         {
-            var task = await _taskrepository.FirstOrDefaultAsync(t => t.Id == taskId);
-            if (task == null)
+            var model = await _taskrepository.FirstOrDefaultAsync(t => t.Id == task.Id);
+            if (model == null)
             {
                 return NotFound("Task not found");
             }
-            task.CronExpression = cronExpression;
-            task.UpdatedAt = DateTime.Now;
-            await _taskrepository.UpdateAsync(task);
+            model.CronExpression = model.CronExpression;
+            model.UpdatedAt = DateTime.Now;
+            await _taskrepository.UpdateAsync(model);
 
             // 更新任务的 Cron 表达式
             _recurringJobManager.AddOrUpdate(
-                taskId.ToString(),
+                task.Id.ToString(),
                 () => _taskExecutionService.ExecuteTask(task.TaskName),  // 执行任务的方法
                 () => task.CronExpression,        // Cron 表达式的获取
                 new RecurringJobOptions()         // 可选的任务选项
@@ -111,7 +111,7 @@ namespace Highever.SocialMedia.Admin
         /// <param name="taskId"></param>
         /// <returns></returns>
         [HttpPost("deleteTask")]
-        public async Task<IActionResult> DeleteTask(int taskId)
+        public async Task<IActionResult> DeleteTask([FromForm]int taskId)
         {
             var task = await _taskrepository.FirstOrDefaultAsync(t => t.Id == taskId);
             if (task != null)
@@ -162,5 +162,15 @@ namespace Highever.SocialMedia.Admin
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("RunHotTagsVideoJob")]
+        public async Task<IActionResult> RunHotTagsVideoJob()
+        {
+            await _ITaskExecutor.ExecuteTask("HotTagsVideoJob");
+            return this.Success();
+        }
     }
 }

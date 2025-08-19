@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Highever.SocialMedia.Application.Contracts;
+using Highever.SocialMedia.Application.Contracts.Context;
 
 namespace Highever.SocialMedia.API.Controllers
 {
@@ -24,6 +24,7 @@ namespace Highever.SocialMedia.API.Controllers
         private IRepository<UserRoles> _repositoryUserRoles => _serviceProvider.GetRequiredService<IRepository<UserRoles>>();
         private JwtHelper _jwtHelper => _serviceProvider.GetRequiredService<JwtHelper>();
         private ITokenService _tokenService => _serviceProvider.GetRequiredService<ITokenService>();
+        private ITokenPermissionEncoder _tokenPermissionEncoder => _serviceProvider.GetRequiredService<ITokenPermissionEncoder>();
 
         /// <summary>
         /// 
@@ -82,12 +83,13 @@ namespace Highever.SocialMedia.API.Controllers
                 var userRoles = await _repositoryUserRoles.QueryListAsync(u => u.UserId == user.Id);
                 var roles = userRoles?.Select(t => t.RoleId.ToString()).ToList() ?? new List<string>();
 
-                // 生成Token对
-                var tokenResult = _jwtHelper.GenerateTokenPair(
+                // 生成包含权限的Token对
+                var permissionClaims = await _tokenPermissionEncoder.EncodeUserPermissionsAsync(user.Id, roles);
+                var tokenResult = await _jwtHelper.GenerateTokenPairWithPermissionsAsync(
                     userId: user.Id,
                     userName: user.Account,
                     roles: roles,
-                    permissions: new List<string>()
+                    permissionClaims: permissionClaims
                 );
 
                 // 获取设备信息

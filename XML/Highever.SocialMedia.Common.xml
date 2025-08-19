@@ -26,6 +26,9 @@
         <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.ParseAmazonProduct(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             抓取亚马逊商品页面主要信息
+            <remark>
+            
+            </remark>
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetImages_Json(OpenQA.Selenium.IWebDriver,System.String)">
@@ -43,9 +46,37 @@
             <param name="driver"></param>
             <returns></returns>
         </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetFivePoints_Class(OpenQA.Selenium.IWebDriver)">
+            <summary>
+            
+            </summary>
+            <param name="driver"></param>
+            <returns></returns>
+        </member>
         <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetFivePoints_Id(OpenQA.Selenium.IWebDriver)">
             <summary>
             
+            </summary>
+            <param name="driver"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetFivePoints_ById(OpenQA.Selenium.IWebDriver)">
+            <summary>
+            通过ID定位父容器获取五点描述
+            </summary>
+            <param name="driver"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetAttributes(OpenQA.Selenium.IWebDriver)">
+            <summary>
+            
+            </summary>
+            <param name="driver"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.AmazonProductHelper.GetCategoryFromBreadcrumb(OpenQA.Selenium.IWebDriver)">
+            <summary>
+            从面包屑导航中提取品类信息
             </summary>
             <param name="driver"></param>
             <returns></returns>
@@ -54,6 +85,20 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.ProductInfo">
+            <summary>
+            产品信息实体，对应Excel每一行数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.ProductInfo.SKU">
+            <summary>编号</summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.ProductInfo.UPC">
+            <summary>产品图片</summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.ProductInfo.ASIN">
+            <summary>ASIN</summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.AppSettingConifgHelper">
             <summary>
@@ -307,6 +352,20 @@
             <param name="cell">Excel 单元格。</param>
             <param name="value">要设置的值。</param>
             <param name="dataStyle">数据单元格样式。</param>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.ReadFirstColumn(System.String)">
+            <summary>
+            读取第一列的数据
+            </summary>
+            <param name="filePath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.ExcelHelper.ReadTableAsProductInfoList(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filePath"></param>
+            <returns></returns>
         </member>
         <member name="T:Highever.SocialMedia.Common.ControllerExtensions">
             <summary>
@@ -714,6 +773,7 @@
         <member name="M:Highever.SocialMedia.Common.ImageHelper.ConvertHeicToJpgAsync(System.Byte[],System.Int32)">
             <summary>
             将 HEIC/HEIF 解码并转为 JPG 字节（使用 Openize.HEIC）
+            https://products.openize.com/zh/heic/net/
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.Common.ImageHelper.ConvertHeicToJpgWithFallbackAsync(System.Byte[],System.Int32)">
@@ -812,6 +872,16 @@
             </summary>
             <param name="token">JWT令牌</param>
             <returns>是否过期</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateTokenWithPermissionsAsync(System.Int32,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            生成包含权限的JWT令牌
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Common.JwtHelper.GenerateTokenPairWithPermissionsAsync(System.Int32,System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            生成包含权限的Token对
+            </summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.HostingEnvironmentHelper">
             <summary>
@@ -1219,126 +1289,6 @@
             </summary>
             <param name="message"></param>
         </member>
-        <member name="T:Highever.SocialMedia.Common.Models.JwtSettings">
-            <summary>
-            JWT配置
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.SecretKey">
-            <summary>
-            密钥
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.Issuer">
-            <summary>
-            发行者
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.Audience">
-            <summary>
-            受众
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.ExpiryMinutes">
-            <summary>
-            过期时间（分钟）
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.JwtSettings.RefreshTokenExpiryDays">
-            <summary>
-            刷新令牌过期时间（天）
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Common.Models.TokenResult">
-            <summary>
-            Token结果
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.AccessToken">
-            <summary>
-            访问令牌
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.RefreshToken">
-            <summary>
-            刷新令牌
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.ExpiresIn">
-            <summary>
-            访问令牌过期时间（秒）
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.TokenType">
-            <summary>
-            令牌类型
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.UserId">
-            <summary>
-            用户ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.TokenResult.UserName">
-            <summary>
-            用户名
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Common.Models.UserTokenSessionInfo">
-            <summary>
-            用户Token会话信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.Id">
-            <summary>
-            会话ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.UserId">
-            <summary>
-            用户ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.DeviceId">
-            <summary>
-            设备ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.DeviceInfo">
-            <summary>
-            设备信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.IpAddress">
-            <summary>
-            IP地址
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.LastActivityTime">
-            <summary>
-            最后活动时间
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.CreatedAt">
-            <summary>
-            创建时间
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.IsCurrentSession">
-            <summary>
-            是否当前会话
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.DeviceType">
-            <summary>
-            设备类型（可选）
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Common.Models.UserTokenSessionInfo.Location">
-            <summary>
-            地理位置（可选）
-            </summary>
-        </member>
         <member name="T:Highever.SocialMedia.Common.AjaxResult`1">
             <summary>
             统一响应模型
@@ -1385,8 +1335,128 @@
             分页响应
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Common.Model.JwtSettings">
+            <summary>
+            JWT配置
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.JwtSettings.SecretKey">
+            <summary>
+            密钥
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.JwtSettings.Issuer">
+            <summary>
+            发行者
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.JwtSettings.Audience">
+            <summary>
+            受众
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.JwtSettings.ExpiryMinutes">
+            <summary>
+            过期时间（分钟）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.JwtSettings.RefreshTokenExpiryDays">
+            <summary>
+            刷新令牌过期时间（天）
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Common.Model.ApiException">
             <summary>封装非 2xx 时的详细信息</summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Model.TokenResult">
+            <summary>
+            Token结果
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.TokenResult.AccessToken">
+            <summary>
+            访问令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.TokenResult.RefreshToken">
+            <summary>
+            刷新令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.TokenResult.ExpiresIn">
+            <summary>
+            访问令牌过期时间（秒）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.TokenResult.TokenType">
+            <summary>
+            令牌类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.TokenResult.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.TokenResult.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Common.Model.UserTokenSessionInfo">
+            <summary>
+            用户Token会话信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.Id">
+            <summary>
+            会话ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.DeviceId">
+            <summary>
+            设备ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.DeviceInfo">
+            <summary>
+            设备信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.IpAddress">
+            <summary>
+            IP地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.LastActivityTime">
+            <summary>
+            最后活动时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.IsCurrentSession">
+            <summary>
+            是否当前会话
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.DeviceType">
+            <summary>
+            设备类型（可选）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Common.Model.UserTokenSessionInfo.Location">
+            <summary>
+            地理位置（可选）
+            </summary>
         </member>
         <member name="T:Highever.SocialMedia.Common.UploadResult">
             <summary>
@@ -1733,6 +1803,66 @@
             </summary>
             <param name="name"></param>
             <returns></returns>
+        </member>
+        <member name="T:TikhubSettings">
+            <summary>
+            TikTok API配置设置
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.ApiToken">
+            <summary>
+            API访问令牌
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.MaxRetryCount">
+            <summary>
+            最大重试次数
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.MaxDelaySeconds">
+            <summary>
+            最大延迟秒数
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.TimeoutMinutes">
+            <summary>
+            请求超时分钟数
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.RequestIntervalMs">
+            <summary>
+            基础请求间隔毫秒数（避免频繁请求）
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.MaxConcurrency">
+            <summary>
+            最大并发数（建议1-3，避免触发限制）
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.BatchSize">
+            <summary>
+            批次大小（每批处理的用户数）
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.BatchDelayMs">
+            <summary>
+            批次间延迟毫秒数（批次完成后的等待时间）
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.EnableAdaptiveThrottling">
+            <summary>
+            是否启用自适应限流（根据响应调整请求频率）
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.MaxRequestsPerMinute">
+            <summary>
+            每分钟最大请求数（0表示不限制）
+            </summary>
+        </member>
+        <member name="P:TikhubSettings.ThrottleBackoffSeconds">
+            <summary>
+            遇到限流时的退避时间（秒）
+            </summary>
         </member>
     </members>
 </doc>

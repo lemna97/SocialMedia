@@ -1,10 +1,10 @@
 using Highever.SocialMedia.Common;
-using Highever.SocialMedia.Common.Models;
+using Highever.SocialMedia.Common.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Highever.SocialMedia.Application.Contracts
+namespace Highever.SocialMedia.Application.Contracts.Context
 {
     /// <summary>
     /// Token管理服务接口
@@ -108,17 +108,12 @@ namespace Highever.SocialMedia.Application.Contracts
         /// </summary>
         /// <param name="userId">用户ID</param>
         /// <returns>用户的活跃会话列表</returns>
-        Task<List<UserTokenSessionInfo>> GetUserActiveSessionsAsync(int userId);
-
-        /// <summary>
-        /// 生成访问令牌（用于延期）
-        /// </summary>
-        string GenerateAccessToken(int userId, string? userName, List<string> roles);
+        Task<List<UserTokenSessionInfo>> GetUserActiveSessionsAsync(int userId); 
 
         /// <summary>
         /// 延长Token过期时间（滑动过期）
         /// </summary>
-        Task ExtendTokenExpiryAsync(HttpContext context, JwtSecurityToken jsonToken); 
+        Task ExtendTokenExpiryAsync(HttpContext context, JwtSecurityToken jsonToken);
     }
 
     /// <summary>

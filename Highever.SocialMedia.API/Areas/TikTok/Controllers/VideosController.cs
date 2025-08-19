@@ -1,9 +1,10 @@
 ﻿using Highever.SocialMedia.API.Areas.TikTok.DTO;
-using Highever.SocialMedia.Application.Context;
+using Highever.SocialMedia.Application.Contracts.Context;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
 using LinqKit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
@@ -21,6 +22,7 @@ namespace Highever.SocialMedia.API.Areas.TikTok.Controllers
         INLogger _logger => _serviceProvider.GetRequiredService<INLogger>();
         private IRepository<TiktokVideos> _repositoryTiktokVideos => _serviceProvider.GetRequiredService<IRepository<TiktokVideos>>();
         private IRepository<TiktokVideosDaily> _repositoryTiktokVideosDaily => _serviceProvider.GetRequiredService<IRepository<TiktokVideosDaily>>();
+        private IRepository<HotTagsVideo> _repositoryHotTagsVideo => _serviceProvider.GetRequiredService<IRepository<HotTagsVideo>>();
         private IDataPermissionContextService _dataPermissionContextService => _serviceProvider.GetRequiredService<IDataPermissionContextService>();
 
         /// <summary>
@@ -37,6 +39,7 @@ namespace Highever.SocialMedia.API.Areas.TikTok.Controllers
             _serviceProvider = serviceProvider;
         }
 
+        #region 视频
         /// <summary>
         /// 查询TikTok视频信息（分页+关键词搜索）
         /// </summary>
@@ -1053,5 +1056,215 @@ namespace Highever.SocialMedia.API.Areas.TikTok.Controllers
                 return this.Fail("获取统计数据失败");
             }
         }
+        #endregion
+
+
+        #region 标签
+        /// <summary>
+        /// 查询TikTok热门标签信息（分页+关键词搜索）- 无需登录
+        /// </summary>
+        /// <param name="request">查询请求参数</param>
+        /// <returns>分页热门标签信息</returns>
+        [HttpPost("getHotTags")]
+        [AllowAnonymous] // 无需登录验证
+        [ProducesResponseType(typeof(PageResult<HotTagsResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetHotTags([FromBody] HotTagsQueryRequest request)
+        {
+            if (request.PageIndex == null || request.PageIndex <= 0)
+            {
+                request.PageIndex = 1;
+            }
+            if (request.PageSize == null || request.PageSize <= 0)
+            {
+                request.PageSize = 20;
+            }
+            if (request.QueryDate == null || !request.QueryDate.HasValue)
+            {
+                request.QueryDate = DateTime.Now.Date;
+            }
+            if (request.QueryDate.Value.ToString().IsNullOrEmpty())
+            { 
+                request.QueryDate = DateTime.Now.Date;
+            }
+            if (string.IsNullOrWhiteSpace(request.SortType))
+            {
+                request.SortType = "popular";
+            }
+            try
+            {
+                // 构建查询条件
+                Expression<Func<HotTagsVideo, bool>>? predicate = null;
+
+                // 关键词搜索（标签名称）
+                if (!string.IsNullOrWhiteSpace(request.Keyword))
+                {
+                    var keyword = request.Keyword.Trim();
+                    predicate = x => x.HashtagName.Contains(keyword) ||
+                                   x.HashtagId.Contains(keyword);
+                }
+
+                // 排序类型过滤 - 验证有效值
+                if (!string.IsNullOrWhiteSpace(request.SortType))
+                {
+                    var validSortTypes = new[] { "popular", "new" };
+                    if (!validSortTypes.Contains(request.SortType.ToLower()))
+                    {
+                        return this.Fail("无效的排序类型，支持的值：popular, trending, rising");
+                    }
+                    
+                    if (predicate == null)
+                        predicate = x => x.SortType == request.SortType;
+                    else
+                        predicate = predicate.And(x => x.SortType == request.SortType);
+                }
+
+                // 国家过滤
+                if (!string.IsNullOrWhiteSpace(request.CountryId))
+                {
+                    if (predicate == null)
+                        predicate = x => x.CountryId == request.CountryId;
+                    else
+                        predicate = predicate.And(x => x.CountryId == request.CountryId);
+                }
+
+                // 行业过滤
+                if (request.IndustryId != null && request.IndustryId.HasValue && request.IndustryId > 0)
+                {
+                    if (predicate == null)
+                        predicate = x => x.IndustryId == request.IndustryId.Value;
+                    else
+                        predicate = predicate.And(x => x.IndustryId == request.IndustryId.Value);
+                }
+
+                // 推广标签过滤
+                //if (request.IsPromoted != null && request.IsPromoted.HasValue)
+                //{
+                //    if (predicate == null)
+                //        predicate = x => x.IsPromoted == request.IsPromoted.Value;
+                //    else
+                //        predicate = predicate.And(x => x.IsPromoted == request.IsPromoted.Value);
+                //}
+
+                // 记录日期范围过滤
+                if (request.QueryDate != null && request.QueryDate.HasValue)
+                {
+                    var startDate = request.QueryDate.Value.Date;
+                    if (predicate == null)
+                        predicate = x => x.RecordDate == startDate;
+                    else
+                        predicate = predicate.And(x => x.RecordDate == startDate);
+                }
+
+                // 排名范围过滤
+                if (request.MinRank != null && request.MinRank.HasValue && request.MinRank > 0)
+                {
+                    if (predicate == null)
+                        predicate = x => x.Rank >= request.MinRank.Value;
+                    else
+                        predicate = predicate.And(x => x.Rank >= request.MinRank.Value);
+                }
+
+                if (request.MaxRank != null && request.MaxRank.HasValue && request.MaxRank > 0)
+                {
+                    if (predicate == null)
+                        predicate = x => x.Rank <= request.MaxRank.Value;
+                    else
+                        predicate = predicate.And(x => x.Rank <= request.MaxRank.Value);
+                }
+
+                // 构建排序表达式
+                Expression<Func<HotTagsVideo, object>>? orderBy = null;
+                if (!string.IsNullOrWhiteSpace(request.OrderBy))
+                {
+                    orderBy = request.OrderBy.ToLower() switch
+                    {
+                        "id" => x => x.Id,
+                        "hashtagid" => x => x.HashtagId,
+                        "hashtagname" => x => x.HashtagName ?? "",
+                        "rank" => x => x.Rank,
+                        "publishcnt" => x => x.PublishCnt,
+                        "videoviews" => x => x.VideoViews,
+                        "rankdiff" => x => x.RankDiff,
+                        "recorddate" => x => x.RecordDate,
+                        "createdat" => x => x.CreatedAt,
+                        "updatedat" => x => x.UpdatedAt,
+                        _ => x => x.Rank
+                    };
+                }
+
+                // 执行分页查询
+                var result = await _repositoryHotTagsVideo.GetPagedListAsync(
+                    predicate: predicate,
+                    pageIndex: request.PageIndex.Value,
+                    pageSize: request.PageSize.Value,
+                    orderBy: orderBy,
+                    ascending: request.Ascending
+                );
+
+                // 转换为响应DTO
+                var responseItems = result.Items.Select(x => new HotTagsResponse
+                {
+                    Id = x.Id,
+                    HashtagId = x.HashtagId,
+                    HashtagName = x.HashtagName,
+                    Country = new CountryInfo
+                    {
+                        Id = x.CountryId,
+                        Value = x.CountryValue,
+                        Label = x.CountryLabel
+                    },
+                    Industry = new IndustryInfo
+                    {
+                        Id = x.IndustryId,
+                        Value = x.IndustryValue,
+                        Label = x.IndustryLabel
+                    },
+                    IsPromoted = x.IsPromoted,
+                    TrendData = x.TrendData,
+                    CreatorsData = x.CreatorsData,
+                    PublishCnt = x.PublishCnt,
+                    VideoViews = x.VideoViews,
+                    Rank = x.Rank,
+                    RankDiff = x.RankDiff,
+                    RankDiffType = x.RankDiffType,
+                    RankDiffDescription = GetRankDiffDescription(x.RankDiffType, x.RankDiff),
+                    SortType = x.SortType,
+                    RecordDate = x.RecordDate,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt
+                }).ToList();
+
+                var pageResult = new PageResult<HotTagsResponse>
+                {
+                    Items = responseItems,
+                    totalCount = result.TotalCount,
+                    PageIndex = result.PageIndex,
+                    PageSize = result.PageSize
+                };
+
+                return this.PagedResult(pageResult, "查询成功");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"查询TikTok热门标签信息失败: {ex.Message}");
+                return this.Fail("查询热门标签信息失败");
+            }
+        }
+        /// <summary>
+        /// 获取排名变化描述
+        /// </summary>
+        [HiddenAPI]
+        private string GetRankDiffDescription(int rankDiffType, int rankDiff)
+        {
+            return rankDiffType switch
+            {
+                1 => $"上升 {Math.Abs(rankDiff)} 位",
+                -1 => $"下降 {Math.Abs(rankDiff)} 位",
+                0 => "排名不变",
+                _ => "未知变化"
+            };
+        }
+        #endregion
+
     }
 }

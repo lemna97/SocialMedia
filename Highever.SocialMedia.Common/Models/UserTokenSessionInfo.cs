@@ -1,4 +1,4 @@
-namespace Highever.SocialMedia.Common.Models
+namespace Highever.SocialMedia.Common.Model
 {
     /// <summary>
     /// 用户Token会话信息

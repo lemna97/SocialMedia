@@ -1,4 +1,4 @@
-namespace Highever.SocialMedia.Application.Context
+namespace Highever.SocialMedia.Application.Contracts.Context
 {
     /// <summary>
     /// 数据权限上下文

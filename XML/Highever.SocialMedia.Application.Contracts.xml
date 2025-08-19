@@ -4,6 +4,233 @@
         <name>Highever.SocialMedia.Application.Contracts</name>
     </assembly>
     <members>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Context.IDataPermissionContextService">
+            <summary>
+            数据权限上下文服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.IDataPermissionContextService.GetCurrentContext">
+            <summary>
+            获取当前数据权限上下文
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.IDataPermissionContextService.SetCurrentContext(Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext)">
+            <summary>
+            设置当前数据权限上下文
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.IDataPermissionContextService.ClearContext">
+            <summary>
+            清除当前上下文
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Context.IDataPermissionService">
+            <summary>
+            数据权限服务接口
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.IDataPermissionService.LoadDataPermissionAsync(System.Int64,System.Collections.Generic.List{System.String})">
+            <summary>
+            根据用户ID加载数据权限上下文
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.IDataPermissionService.GetUserAccountConfigIdsAsync(System.Int64)">
+            <summary>
+            获取用户的配置ID列表
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Context.ITokenPermissionEncoder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenPermissionEncoder.DecompressPermissionData(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="compressedData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenPermissionEncoder.EncodeUserPermissionsAsync(System.Int64,System.Collections.Generic.List{System.String})">
+            <summary>
+            
+            </summary>
+            <param name="userId"></param>
+            <param name="roles"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Context.ITokenService">
+            <summary>
+            Token管理服务接口
+            负责处理JWT Token的业务逻辑，包括刷新、撤销等操作
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.RefreshTokenAsync(System.String)">
+            <summary>
+            刷新访问令牌
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>新的Token对</returns>
+            <exception cref="T:System.UnauthorizedAccessException">当刷新令牌无效或已过期时抛出</exception>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.RevokeRefreshTokenAsync(System.Int32)">
+            <summary>
+            撤销用户的刷新令牌
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>是否撤销成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.UpdateRefreshTokenAsync(System.Int32,System.String,System.DateTime)">
+            <summary>
+            更新用户的刷新令牌
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="refreshToken">新的刷新令牌</param>
+            <param name="expiry">过期时间</param>
+            <returns>是否更新成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.ValidateRefreshTokenAsync(System.String)">
+            <summary>
+            验证刷新令牌是否有效
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>是否有效</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.GetRefreshTokenInfoAsync(System.Int32)">
+            <summary>
+            获取用户的刷新令牌信息
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>刷新令牌信息，如果不存在则返回null</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.CleanupExpiredTokensAsync">
+            <summary>
+            清理过期的刷新令牌
+            </summary>
+            <returns>清理的令牌数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.GetRefreshTokenFromRequest(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            从HTTP请求中获取RefreshToken
+            </summary>
+            <param name="context">HTTP上下文</param>
+            <returns>RefreshToken，如果没有找到则返回null</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.CreateTokenSessionAsync(System.Int32,System.String,System.String,System.String,System.String)">
+            <summary>
+            创建新的Token会话
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="refreshToken">刷新令牌</param>
+            <param name="deviceId">设备ID</param>
+            <param name="deviceInfo">设备信息</param>
+            <param name="ipAddress">IP地址</param>
+            <returns>是否创建成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.RevokeAllUserTokenSessionsAsync(System.Int32)">
+            <summary>
+            撤销用户的所有Token会话
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>是否撤销成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.RevokeTokenSessionAsync(System.String)">
+            <summary>
+            撤销指定的Token会话
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>是否撤销成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.UpdateTokenSessionActivityAsync(System.String)">
+            <summary>
+            更新Token会话活动时间
+            </summary>
+            <param name="refreshToken">刷新令牌</param>
+            <returns>是否更新成功</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.CleanupExpiredTokenSessionsAsync">
+            <summary>
+            清理过期的Token会话
+            </summary>
+            <returns>清理的会话数量</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.GetUserActiveSessionsAsync(System.Int32)">
+            <summary>
+            获取用户的所有活跃会话
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>用户的活跃会话列表</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.Context.ITokenService.ExtendTokenExpiryAsync(Microsoft.AspNetCore.Http.HttpContext,System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
+            <summary>
+            延长Token过期时间（滑动过期）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Context.RefreshTokenInfo">
+            <summary>
+            刷新令牌信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.RefreshTokenInfo.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.RefreshTokenInfo.RefreshToken">
+            <summary>
+            刷新令牌
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.RefreshTokenInfo.ExpireTime">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.RefreshTokenInfo.LastActivityTime">
+            <summary>
+            最后活动时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.RefreshTokenInfo.IsExpired">
+            <summary>
+            是否已过期
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext">
+            <summary>
+            数据权限上下文
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext.UserId">
+            <summary>
+            当前用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext.Roles">
+            <summary>
+            当前用户角色列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext.AccountConfigUniqueIds">
+            <summary>
+            用户配置UniqueId列表（当前用户有权限访问的配置UniqueId）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext.IsAdmin">
+            <summary>
+            是否为管理员
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext.HasDataPermission">
+            <summary>
+            是否有数据权限（管理员或有配置UniqueId）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.Context.DataPermissionContext.ExtendedProperties">
+            <summary>
+            扩展属性（用于未来业务扩展）
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.DTOs.System.AssignMenusToRoleRequest">
             <summary>
             角色菜单分配请求
@@ -1226,148 +1453,6 @@
             <param name="id">角色ID</param>
             <returns>角色详情</returns>
         </member>
-        <member name="T:Highever.SocialMedia.Application.Contracts.ITokenService">
-            <summary>
-            Token管理服务接口
-            负责处理JWT Token的业务逻辑，包括刷新、撤销等操作
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RefreshTokenAsync(System.String)">
-            <summary>
-            刷新访问令牌
-            </summary>
-            <param name="refreshToken">刷新令牌</param>
-            <returns>新的Token对</returns>
-            <exception cref="T:System.UnauthorizedAccessException">当刷新令牌无效或已过期时抛出</exception>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeRefreshTokenAsync(System.Int32)">
-            <summary>
-            撤销用户的刷新令牌
-            </summary>
-            <param name="userId">用户ID</param>
-            <returns>是否撤销成功</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.UpdateRefreshTokenAsync(System.Int32,System.String,System.DateTime)">
-            <summary>
-            更新用户的刷新令牌
-            </summary>
-            <param name="userId">用户ID</param>
-            <param name="refreshToken">新的刷新令牌</param>
-            <param name="expiry">过期时间</param>
-            <returns>是否更新成功</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.ValidateRefreshTokenAsync(System.String)">
-            <summary>
-            验证刷新令牌是否有效
-            </summary>
-            <param name="refreshToken">刷新令牌</param>
-            <returns>是否有效</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetRefreshTokenInfoAsync(System.Int32)">
-            <summary>
-            获取用户的刷新令牌信息
-            </summary>
-            <param name="userId">用户ID</param>
-            <returns>刷新令牌信息，如果不存在则返回null</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.CleanupExpiredTokensAsync">
-            <summary>
-            清理过期的刷新令牌
-            </summary>
-            <returns>清理的令牌数量</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetRefreshTokenFromRequest(Microsoft.AspNetCore.Http.HttpContext)">
-            <summary>
-            从HTTP请求中获取RefreshToken
-            </summary>
-            <param name="context">HTTP上下文</param>
-            <returns>RefreshToken，如果没有找到则返回null</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.CreateTokenSessionAsync(System.Int32,System.String,System.String,System.String,System.String)">
-            <summary>
-            创建新的Token会话
-            </summary>
-            <param name="userId">用户ID</param>
-            <param name="refreshToken">刷新令牌</param>
-            <param name="deviceId">设备ID</param>
-            <param name="deviceInfo">设备信息</param>
-            <param name="ipAddress">IP地址</param>
-            <returns>是否创建成功</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeAllUserTokenSessionsAsync(System.Int32)">
-            <summary>
-            撤销用户的所有Token会话
-            </summary>
-            <param name="userId">用户ID</param>
-            <returns>是否撤销成功</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.RevokeTokenSessionAsync(System.String)">
-            <summary>
-            撤销指定的Token会话
-            </summary>
-            <param name="refreshToken">刷新令牌</param>
-            <returns>是否撤销成功</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.UpdateTokenSessionActivityAsync(System.String)">
-            <summary>
-            更新Token会话活动时间
-            </summary>
-            <param name="refreshToken">刷新令牌</param>
-            <returns>是否更新成功</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.CleanupExpiredTokenSessionsAsync">
-            <summary>
-            清理过期的Token会话
-            </summary>
-            <returns>清理的会话数量</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GetUserActiveSessionsAsync(System.Int32)">
-            <summary>
-            获取用户的所有活跃会话
-            </summary>
-            <param name="userId">用户ID</param>
-            <returns>用户的活跃会话列表</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.GenerateAccessToken(System.Int32,System.String,System.Collections.Generic.List{System.String})">
-            <summary>
-            生成访问令牌（用于延期）
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Application.Contracts.ITokenService.ExtendTokenExpiryAsync(Microsoft.AspNetCore.Http.HttpContext,System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
-            <summary>
-            延长Token过期时间（滑动过期）
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo">
-            <summary>
-            刷新令牌信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.UserId">
-            <summary>
-            用户ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.RefreshToken">
-            <summary>
-            刷新令牌
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.ExpireTime">
-            <summary>
-            过期时间
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.LastActivityTime">
-            <summary>
-            最后活动时间
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Application.Contracts.RefreshTokenInfo.IsExpired">
-            <summary>
-            是否已过期
-            </summary>
-        </member>
         <member name="T:Highever.SocialMedia.Application.Contracts.IUserRolesService">
             <summary>
             用户角色关联服务接口
@@ -1429,6 +1514,498 @@
             <param name="userId">用户ID</param>
             <param name="roleId">角色ID</param>
             <returns>是否拥有角色</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.ITKAPIService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITKAPIService.FetchUserProfileWithRetryAsync(System.String,System.String)">
+            <summary>
+            带重试机制的用户资料API调用
+            </summary>
+            <param name="uniqueId">用户唯一ID</param>
+            <param name="secUid">安全用户ID（可选）</param>
+            <returns>API响应和错误信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITKAPIService.UpdateTiktokUsersAsync(Highever.SocialMedia.Application.Contracts.TikTokApiResponse)">
+            <summary>
+            更新用户数据
+            </summary>
+            <param name="apiResponse"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITKAPIService.FetchUserVideosWithRetryAsync(System.String,System.String,System.String,System.Int32)">
+            <summary>
+            带重试机制的用户视频API调用
+            </summary>
+            <param name="uniqueId">用户唯一ID</param>
+            <param name="secUid">安全用户ID（可选）</param>
+            <param name="maxCursor">分页游标</param>
+            <param name="count">获取数量</param>
+            <returns>视频API响应和错误信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Application.Contracts.ITKAPIService.FetchHotTagsWithRetryAsync(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            带重试机制的热门标签API调用
+            </summary>
+            <param name="parameters">API请求参数</param>
+            <returns>API响应结果和错误信息</returns>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.HotTagsApiResponse">
+            <summary>
+            热门标签API响应数据模型
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.TikTokApiResponse">
+            <summary>
+            TikTok API响应数据模型
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.TikTokVideoApiResponse">
+            <summary>
+            TikTok 视频 API 响应数据模型
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.VideoItem">
+            <summary>
+            视频项目信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.AwemeId">
+            <summary>
+            视频ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.Desc">
+            <summary>
+            视频描述
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.CreateTime">
+            <summary>
+            创建时间戳
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.Author">
+            <summary>
+            作者信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.Video">
+            <summary>
+            视频信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.Music">
+            <summary>
+            音乐信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.Statistics">
+            <summary>
+            统计数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.Status">
+            <summary>
+            状态信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.VideoControl">
+            <summary>
+            视频控制设置
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.PoiData">
+            <summary>
+            位置信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.ChaList">
+            <summary>
+            话题标签列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.Region">
+            <summary>
+            地区信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.AigcInfo">
+            <summary>
+            AI生成内容信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.ShareInfo">
+            <summary>
+            分享信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.ContentDesc">
+            <summary>
+            内容描述
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.IsAds">
+            <summary>
+            是否为广告
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.IsTop">
+            <summary>
+            是否置顶
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.ContentOriginalType">
+            <summary>
+            内容原创类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.MiscInfo">
+            <summary>
+            其他信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.PromoteIconText">
+            <summary>
+            推广图标文本
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoItem.CoverLabels">
+            <summary>
+            封面标签
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.VideoAuthor">
+            <summary>
+            视频作者信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.Uid">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.UniqueId">
+            <summary>
+            唯一标识符
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.Nickname">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.Signature">
+            <summary>
+            个人签名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.FollowerCount">
+            <summary>
+            粉丝数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.FollowingCount">
+            <summary>
+            关注数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.AwemeCount">
+            <summary>
+            作品数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.TotalFavorited">
+            <summary>
+            获赞总数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoAuthor.FavoritingCount">
+            <summary>
+            点赞数量
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.VideoInfo">
+            <summary>
+            视频信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoInfo.Duration">
+            <summary>
+            视频时长（秒）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoInfo.Ratio">
+            <summary>
+            视频比例
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoInfo.Cover">
+            <summary>
+            封面图片
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoInfo.PlayAddr">
+            <summary>
+            播放地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoInfo.HasWatermark">
+            <summary>
+            是否有水印
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.UrlList">
+            <summary>
+            URL列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.UrlList.UrlListData">
+            <summary>
+            URL列表数据
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.MusicInfo">
+            <summary>
+            音乐信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.MusicInfo.IdStr">
+            <summary>
+            音乐ID字符串
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.MusicInfo.Title">
+            <summary>
+            音乐标题
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.MusicInfo.Author">
+            <summary>
+            音乐作者
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.MusicInfo.IsOriginalSound">
+            <summary>
+            是否为原声
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.MusicInfo.IsCommerceMusic">
+            <summary>
+            是否为商业音乐
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.VideoStatistics">
+            <summary>
+            视频统计数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.PlayCount">
+            <summary>
+            播放次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.DiggCount">
+            <summary>
+            点赞次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.CommentCount">
+            <summary>
+            评论次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.DownloadCount">
+            <summary>
+            下载次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.ShareCount">
+            <summary>
+            分享次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.CollectCount">
+            <summary>
+            收藏次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.ForwardCount">
+            <summary>
+            转发次数
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatistics.WhatsappShareCount">
+            <summary>
+            WhatsApp分享次数
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.VideoStatus">
+            <summary>
+            视频状态信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatus.AllowComment">
+            <summary>
+            是否允许评论
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoStatus.AllowShare">
+            <summary>
+            是否允许分享
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.VideoControl">
+            <summary>
+            视频控制设置
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoControl.AllowDownload">
+            <summary>
+            是否允许下载
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoControl.AllowDuet">
+            <summary>
+            是否允许合拍
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.VideoControl.AllowStitch">
+            <summary>
+            是否允许拼接
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.PoiData">
+            <summary>
+            位置数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.PoiData.PoiName">
+            <summary>
+            位置名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.PoiData.AddressInfo">
+            <summary>
+            地址信息
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.AddressInfo">
+            <summary>
+            地址信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.AddressInfo.Address">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.AddressInfo.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.AddressInfo.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.HashtagInfo">
+            <summary>
+            话题标签信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.HashtagInfo.ChaName">
+            <summary>
+            话题名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.HashtagInfo.Cid">
+            <summary>
+            话题ID
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.AigcInfo">
+            <summary>
+            AI生成内容信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.AigcInfo.CreatedByAi">
+            <summary>
+            是否由AI创建
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.AigcInfo.AigcLabelType">
+            <summary>
+            AIGC标签类型
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Contracts.ShareInfo">
+            <summary>
+            分享信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Contracts.ShareInfo.ShareUrl">
+            <summary>
+            分享链接
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Models.TokenMenuPermission">
+            <summary>
+            Token中的菜单权限信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.TokenMenuPermission.MenuId">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.TokenMenuPermission.MenuCode">
+            <summary>
+            菜单编码
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.TokenMenuPermission.MenuUrl">
+            <summary>
+            菜单URL路径
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.TokenMenuPermission.AllowedMethods">
+            <summary>
+            允许的HTTP方法
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.TokenMenuPermission.IsWildcard">
+            <summary>
+            是否支持通配符匹配
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.Application.Models.CompressedPermissionData">
+            <summary>
+            压缩的权限数据结构
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.CompressedPermissionData.Version">
+            <summary>
+            权限版本号
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.CompressedPermissionData.GeneratedAt">
+            <summary>
+            权限数据生成时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.CompressedPermissionData.MenuPermissions">
+            <summary>
+            菜单权限列表
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Application.Models.CompressedPermissionData.Hash">
+            <summary>
+            权限哈希值
+            </summary>
         </member>
     </members>
 </doc>

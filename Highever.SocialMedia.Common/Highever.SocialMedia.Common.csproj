@@ -20,6 +20,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
     <PackageReference Include="EFCore.BulkExtensions" Version="6.0.0" />
@@ -45,7 +46,7 @@
     <PackageReference Include="RedLock.net" Version="2.3.2" />
     <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.33.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="138.0.7204.9200" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="139.0.7258.6800" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
     <PackageReference Include="SqlSugarCore" Version="5.1.4.173" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.48" />

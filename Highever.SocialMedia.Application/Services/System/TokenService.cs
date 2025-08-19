@@ -1,6 +1,8 @@
+using Highever.SocialMedia.Application.Context;
 using Highever.SocialMedia.Application.Contracts;
+using Highever.SocialMedia.Application.Contracts.Context;
 using Highever.SocialMedia.Common;
-using Highever.SocialMedia.Common.Models;
+using Highever.SocialMedia.Common.Model;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +20,7 @@ namespace Highever.SocialMedia.Application.Services.System
         private readonly IRepository<UserTokenSessions> _userTokenSessionRepository;
         private readonly JwtHelper _jwtHelper;
         private readonly INLogger _logger;
+        private readonly TokenPermissionEncoder _permissionEncoder;
 
         public TokenService(
             IRepository<Users> userRepository,
@@ -25,7 +28,8 @@ namespace Highever.SocialMedia.Application.Services.System
             IRepository<UserTokenSessions> userTokenSessionRepository,
             JwtHelper jwtHelper,
             INLogger logger,
-            IRepository<Roles> userRoleRepository)
+            IRepository<Roles> userRoleRepository,
+            TokenPermissionEncoder permissionEncoder)
         {
             _userRepository = userRepository;
             _userUserRolesRepository = userUserRolesRepository;
@@ -33,13 +37,27 @@ namespace Highever.SocialMedia.Application.Services.System
             _jwtHelper = jwtHelper;
             _logger = logger;
             _userRoleRepository = userRoleRepository;
+            _permissionEncoder = permissionEncoder;
         }
         /// <summary>
-        /// 生成访问令牌（用于延期）
+        /// 生成包含权限的访问令牌
         /// </summary>
-        public string GenerateAccessToken(int userId, string? userName, List<string> roles)
+        public async Task<string> GenerateAccessTokenWithPermissionsAsync(int userId, string userName, List<string> roles)
         {
-            return _jwtHelper.GenerateToken(userId, userName ?? string.Empty, roles);
+            try
+            {
+                // 编码用户权限
+                var permissionClaims = await _permissionEncoder.EncodeUserPermissionsAsync(userId, roles);
+
+                // 生成包含权限的Token
+                return await _jwtHelper.GenerateTokenWithPermissionsAsync(userId, userName, roles, permissionClaims);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"生成用户 {userId} 的权限Token失败");
+                // 降级：生成普通Token
+                return _jwtHelper.GenerateToken(userId, userName, roles);
+            }
         }
         /// <summary>
         /// 延长Token过期时间（滑动过期）
@@ -53,13 +71,13 @@ namespace Highever.SocialMedia.Application.Services.System
                 {
                     return;
                 }
-                
+
                 var userRoles = await _userUserRolesRepository.QueryListAsync(ur => ur.UserId == userId);
                 var roles = userRoles?.Select(r => r.RoleId.ToString()).ToList() ?? new List<string>();
 
                 // 使用新的方法生成延期token 
                 var userName = jsonToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-                var newToken = GenerateAccessToken(userId, userName, roles);
+                var newToken = await GenerateAccessTokenWithPermissionsAsync(userId, userName ?? string.Empty, roles);
 
                 // 设置新token到响应头
                 context.Response.Headers.Add("X-Extended-Token", newToken);
@@ -79,7 +97,7 @@ namespace Highever.SocialMedia.Application.Services.System
             }
         }
         /// <summary>
-        /// 刷新Token - 支持多设备登录
+        /// 刷新Token - 支持多设备登录和权限同步
         /// </summary>
         public async Task<TokenResult> RefreshTokenAsync(string refreshToken)
         {
@@ -117,8 +135,9 @@ namespace Highever.SocialMedia.Application.Services.System
             var userRoles = await _userUserRolesRepository.QueryListAsync(ur => ur.UserId == user.Id);
             var roles = userRoles?.Select(r => r.RoleId.ToString()).ToList() ?? new List<string>();
 
-            // 6. 生成新的Token对
-            var tokenResult = _jwtHelper.RefreshToken(user.Id, user.Account, roles);
+            // 6. 生成包含最新权限的新Token对
+            var permissionClaims = await _permissionEncoder.EncodeUserPermissionsAsync(user.Id, roles);
+            var tokenResult = await _jwtHelper.GenerateTokenPairWithPermissionsAsync(user.Id, user.Account, roles, permissionClaims);
 
             // 7. 更新Token会话
             tokenSession.RefreshToken = tokenResult.RefreshToken;
@@ -127,7 +146,7 @@ namespace Highever.SocialMedia.Application.Services.System
             tokenSession.UpdatedAt = DateTime.Now;
             await _userTokenSessionRepository.UpdateAsync(tokenSession);
 
-            _logger.Info($"用户 {user.Id} 的Token会话 {tokenSession.Id} 已刷新");
+            _logger.Info($"用户 {user.Id} 的Token会话 {tokenSession.Id} 已刷新，权限已同步更新");
             return tokenResult;
         }
 
@@ -346,8 +365,18 @@ namespace Highever.SocialMedia.Application.Services.System
 
             return null;
         }
+
+        /// <summary>
+        /// 获取权限编码器
+        /// </summary>
+        public TokenPermissionEncoder GetPermissionEncoder()
+        {
+            return _permissionEncoder;
+        }
     }
 }
+
+
 
 
 

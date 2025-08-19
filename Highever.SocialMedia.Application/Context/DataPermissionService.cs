@@ -1,3 +1,4 @@
+using Highever.SocialMedia.Application.Contracts.Context;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
@@ -56,7 +57,11 @@ namespace Highever.SocialMedia.Application.Context
                 return context; // 返回基础上下文，避免阻塞请求
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<List<string>> GetUserAccountConfigIdsAsync(long userId)
         {
             var userConfigs = await _accountConfigConfigRepository.QueryListAsync(

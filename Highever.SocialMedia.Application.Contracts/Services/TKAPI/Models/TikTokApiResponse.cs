@@ -1,4 +1,4 @@
-namespace Highever.SocialMedia.Admin.TaskService.Models
+namespace Highever.SocialMedia.Application.Contracts
 {
     /// <summary>
     /// TikTok API响应数据模型

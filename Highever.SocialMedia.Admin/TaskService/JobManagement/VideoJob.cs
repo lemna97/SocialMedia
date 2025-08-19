@@ -1,25 +1,20 @@
-﻿using Highever.SocialMedia.Admin.TaskService.Models;
+﻿using Highever.SocialMedia.Application.Contracts;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
-using Highever.SocialMedia.SqlSugar;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using SqlSugar;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Highever.SocialMedia.Admin.TaskService
 {
     public class VideoJob : ITaskExecutor
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly TikhubSettings _tikTokSettings;
-        private readonly RateLimitController _rateLimitController;
+        private readonly TikhubSettings _tikTokSettings; 
         private readonly INLogger _logger;
 
+        private readonly ITKAPIService _tKAPIService;
         private HttpClientHelper _httpclient => _serviceProvider.GetRequiredService<HttpClientHelper>();
         private IRepository<AccountConfig> repositoryAccountConfig => _serviceProvider.GetRequiredService<IRepository<AccountConfig>>();
         private IRepository<TiktokVideos> _repositoryTiktokVideos => _serviceProvider.GetRequiredService<IRepository<TiktokVideos>>();
@@ -28,12 +23,12 @@ namespace Highever.SocialMedia.Admin.TaskService
         // 使用信号量控制并发数，设置为1确保串行处理
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1); // 改为最多1个并发
 
-        public VideoJob(IServiceProvider serviceProvider, IOptions<TikhubSettings> tikTokSettings, INLogger logger)
+        public VideoJob(IServiceProvider serviceProvider, IOptions<TikhubSettings> tikTokSettings, INLogger logger, ITKAPIService tKAPIService)
         {
             _serviceProvider = serviceProvider;
             _tikTokSettings = tikTokSettings.Value;
-            _rateLimitController = new RateLimitController(_tikTokSettings);
             _logger = logger;
+            _tKAPIService = tKAPIService;
         }
 
         /// <summary>
@@ -178,7 +173,7 @@ namespace Highever.SocialMedia.Admin.TaskService
             await _semaphore.WaitAsync();
             try
             {
-                var (apiResponse, errorMessage) = await FetchUserVideosWithRetryAsync(config.UniqueId, config.SecUid);
+                var (apiResponse, errorMessage) = await _tKAPIService.FetchUserVideosWithRetryAsync(config.UniqueId, config.SecUid);
 
                 if (apiResponse != null && apiResponse.Data?.AwemeList != null)
                 {
@@ -213,113 +208,7 @@ namespace Highever.SocialMedia.Admin.TaskService
             {
                 _semaphore.Release();
             }
-        }
-
-        /// <summary>
-        /// 带重试机制的视频API调用
-        /// </summary>
-        private async Task<(TikTokVideoApiResponse? Response, string? ErrorMessage)> FetchUserVideosWithRetryAsync(string uniqueId, string? secUid = null)
-        {
-            int retryCount = 0;
-            string? lastErrorMessage = null;
-
-            while (retryCount < _tikTokSettings.MaxRetryCount)
-            {
-                await _rateLimitController.WaitForPermissionAsync();
-
-                try
-                {
-                    var url = "https://api.tikhub.io/api/v1/tiktok/app/v3/fetch_user_post_videos";
-                    var queryParams = new Dictionary<string, string>
-                    {
-                        ["max_cursor"] = "0",
-                        ["count"] = "50",
-                        ["sort_type"] = "0"
-                    };
-
-                    // 优先使用 sec_user_id
-                    if (!string.IsNullOrEmpty(secUid))
-                    {
-                        queryParams["sec_user_id"] = secUid;
-                    }
-                    else
-                    {
-                        queryParams["unique_id"] = uniqueId;
-                    }
-
-                    // 构建完整URL
-                    var queryString = string.Join("&", queryParams.Select(kv => $"{kv.Key}={Uri.EscapeDataString(kv.Value)}"));
-                    var fullUrl = $"{url}?{queryString}";
-
-                    var headers = new Dictionary<string, string>
-                    {
-                        { "Authorization", _tikTokSettings.ApiToken },
-                        { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
-                    };
-
-                    var responseJson = await _httpclient.GetAsync(fullUrl, headers, TimeSpan.FromMinutes(_tikTokSettings.TimeoutMinutes));
-
-                    if (string.IsNullOrWhiteSpace(responseJson))
-                    {
-                        lastErrorMessage = "API返回空响应";
-                        throw new InvalidOperationException(lastErrorMessage);
-                    }
-
-                    var apiResponse = JsonSerializer.Deserialize<TikTokVideoApiResponse>(responseJson, Highever.SocialMedia.Common.JsonHelper.DefaultOptions);
-
-                    if (apiResponse?.Code == 200 && apiResponse.Data?.AwemeList != null)
-                    {
-                        _rateLimitController.ReportSuccess();
-                        return (apiResponse, null);
-                    }
-                    else if (apiResponse?.Code == 429)
-                    {
-                        _rateLimitController.ReportError(isRateLimited: true);
-                        lastErrorMessage = "API返回429限流错误";
-                        Console.WriteLine($"{lastErrorMessage}，用户: {uniqueId}");
-                    }
-                    else
-                    {
-                        _rateLimitController.ReportError();
-                        lastErrorMessage = $"API返回错误: Code={apiResponse?.Code}";
-                        Console.WriteLine($"{lastErrorMessage}, User={uniqueId}");
-                    }
-                }
-                catch (TaskCanceledException)
-                {
-                    _rateLimitController.ReportError();
-                    lastErrorMessage = "请求超时";
-                    Console.WriteLine($"用户 {uniqueId} {lastErrorMessage} (第 {retryCount + 1} 次)");
-                }
-                catch (HttpRequestException ex) when (ex.Message.Contains("429"))
-                {
-                    _rateLimitController.ReportError(isRateLimited: true);
-                    lastErrorMessage = $"遇到限流: {ex.Message}";
-                    Console.WriteLine($"用户 {uniqueId} {lastErrorMessage}");
-                }
-                catch (Exception ex)
-                {
-                    _rateLimitController.ReportError();
-                    lastErrorMessage = $"请求异常: {ex.Message}";
-                    Console.WriteLine($"用户 {uniqueId} {lastErrorMessage} (第 {retryCount + 1} 次)");
-                }
-                finally
-                {
-                    _rateLimitController.ReleasePermission();
-                }
-
-                retryCount++;
-
-                if (retryCount < _tikTokSettings.MaxRetryCount)
-                {
-                    var delaySeconds = Math.Min(Math.Pow(2, retryCount), _tikTokSettings.MaxDelaySeconds);
-                    await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
-                }
-            }
-
-            return (null, lastErrorMessage ?? "未知错误");
-        }
-
+        } 
         /// <summary>
         /// 更新TiktokVideos表
         /// </summary>

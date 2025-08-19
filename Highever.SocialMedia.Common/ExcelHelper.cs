@@ -1,4 +1,5 @@
-﻿using Npoi.Mapper;
+﻿using ClosedXML.Excel;
+using Npoi.Mapper;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -553,5 +554,83 @@ namespace Highever.SocialMedia.Common
             }
         }
         #endregion
+
+
+        /// <summary>
+        /// 读取第一列的数据
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static List<string> ReadFirstColumn(string filePath)
+        {
+            var result = new List<string>();
+
+            // 加载Excel文件
+            using (var workbook = new XLWorkbook(filePath))
+            {
+                // 获取第一个工作表
+                var worksheet = workbook.Worksheet(1);
+
+                // 遍历第一列，从第一行开始读取
+                foreach (var cell in worksheet.Column(1).CellsUsed())
+                {
+                    // 将单元格值加入列表（忽略空值）
+                    result.Add(cell.GetValue<string>());
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static List<ProductInfo> ReadTableAsProductInfoList(string filePath)
+        {
+            var result = new List<ProductInfo>();
+
+            using (var workbook = new XLWorkbook(filePath))
+            {
+                var worksheet = workbook.Worksheet(1);
+
+                int totalColumns = worksheet.LastColumnUsed()?.ColumnNumber() ?? 0;
+                int totalRows = worksheet.LastRowUsed()?.RowNumber() ?? 0;
+
+                if (totalRows < 2 || totalColumns == 0)
+                    return result;
+
+                // 获取标题栏
+                var headers = new List<string>();
+                for (int col = 1; col <= totalColumns; col++)
+                {
+                    var headerCell = worksheet.Cell(1, col).GetValue<string>().Trim();
+                    headers.Add(headerCell);
+                }
+
+                // 遍历数据行
+                for (int row = 2; row <= totalRows; row++)
+                {
+                    var item = new ProductInfo();
+
+                    for (int col = 1; col <= totalColumns; col++)
+                    {
+                        var cellValue = worksheet.Cell(row, col).GetValue<string>()?.Trim() ?? "";
+
+                        switch (headers[col - 1])
+                        {
+                            case "SKU": item.SKU = cellValue; break;
+                            case "UPC": item.UPC = cellValue; break;
+                            case "ASIN": item.ASIN = cellValue; break; 
+                            // 如有其它字段，请继续补充
+                        }
+                    }
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-namespace Highever.SocialMedia.Common.Models
+namespace Highever.SocialMedia.Common.Model
 {
     /// <summary>
     /// Token结果

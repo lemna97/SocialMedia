@@ -2,7 +2,7 @@ using Hangfire;
 using Hangfire.MySql;
 using Highever.SocialMedia.Admin;
 using Highever.SocialMedia.Common;
-using Highever.SocialMedia.Common.Models;
+using Highever.SocialMedia.Common.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;

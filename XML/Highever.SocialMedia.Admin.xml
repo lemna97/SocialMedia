@@ -424,7 +424,7 @@
             <param name="task"></param>
             <returns></returns>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.UpdateTask(System.Int32,System.String)">
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.UpdateTask(Highever.SocialMedia.Domain.Entity.TaskEntity)">
             <summary>
             修改任务定时时间
             </summary>
@@ -445,9 +445,21 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.TestTasks(System.String)">
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.RunUserJob">
             <summary>
-            测试任务（本地调用）
+            手动同步用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.RunVideoJob">
+            <summary>
+            手动同步所有用户视频
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskServiceController.RunHotTagsVideoJob">
+            <summary>
+            
             </summary>
             <returns></returns>
         </member>
@@ -465,6 +477,80 @@
             任务执行接口
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob">
+            <summary>
+            热门标签视频任务
+            定时获取TikTok热门标签排行榜数据
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.#ctor(System.IServiceProvider)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="serviceProvider">服务提供者</param>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.Repository">
+            <summary>
+            获取仓储实例
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.TKAPIService">
+            <summary>
+            获取TikTok API服务
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.Logger">
+            <summary>
+            获取日志服务
+            </summary>
+        </member>
+        <member name="F:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.sortTypes">
+            <summary>
+            标签的类型
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.Execute(System.String)">
+            <summary>
+            执行热门标签视频数据获取任务
+            </summary>
+            <param name="taskName">任务名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.GetHotTagsFromAPI(System.String,System.String,System.Nullable{System.Int64},System.Int32)">
+            <summary>
+            从API获取热门标签数据（支持分页）
+            </summary>
+            <param name="sortType">排序类型：popular=热门，new=最新</param>
+            <param name="taskName">任务名称</param>
+            <param name="taskRunId">任务运行ID</param>
+            <param name="totalLimit">总共需要获取的数据条数</param>
+            <returns>API响应数据和实际API调用次数</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.SaveHotTagsToDatabase(System.Collections.Generic.List{Highever.SocialMedia.Application.Contracts.HotTagItem},System.String,System.DateTime,System.String,System.Nullable{System.Int64})">
+            <summary>
+            保存热门标签数据到数据库
+            </summary>
+            <param name="hotTagsList">热门标签列表</param>
+            <param name="sortType">排序类型</param>
+            <param name="recordDate">记录日期</param>
+            <param name="taskName">任务名称</param>
+            <param name="taskRunId">任务运行ID</param>
+            <returns>保存结果统计</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.ConvertToEntity(Highever.SocialMedia.Application.Contracts.HotTagItem,System.String,System.DateTime)">
+            <summary>
+            将API数据转换为实体对象
+            </summary>
+            <param name="apiItem">API数据项</param>
+            <param name="sortType">排序类型</param>
+            <param name="recordDate">记录日期</param>
+            <returns>热门标签视频实体</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.Admin.TaskService.HotTagsVideoJob.SafeJsonSerialize(System.Object)">
+            <summary>
+            修正：安全的JSON序列化方法，增强异常处理
+            </summary>
+        </member>
         <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.Execute(System.String)">
             <summary>
             
@@ -477,17 +563,12 @@
             获取活跃的用户配置列表
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.FetchUserProfileWithRetryAsync(System.String,System.String)">
-            <summary>
-            带重试机制的API调用
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.UpdateTiktokUsersAsync(Highever.SocialMedia.Admin.TaskService.Models.TikTokApiResponse)">
+        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.UpdateTiktokUsersAsync(Highever.SocialMedia.Application.Contracts.TikTokApiResponse)">
             <summary>
             更新TiktokUsers表（插入或更新）- 在外层事务中执行
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.UpdateTiktokUsersDailyAsync(Highever.SocialMedia.Admin.TaskService.Models.TikTokApiResponse)">
+        <member name="M:Highever.SocialMedia.Admin.TaskService.UserJob.UpdateTiktokUsersDailyAsync(Highever.SocialMedia.Application.Contracts.TikTokApiResponse)">
             <summary>
             更新TiktokUsersDaily表（插入或更新当天记录）- 在外层事务中执行
             </summary>
@@ -519,444 +600,14 @@
             处理单个用户的视频数据
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.FetchUserVideosWithRetryAsync(System.String,System.String)">
-            <summary>
-            带重试机制的视频API调用
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.UpdateTiktokVideosAsync(Highever.SocialMedia.Admin.TaskService.Models.VideoItem)">
+        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.UpdateTiktokVideosAsync(Highever.SocialMedia.Application.Contracts.VideoItem)">
             <summary>
             更新TiktokVideos表
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.UpdateTiktokVideosDailyAsync(Highever.SocialMedia.Admin.TaskService.Models.VideoItem)">
+        <member name="M:Highever.SocialMedia.Admin.TaskService.VideoJob.UpdateTiktokVideosDailyAsync(Highever.SocialMedia.Application.Contracts.VideoItem)">
             <summary>
             更新TiktokVideosDaily表
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.TikTokApiResponse">
-            <summary>
-            TikTok API响应数据模型
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.TikTokVideoApiResponse">
-            <summary>
-            TikTok 视频 API 响应数据模型
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoItem">
-            <summary>
-            视频项目信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.AwemeId">
-            <summary>
-            视频ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Desc">
-            <summary>
-            视频描述
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.CreateTime">
-            <summary>
-            创建时间戳
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Author">
-            <summary>
-            作者信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Video">
-            <summary>
-            视频信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Music">
-            <summary>
-            音乐信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Statistics">
-            <summary>
-            统计数据
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Status">
-            <summary>
-            状态信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.VideoControl">
-            <summary>
-            视频控制设置
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.PoiData">
-            <summary>
-            位置信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ChaList">
-            <summary>
-            话题标签列表
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.Region">
-            <summary>
-            地区信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.AigcInfo">
-            <summary>
-            AI生成内容信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ShareInfo">
-            <summary>
-            分享信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ContentDesc">
-            <summary>
-            内容描述
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.IsAds">
-            <summary>
-            是否为广告
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.IsTop">
-            <summary>
-            是否置顶
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.ContentOriginalType">
-            <summary>
-            内容原创类型
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.MiscInfo">
-            <summary>
-            其他信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.PromoteIconText">
-            <summary>
-            推广图标文本
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoItem.CoverLabels">
-            <summary>
-            封面标签
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor">
-            <summary>
-            视频作者信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.Uid">
-            <summary>
-            用户ID
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.UniqueId">
-            <summary>
-            唯一标识符
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.Nickname">
-            <summary>
-            昵称
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.Signature">
-            <summary>
-            个人签名
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.FollowerCount">
-            <summary>
-            粉丝数量
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.FollowingCount">
-            <summary>
-            关注数量
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.AwemeCount">
-            <summary>
-            作品数量
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.TotalFavorited">
-            <summary>
-            获赞总数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoAuthor.FavoritingCount">
-            <summary>
-            点赞数量
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo">
-            <summary>
-            视频信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.Duration">
-            <summary>
-            视频时长（秒）
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.Ratio">
-            <summary>
-            视频比例
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.Cover">
-            <summary>
-            封面图片
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.PlayAddr">
-            <summary>
-            播放地址
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoInfo.HasWatermark">
-            <summary>
-            是否有水印
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.UrlList">
-            <summary>
-            URL列表
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.UrlList.UrlListData">
-            <summary>
-            URL列表数据
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo">
-            <summary>
-            音乐信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.IdStr">
-            <summary>
-            音乐ID字符串
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.Title">
-            <summary>
-            音乐标题
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.Author">
-            <summary>
-            音乐作者
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.IsOriginalSound">
-            <summary>
-            是否为原声
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.MusicInfo.IsCommerceMusic">
-            <summary>
-            是否为商业音乐
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics">
-            <summary>
-            视频统计数据
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.PlayCount">
-            <summary>
-            播放次数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.DiggCount">
-            <summary>
-            点赞次数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.CommentCount">
-            <summary>
-            评论次数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.DownloadCount">
-            <summary>
-            下载次数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.ShareCount">
-            <summary>
-            分享次数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.CollectCount">
-            <summary>
-            收藏次数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.ForwardCount">
-            <summary>
-            转发次数
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatistics.WhatsappShareCount">
-            <summary>
-            WhatsApp分享次数
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoStatus">
-            <summary>
-            视频状态信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatus.AllowComment">
-            <summary>
-            是否允许评论
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoStatus.AllowShare">
-            <summary>
-            是否允许分享
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.VideoControl">
-            <summary>
-            视频控制设置
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoControl.AllowDownload">
-            <summary>
-            是否允许下载
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoControl.AllowDuet">
-            <summary>
-            是否允许合拍
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.VideoControl.AllowStitch">
-            <summary>
-            是否允许拼接
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.PoiData">
-            <summary>
-            位置数据
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.PoiData.PoiName">
-            <summary>
-            位置名称
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.PoiData.AddressInfo">
-            <summary>
-            地址信息
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo">
-            <summary>
-            地址信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo.Address">
-            <summary>
-            详细地址
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo.Lat">
-            <summary>
-            纬度
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AddressInfo.Lng">
-            <summary>
-            经度
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.HashtagInfo">
-            <summary>
-            话题标签信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.HashtagInfo.ChaName">
-            <summary>
-            话题名称
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.HashtagInfo.Cid">
-            <summary>
-            话题ID
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.AigcInfo">
-            <summary>
-            AI生成内容信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AigcInfo.CreatedByAi">
-            <summary>
-            是否由AI创建
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.AigcInfo.AigcLabelType">
-            <summary>
-            AIGC标签类型
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.Models.ShareInfo">
-            <summary>
-            分享信息
-            </summary>
-        </member>
-        <member name="P:Highever.SocialMedia.Admin.TaskService.Models.ShareInfo.ShareUrl">
-            <summary>
-            分享链接
-            </summary>
-        </member>
-        <member name="T:Highever.SocialMedia.Admin.TaskService.RateLimitController">
-            <summary>
-            API请求限流控制器
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.RateLimitController.WaitForPermissionAsync">
-            <summary>
-            等待获取请求许可
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.RateLimitController.ReleasePermission">
-            <summary>
-            释放请求许可
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.RateLimitController.ReportSuccess">
-            <summary>
-            报告请求成功
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.RateLimitController.ReportError(System.Boolean)">
-            <summary>
-            报告请求失败
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.Admin.TaskService.RateLimitController.EnforceRateLimitAsync">
-            <summary>
-            强制执行每分钟请求限制
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.Admin.TaskService.TaskExecutorFactory">
@@ -1222,64 +873,24 @@
              核价次数
             </summary>
         </member>
-        <member name="T:TikhubSettings">
+        <member name="T:TikTokHotTagsApiConstants">
             <summary>
-            TikTok API配置设置
+            TikTok热门标签API参数常量
             </summary>
         </member>
-        <member name="P:TikhubSettings.ApiToken">
+        <member name="T:TikTokHotTagsApiConstants.SortTypes">
             <summary>
-            API访问令牌
+            支持的排序类型
             </summary>
         </member>
-        <member name="P:TikhubSettings.MaxRetryCount">
+        <member name="T:TikTokHotTagsApiConstants.Periods">
             <summary>
-            最大重试次数
+            支持的时间周期
             </summary>
         </member>
-        <member name="P:TikhubSettings.MaxDelaySeconds">
+        <member name="T:TikTokHotTagsApiConstants.CountryCodes">
             <summary>
-            最大延迟秒数
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.TimeoutMinutes">
-            <summary>
-            请求超时分钟数
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.RequestIntervalMs">
-            <summary>
-            基础请求间隔毫秒数（避免频繁请求）
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.MaxConcurrency">
-            <summary>
-            最大并发数（建议1-3，避免触发限制）
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.BatchSize">
-            <summary>
-            批次大小（每批处理的用户数）
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.BatchDelayMs">
-            <summary>
-            批次间延迟毫秒数（批次完成后的等待时间）
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.EnableAdaptiveThrottling">
-            <summary>
-            是否启用自适应限流（根据响应调整请求频率）
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.MaxRequestsPerMinute">
-            <summary>
-            每分钟最大请求数（0表示不限制）
-            </summary>
-        </member>
-        <member name="P:TikhubSettings.ThrottleBackoffSeconds">
-            <summary>
-            遇到限流时的退避时间（秒）
+            支持的国家代码
             </summary>
         </member>
     </members>

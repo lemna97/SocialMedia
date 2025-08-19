@@ -1,4 +1,4 @@
-using Highever.SocialMedia.Application.Contracts;
+using Highever.SocialMedia.Application.Contracts.Context;
 using Highever.SocialMedia.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

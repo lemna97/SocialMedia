@@ -105,14 +105,7 @@
             数据权限中间件
             </summary>
         </member>
-        <member name="M:Highever.SocialMedia.API.DataPermissionMiddleware.ShouldProcessAuthentication(Microsoft.AspNetCore.Http.HttpContext)">
-            <summary>
-            判断当前请求是否需要处理认证逻辑
-            </summary>
-            <param name="context">HTTP上下文</param>
-            <returns>是否需要处理认证</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.DataPermissionMiddleware.LoadDataPermissionAsync(Microsoft.AspNetCore.Http.HttpContext,Highever.SocialMedia.Application.Context.IDataPermissionService,Highever.SocialMedia.Application.Context.IDataPermissionContextService)">
+        <member name="M:Highever.SocialMedia.API.DataPermissionMiddleware.LoadDataPermissionAsync(Microsoft.AspNetCore.Http.HttpContext,Highever.SocialMedia.Application.Contracts.Context.IDataPermissionService,Highever.SocialMedia.Application.Contracts.Context.IDataPermissionContextService)">
             <summary>
             加载数据权限
             </summary>
@@ -120,6 +113,46 @@
             <param name="dataPermissionService"></param>
             <param name="contextService"></param>
             <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.API.TokenPermissionMiddleware">
+            <summary>
+            基于Token内嵌权限的验证中间件
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenPermissionMiddleware.ValidateMenuPermissionFromTokenAsync(Microsoft.AspNetCore.Http.HttpContext,Highever.SocialMedia.Application.Contracts.Context.ITokenPermissionEncoder)">
+            <summary>
+            从Token中验证菜单权限
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenPermissionMiddleware.ValidateSpecificPermission(System.Collections.Generic.List{Highever.SocialMedia.Application.Models.TokenMenuPermission},System.String,System.String)">
+            <summary>
+            验证具体的菜单权限
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenPermissionMiddleware.ValidateHttpMethod(Highever.SocialMedia.Application.Models.TokenMenuPermission,System.String)">
+            <summary>
+            验证HTTP方法权限
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenPermissionMiddleware.IsWildcardMatch(System.String,System.String)">
+            <summary>
+            通配符匹配
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenPermissionMiddleware.HandlePermissionDeniedAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            处理权限拒绝
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenPermissionMiddleware.IsAdministrator(System.Collections.Generic.List{System.String})">
+            <summary>
+            检查是否为管理员
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.TokenPermissionMiddleware.NormalizePath(System.String)">
+            <summary>
+            标准化路径
+            </summary>
         </member>
         <member name="T:Highever.SocialMedia.API.TokenRefreshMiddleware">
             <summary>
@@ -142,7 +175,7 @@
         </member>
         <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.ExtendTokenExpiryAsync(Microsoft.AspNetCore.Http.HttpContext,System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
             <summary>
-            延长Token过期时间（滑动过期）- 延期2小时
+            延长Token过期时间（滑动过期）- 延期2小时，包含最新权限
             </summary>
         </member>
         <member name="M:Highever.SocialMedia.API.TokenRefreshMiddleware.GetTokenFromRequest(Microsoft.AspNetCore.Http.HttpContext)">
@@ -450,6 +483,18 @@
             <param name="request">统计请求参数</param>
             <returns>账号维度的视频统计数据</returns>
         </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController.GetHotTags(Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest)">
+            <summary>
+            查询TikTok热门标签信息（分页+关键词搜索）- 无需登录
+            </summary>
+            <param name="request">查询请求参数</param>
+            <returns>分页热门标签信息</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Areas.TikTok.Controllers.VideosController.GetRankDiffDescription(System.Int32,System.Int32)">
+            <summary>
+            获取排名变化描述
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountConfigQueryRequest">
             <summary>
             账户配置查询请求
@@ -503,7 +548,8 @@
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.CreateAccountConfigRequest.SystemUid">
             <summary>
             系统用户ID(数据权限关联)
-            </summary>
+            
+            </summary>  
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.CreateAccountConfigRequest.IsActive">
             <summary>
@@ -533,7 +579,7 @@
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.UpdateAccountConfigRequest.SystemUid">
             <summary>
             系统用户ID(数据权限关联)
-            </summary>
+            </summary> 
         </member>
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.UpdateAccountConfigRequest.IsActive">
             <summary>
@@ -688,6 +734,201 @@
         <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.TiktokUsersDailyQueryRequest.CreatedEndDate">
             <summary>
             创建时间结束时间（可为null或空字符串）
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest">
+            <summary>
+            热门标签查询请求
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.Keyword">
+            <summary>
+            关键词（标签名称）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.PageIndex">
+            <summary>
+            页码（从1开始）
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.PageSize">
+            <summary>
+            每页大小
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.OrderBy">
+            <summary>
+            排序字段（rank）
+            </summary> 
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.Ascending">
+            <summary>
+            是否升序
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.SortType">
+            <summary>
+            排序类型过滤：popular=热门，new=最新
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.CountryId">
+            <summary>
+            国家代码过滤
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.IndustryId">
+            <summary>
+            行业ID过滤
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.QueryDate">
+            <summary>
+            查询时间
+            </summary> 
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.MinRank">
+            <summary>
+            最小排名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsQueryRequest.MaxRank">
+            <summary>
+            最大排名
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse">
+            <summary>
+            热门标签查询响应
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.Id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.HashtagId">
+            <summary>
+            标签ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.HashtagName">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.Country">
+            <summary>
+            国家信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.Industry">
+            <summary>
+            行业信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.IsPromoted">
+            <summary>
+            是否推广
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.TrendData">
+            <summary>
+            趋势数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.CreatorsData">
+            <summary>
+            创作者数据
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.PublishCnt">
+            <summary>
+            发布数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.VideoViews">
+            <summary>
+            视频观看量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.Rank">
+            <summary>
+            排名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.RankDiff">
+            <summary>
+            排名变化
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.RankDiffType">
+            <summary>
+            排名变化类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.RankDiffDescription">
+            <summary>
+            排名变化描述
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.SortType">
+            <summary>
+            排序类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.RecordDate">
+            <summary>
+            记录日期
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.HotTagsResponse.UpdatedAt">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.CountryInfo">
+            <summary>
+            国家信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.CountryInfo.Id">
+            <summary>
+            国家ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.CountryInfo.Value">
+            <summary>
+            国家名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.CountryInfo.Label">
+            <summary>
+            国家标签
+            </summary>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.IndustryInfo">
+            <summary>
+            行业信息
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.IndustryInfo.Id">
+            <summary>
+            行业ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.IndustryInfo.Value">
+            <summary>
+            行业名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.API.Areas.TikTok.DTO.IndustryInfo.Label">
+            <summary>
+            行业标签
             </summary>
         </member>
         <member name="T:Highever.SocialMedia.API.Areas.TikTok.DTO.AccountStatisticsRequest">
@@ -1552,31 +1793,6 @@
             转换为字典格式（便于前端使用）
             </summary>
         </member>
-        <member name="T:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController">
-            <summary>
-            Token管理
-            </summary>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.CleanupExpiredTokens">
-            <summary>
-            手动清理过期令牌
-            </summary>
-            <returns>清理结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.RevokeUserToken(System.Int32)">
-            <summary>
-            撤销指定用户的令牌
-            </summary>
-            <param name="userId">用户ID</param>
-            <returns>撤销结果</returns>
-        </member>
-        <member name="M:Highever.SocialMedia.API.Controllers.Admin.TokenManagementController.GetUserTokenInfo(System.Int32)">
-            <summary>
-            获取用户令牌信息
-            </summary>
-            <param name="userId">用户ID</param>
-            <returns>令牌信息</returns>
-        </member>
         <member name="T:Highever.SocialMedia.API.Controllers.HomeController">
             <summary>
             登录相关
@@ -1631,6 +1847,31 @@
             </summary>
             <param name="refreshToken">刷新令牌</param>
             <returns></returns>
+        </member>
+        <member name="T:Highever.SocialMedia.API.Controllers.TokenManagementController">
+            <summary>
+            Token管理
+            </summary>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TokenManagementController.CleanupExpiredTokens">
+            <summary>
+            手动清理过期令牌
+            </summary>
+            <returns>清理结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TokenManagementController.RevokeUserToken(System.Int32)">
+            <summary>
+            撤销指定用户的令牌
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>撤销结果</returns>
+        </member>
+        <member name="M:Highever.SocialMedia.API.Controllers.TokenManagementController.GetUserTokenInfo(System.Int32)">
+            <summary>
+            获取用户令牌信息
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns>令牌信息</returns>
         </member>
         <member name="T:Highever.SocialMedia.API.Controllers.MenuPermsController">
             <summary>

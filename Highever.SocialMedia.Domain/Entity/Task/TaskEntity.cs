@@ -48,7 +48,7 @@ namespace Highever.SocialMedia.Domain.Entity
         /// 当前时间
         /// </summary>
 
-        [SugarColumn(ColumnName = "created_at", IsOnlyIgnoreInsert = true)]
+        [SugarColumn(ColumnName = "created_at", IsOnlyIgnoreInsert = true)] 
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
         [SugarColumn(ColumnName = "updated_at", IsOnlyIgnoreInsert = true)]

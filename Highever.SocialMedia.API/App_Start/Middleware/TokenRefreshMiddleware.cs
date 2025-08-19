@@ -1,4 +1,4 @@
-using Highever.SocialMedia.Application.Contracts;
+using Highever.SocialMedia.Application.Contracts.Context;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
@@ -141,7 +141,7 @@ namespace Highever.SocialMedia.API
             }
         }
         /// <summary>
-        /// 延长Token过期时间（滑动过期）- 延期2小时
+        /// 延长Token过期时间（滑动过期）- 延期2小时，包含最新权限
         /// </summary>
         private async Task ExtendTokenExpiryAsync(HttpContext context, JwtSecurityToken jsonToken)
         {
@@ -152,31 +152,29 @@ namespace Highever.SocialMedia.API
                 {
                     return;
                 }
+                using (var scope = _serviceProvider.CreateScope())
+                { 
+                    var userRoleRepository = scope.ServiceProvider.GetRequiredService<IRepository<UserRoles>>();
+                    var _tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
+                    var permissionEncoder = scope.ServiceProvider.GetRequiredService<ITokenPermissionEncoder>();
 
-                // 获取用户角色
-                using var scope = _serviceProvider.CreateScope();
-                var userRoleRepository = scope.ServiceProvider.GetRequiredService<IRepository<UserRoles>>();
-                var _tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
-                var userRoles = await userRoleRepository.QueryListAsync(ur => ur.UserId == userId);
-                var roles = userRoles?.Select(r => r.RoleId.ToString()).ToList() ?? new List<string>();
+                    var userRoles = await userRoleRepository.QueryListAsync(ur => ur.UserId == userId);
+                    var roles = userRoles?.Select(r => r.RoleId.ToString()).ToList() ?? new List<string>();
 
-                // 生成延期Token（延长2小时）
-                var userName = jsonToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-                var extendedToken = _tokenService.GenerateAccessToken(userId, userName, roles);
+                    // 获取最新权限并生成延期Token
+                    var permissionClaims = await permissionEncoder.EncodeUserPermissionsAsync(userId, roles);
+                    var userName = jsonToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
-                // 设置延期token到响应头
-                context.Response.Headers.Add("X-Extended-Token", extendedToken);
+                    var jwtHelper = scope.ServiceProvider.GetRequiredService<JwtHelper>();
+                    var extendedToken = await jwtHelper.GenerateTokenWithPermissionsAsync(userId, userName ?? string.Empty, roles, permissionClaims);
 
-                // 更新用户会话活动时间
-                var refreshToken = _tokenService.GetRefreshTokenFromRequest(context);
-                if (!string.IsNullOrEmpty(refreshToken))
-                {
-                    await _tokenService.UpdateTokenSessionActivityAsync(refreshToken);
+                    // 设置延期token到响应头
+                    context.Response.Headers.Add("X-Extended-Token", extendedToken);
+
                 }
-
-                Console.WriteLine($"用户 {userId} Token已延期2小时，剩余时间重置");
+                Console.WriteLine($"用户 {userId} Token已延期2小时，权限已同步更新");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine("延长Token过期时间失败");
             }
@@ -238,27 +236,29 @@ namespace Highever.SocialMedia.API
                 {
                     return;
                 }
+                
                 using var scope = _serviceProvider.CreateScope();
                 var _tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
                 var currentRefreshToken = _tokenService.GetRefreshTokenFromRequest(context);
+                
                 if (string.IsNullOrEmpty(currentRefreshToken))
                 {
                     Console.WriteLine($"用户 {userId} 没有找到RefreshToken，无法刷新");
                     return;
                 }
 
-                // 使用TokenService刷新Token
+                // 使用TokenService刷新Token（已包含权限同步）
                 var newTokenResult = await _tokenService.RefreshTokenAsync(currentRefreshToken);
 
                 // 设置新的Token到响应头
                 context.Response.Headers.Add("X-New-Access-Token", newTokenResult.AccessToken);
                 context.Response.Headers.Add("X-New-Refresh-Token", newTokenResult.RefreshToken);
 
-                Console.WriteLine($"用户 {userId} Token刷新成功，新Token有效期2小时");
+                Console.WriteLine($"用户 {userId} Token刷新成功，新Token有效期2小时，权限已同步");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("刷新Token失败");
+                Console.WriteLine($"刷新Token失败: {ex.Message}");
             }
         }
     }

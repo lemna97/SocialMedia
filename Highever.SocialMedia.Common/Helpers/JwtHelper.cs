@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Highever.SocialMedia.Common.Models;
+using Highever.SocialMedia.Common.Model;
 
 namespace Highever.SocialMedia.Common
 {
@@ -87,7 +87,7 @@ namespace Highever.SocialMedia.Common
         {
             var accessToken = GenerateToken(userId, userName, roles, permissions);
             var refreshToken = GenerateRefreshToken();
-            
+
             return new TokenResult
             {
                 AccessToken = accessToken,
@@ -120,7 +120,7 @@ namespace Highever.SocialMedia.Common
         {
             if (string.IsNullOrEmpty(refreshToken))
                 return false;
-            
+
             try
             {
                 // 检查是否为Base64格式
@@ -207,8 +207,74 @@ namespace Highever.SocialMedia.Common
                 return true;
             }
         }
+
+        /// <summary>
+        /// 生成包含权限的JWT令牌
+        /// </summary>
+        public async Task<string> GenerateTokenWithPermissionsAsync(int userId, string userName, List<string> roles = null, Dictionary<string, object> permissionClaims = null)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Name, userName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+            };
+
+            // 添加角色声明
+            if (roles?.Any() == true)
+            {
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+            }
+
+            // 添加权限Claims
+            if (permissionClaims?.Any() == true)
+            {
+                foreach (var (key, value) in permissionClaims)
+                {
+                    claims.Add(new Claim(key, value?.ToString() ?? string.Empty));
+                }
+            }
+
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+            var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+            var temp_token = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
+                signingCredentials: credentials
+            );
+            var token = new JwtSecurityTokenHandler().WriteToken(temp_token);
+            await Task.CompletedTask;
+            return token;
+        }
+
+        /// <summary>
+        /// 生成包含权限的Token对
+        /// </summary>
+        public async Task<TokenResult> GenerateTokenPairWithPermissionsAsync(int userId, string userName, List<string> roles = null, Dictionary<string, object> permissionClaims = null)
+        {
+            var accessToken = await GenerateTokenWithPermissionsAsync(userId, userName, roles, permissionClaims);
+            var refreshToken = GenerateRefreshToken();
+
+            return new TokenResult
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                ExpiresIn = _jwtSettings.ExpiryMinutes * 60,
+                UserId = userId,
+                UserName = userName
+            };
+        }
     }
 }
+
+
 
 
 

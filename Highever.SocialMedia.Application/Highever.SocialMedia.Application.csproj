@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\TKAPI\INS\**" />
+    <EmbeddedResource Remove="Services\TKAPI\INS\**" />
+    <None Remove="Services\TKAPI\INS\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Services\System\" />
   </ItemGroup>
 

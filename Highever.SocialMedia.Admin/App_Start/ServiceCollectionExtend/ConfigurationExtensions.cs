@@ -1,4 +1,4 @@
-using Highever.SocialMedia.Common.Models;
+using Highever.SocialMedia.Common.Model;
 
 namespace Highever.SocialMedia.Admin
 {

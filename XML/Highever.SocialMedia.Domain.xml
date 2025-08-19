@@ -574,6 +574,116 @@
             当前时间
             </summary>
         </member>
+        <member name="T:Highever.SocialMedia.Domain.Entity.HotTagsVideo">
+            <summary>
+            热门标签视频实体
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.Id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.HashtagId">
+            <summary>
+            标签ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.HashtagName">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.CountryId">
+            <summary>
+            国家ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.CountryValue">
+            <summary>
+            国家名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.CountryLabel">
+            <summary>
+            国家标签
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.IndustryId">
+            <summary>
+            行业ID
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.IndustryValue">
+            <summary>
+            行业名称
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.IndustryLabel">
+            <summary>
+            行业标签
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.IsPromoted">
+            <summary>
+            是否推广
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.TrendData">
+            <summary>
+            趋势数据JSON
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.CreatorsData">
+            <summary>
+            创作者数据JSON
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.PublishCnt">
+            <summary>
+            发布数量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.VideoViews">
+            <summary>
+            视频观看量
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.Rank">
+            <summary>
+            排名
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.RankDiff">
+            <summary>
+            排名变化
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.RankDiffType">
+            <summary>
+            排名变化类型
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.SortType">
+            <summary>
+            排序类型：popular=热门，new=最新
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.RecordDate">
+            <summary>
+            记录日期(yyyy-MM-dd)
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Highever.SocialMedia.Domain.Entity.HotTagsVideo.UpdatedAt">
+            <summary>
+            更新时间
+            </summary>
+        </member>
         <member name="T:Highever.SocialMedia.Domain.Entity.TiktokUsers">
             <summary>
             TikTok用户信息表

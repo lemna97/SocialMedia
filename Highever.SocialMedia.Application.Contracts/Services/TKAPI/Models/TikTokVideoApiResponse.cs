@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Highever.SocialMedia.Admin.TaskService.Models
+namespace Highever.SocialMedia.Application.Contracts
 {
     /// <summary>
     /// TikTok 视频 API 响应数据模型

@@ -2,7 +2,7 @@ using Highever.SocialMedia.API;
 using Highever.SocialMedia.API.Handlers;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Common.Extension;
-using Highever.SocialMedia.Common.Models;
+using Highever.SocialMedia.Common.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -306,11 +306,11 @@ app.UseAuthentication();
 
 // 2. Token刷新中间件 - 检查是否需要刷新
 app.UseMiddleware<TokenRefreshMiddleware>();
-
-// 3. 数据权限中间件 - 加载用户数据权限上下文
-app.UseMiddleware<DataPermissionMiddleware>();
-
-// 4. 授权中间件 - 检查权限
+// 3. Token权限验证
+app.UseMiddleware<TokenPermissionMiddleware>(); 
+// 4. 数据权限中间件 - 加载用户数据权限上下文
+app.UseMiddleware<DataPermissionMiddleware>(); 
+// 5. 授权中间件 - 检查权限
 app.UseAuthorization();
 
 // Configure the HTTP request pipeline.

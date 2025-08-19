@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Highever.SocialMedia.Application.Contracts;
 using Highever.SocialMedia.Common;
+using Highever.SocialMedia.Application.Contracts.Context;
 
-namespace Highever.SocialMedia.API.Controllers.Admin
+namespace Highever.SocialMedia.API.Controllers
 {
     /// <summary>
     /// Token管理

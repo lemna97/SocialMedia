@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace Highever.SocialMedia.Admin.TaskService
+namespace Highever.SocialMedia.Application
 {
     /// <summary>
     /// API请求限流控制器

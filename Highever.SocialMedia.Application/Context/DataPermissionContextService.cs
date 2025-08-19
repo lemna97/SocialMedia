@@ -1,3 +1,4 @@
+using Highever.SocialMedia.Application.Contracts.Context;
 using Microsoft.AspNetCore.Http;
 
 namespace Highever.SocialMedia.Application.Context

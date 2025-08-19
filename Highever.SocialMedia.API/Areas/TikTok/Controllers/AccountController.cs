@@ -1,5 +1,5 @@
 ﻿using Highever.SocialMedia.API.Areas.TikTok.DTO;
-using Highever.SocialMedia.Application.Context;
+using Highever.SocialMedia.Application.Contracts.Context;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;

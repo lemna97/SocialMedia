@@ -1,5 +1,6 @@
 using Highever.SocialMedia.API.Areas.TikTok.DTO;
-using Highever.SocialMedia.Application.Context;
+using Highever.SocialMedia.Application.Contracts;
+using Highever.SocialMedia.Application.Contracts.Context;
 using Highever.SocialMedia.Common;
 using Highever.SocialMedia.Domain.Entity;
 using Highever.SocialMedia.Domain.Repository;
@@ -17,18 +18,23 @@ namespace Highever.SocialMedia.API.Areas.TikTok.Controllers
     [ApiExplorerSettings(GroupName = nameof(SwaggerApiGroup.系统功能))]
     public class AccountConfigController : ControllerBase
     {
+
         private readonly IRepository<AccountConfig> _repositoryAccountConfig;
         private readonly IDataPermissionContextService _dataPermissionContextService;
         private readonly INLogger _logger;
+        private readonly ITKAPIService _tKAPIService;
 
         public AccountConfigController(
             IRepository<AccountConfig> repositoryAccountConfig,
             IDataPermissionContextService dataPermissionContextService,
-            INLogger logger)
+            INLogger logger,
+            ITKAPIService tKAPIService,
+            IServiceProvider serviceProvider)
         {
             _repositoryAccountConfig = repositoryAccountConfig;
             _dataPermissionContextService = dataPermissionContextService;
             _logger = logger;
+            _tKAPIService = tKAPIService;
         }
         /// <summary>
         /// 分页查询账户配置列表
@@ -88,7 +94,6 @@ namespace Highever.SocialMedia.API.Areas.TikTok.Controllers
                     {
                         "id" => x => x.Id,
                         "uniqueid" => x => x.UniqueId,
-                        "systemuid" => x => x.SystemUid,
                         "isactive" => x => x.IsActive,
                         "createdat" => x => x.CreatedAt,
                         "updatedat" => x => x.UpdatedAt,
@@ -229,7 +234,12 @@ namespace Highever.SocialMedia.API.Areas.TikTok.Controllers
                 if (result > 0)
                 {
                     #region API同步
+                    var (apiResponse, errorMessage) = await _tKAPIService.FetchUserProfileWithRetryAsync(request.UniqueId);
 
+                    if (apiResponse != null)
+                    {
+                        await _tKAPIService.UpdateTiktokUsersAsync(apiResponse);
+                    }
                     #endregion
                     _logger.Info($"创建账户配置成功: UniqueId={request.UniqueId}, SystemUid={request.SystemUid}");
                     return this.Success("创建成功");
@@ -346,7 +356,7 @@ namespace Highever.SocialMedia.API.Areas.TikTok.Controllers
                     return this.Fail("无权限删除此配置");
                 }
 
-                var result = await _repositoryAccountConfig.DeleteAsync(t=>t.Id== request.Id);
+                var result = await _repositoryAccountConfig.DeleteAsync(t => t.Id == request.Id);
 
                 if (result == 1)
                 {
